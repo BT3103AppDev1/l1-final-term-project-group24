@@ -1,4 +1,0 @@
-<script src="curl -H 'X-Api-Key: DEMO_KEY' 'https://developer.nrel.gov/api/alt-fuel-stations/v1.json?limit=1'">
-</script>
-<script src="Ljn/8+fBf3VItM38d5R/cw==7qzsCiFXen3sEHi5">
-</script>

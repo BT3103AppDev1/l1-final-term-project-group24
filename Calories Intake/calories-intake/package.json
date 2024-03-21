@@ -9,7 +9,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "vue": "^3.4.21"
+    "vue": "^3.4.21",
+    "vue-date-pick": "^1.5.1",
+    "vue-recaptcha": "^3.0.0-alpha.6"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.0.4",
