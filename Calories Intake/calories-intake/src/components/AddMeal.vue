@@ -1,7 +1,10 @@
 <template>
-    <div class ="container">
-        <label for="Date">Date: </label>
-        <Datepicker id="Date" v-model="date" />
+    <div class ="date">
+      <label for="Date">Date: </label>
+      <datepicker id="Date" v-model="date" :format="'yyyy-MM-dd'"/>
+    </div>
+    <div class ="mealtype">
+        
         <form id="selection">
             
             <!-- <date-pick v-model="date" :displayFormat="'DD.MM.YYYY'"></date-pick> -->
@@ -19,8 +22,6 @@
 </template>
 
 <script>
-// import DatePick from 'vue-date-pick';
-//import { ref } from 'vue';
 import Datepicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
 
@@ -37,3 +38,6 @@ export default {
   }
 }
 </script>
+
+<style>
+</style>
