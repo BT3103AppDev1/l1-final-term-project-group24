@@ -1,7 +1,10 @@
 <template>
     <div class ="container">
+        <label for="Date">Date: </label>
+        <Datepicker id="Date" v-model="date" />
         <form id="selection">
-            <date-pick v-model="date" :displayFormat="'DD.MM.YYYY'"></date-pick>
+            
+            <!-- <date-pick v-model="date" :displayFormat="'DD.MM.YYYY'"></date-pick> -->
 
             <label for="mealType">Meal Type: </label>
             <select name="meal" id="mealType">
@@ -16,12 +19,21 @@
 </template>
 
 <script>
-import DatePick from 'vue-date-pick';
+// import DatePick from 'vue-date-pick';
+//import { ref } from 'vue';
+import Datepicker from '@vuepic/vue-datepicker';
+import '@vuepic/vue-datepicker/dist/main.css';
 
 export default {
-    components: {DatePick},
-    data: () => ({
-        date: '2019-02-12'
-    })
-};
+  components: { Datepicker },
+  data() {
+    return {
+      date: null,
+    };
+  },
+
+  mounted() {
+    async function changeDateFormat(date) {}
+  }
+}
 </script>
