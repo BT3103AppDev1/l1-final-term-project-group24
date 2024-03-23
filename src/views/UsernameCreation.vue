@@ -1,5 +1,5 @@
 <template>
-  <div id="newUsernameContainer" v-if="username">
+  <div id="newUsernameContainer" v-if="user">
     <img id="FoodFolioLogo" src="/foodfolio_logo.png" alt="FoodFolio logo"><br><br>
     <form @submit.prevent="submitUsername">
       <h1>Choose Your Username</h1> <br>
@@ -18,14 +18,25 @@
 
 
 <script>
-import { getAuth, updateProfile } from 'firebase/auth';
+import { getAuth, onAuthStateChanged, updateProfile } from 'firebase/auth';
 
 export default {
   data() {
     return {
+      user: false,
       username: '',
     };
   },
+  
+  mounted() {
+    const auth = getAuth();
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        this.user = user;
+      }
+    })
+  },
+  
   methods: {
     async submitUsername() {
       try {
