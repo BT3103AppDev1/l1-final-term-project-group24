@@ -34,7 +34,7 @@
 
 <script>
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
-import firebaseApp from '@/firebase.js';
+import '@/firebase.js';
 
 export default {
   methods: {
@@ -51,7 +51,7 @@ export default {
       alert("Logging In...");
 
       try {
-        await signInWithEmailAndPassword(getAuth(firebaseApp), email, password);
+        await signInWithEmailAndPassword(getAuth(), email, password);
         alert("You have successfully Logged In!");
         this.$router.push({ name: 'Home' });
       } catch (error) {

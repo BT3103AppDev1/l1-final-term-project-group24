@@ -33,7 +33,6 @@
 
 <script>
 import { getAuth, createUserWithEmailAndPassword, sendEmailVerification, updateProfile } from 'firebase/auth';
-import firebaseApp from '@/firebase.js';
 
 export default {
   data() {
@@ -63,7 +62,7 @@ export default {
         alert("Passwords do not match!");
       } else {
         try {
-          const userCredentials = await createUserWithEmailAndPassword(getAuth(firebaseApp), this.email, this.password);
+          const userCredentials = await createUserWithEmailAndPassword(getAuth(), this.email, this.password);
           console.log('User Created:', this.email);
 
           await updateProfile(userCredentials.user, {

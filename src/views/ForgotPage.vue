@@ -4,6 +4,7 @@
   </div>
 
   <div id="forgetPasswordContainer">
+    <img id="FoodFolioLogo" src="/foodfolio_logo.png" alt="FoodFolio logo"><br><br>
     <form @submit.prevent="submitForgetPassword">
       <h1>Forgot Password</h1> <br>
       <div id="forgetPasswordForm">
@@ -23,7 +24,9 @@
 
 <script>
 import { getAuth, sendPasswordResetEmail } from 'firebase/auth';
-import firebaseApp from '@/firebase.js';
+
+
+
 
 export default {
   data() {
@@ -41,7 +44,7 @@ export default {
         return;
       }
       try {
-        await sendPasswordResetEmail(getAuth(firebaseApp), this.email);
+        await sendPasswordResetEmail(getAuth(), this.email);
         alert("Password reset email sent! Check your inbox.");
         this.email = '';
       } catch (error) {
@@ -62,6 +65,10 @@ export default {
   position: absolute;
   top: 0;
   left: 0;
+}
+
+#FoodFolioLogo {
+    width: 300px;
 }
 
 #forgetPasswordContainer {
