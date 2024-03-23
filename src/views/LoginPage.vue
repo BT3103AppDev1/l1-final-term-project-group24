@@ -118,7 +118,7 @@ h1 {
   font-weight: bold;
 }
 
-form{
+form {
   height:200px; 
   text-align: center;
   width:100%;
@@ -139,12 +139,7 @@ input {
     font-size: 15px;
 }
 
-input[type="email"]::placeholder {
-    font-family: 'Fuzzy Bubbles';
-    font-size: 15px;
-}
-
-input[type="password"]::placeholder {
+input[type="email"]::placeholder, input[type="password"]::placeholder {
     font-family: 'Fuzzy Bubbles';
     font-size: 15px;
 }
@@ -153,7 +148,7 @@ input[type="password"]::placeholder {
   text-align: center;
 }
 
-#loginButton:hover {
+#loginButton:hover, #googleLoginButton:hover {
   background-color: #f8961f; /* New color for hover */
   transform: scale(1.1); /* Increases size by 10% */
 }

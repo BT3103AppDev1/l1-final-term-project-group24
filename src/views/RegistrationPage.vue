@@ -8,18 +8,19 @@
     <form @submit.prevent="registerToFB">
       <h1>Sign up for FoodFolio!</h1> <br>
       <div id="registrationForm">
-        <label for="email1"> Email: </label>
-        <input type="email" id="email1" v-model="email" required="" placeholder="username@email.com"> <br><br>
-        
-        <label for="username1"> Username: </label>
-        <input type="text" id="username1" v-model="username" required="" placeholder="username123"> <br><br>
+        <div id="registrationInput">
+          <label for="email1"> Email: </label>
+          <input type="email" id="email1" v-model="email" required="" placeholder="username@email.com"> <br><br>
+          
+          <label for="username1"> Username: </label>
+          <input type="text" id="username1" v-model="username" required="" placeholder="username123"> <br><br>
 
-        <label for="password1"> Password: </label>
-        <input type="password" id="password1" v-model="password" required="" placeholder="***********"> <br><br>
+          <label for="password1"> Password: </label>
+          <input type="password" id="password1" v-model="password" required="" placeholder="***********"> <br><br>
 
-        <label for="confirm1"> Confirm Password: </label>
-        <input type="password" id="confirm1" v-model="confirm" required="" placeholder="***********"> <br><br>
-
+          <label for="confirm1"> Confirm Password: </label>
+          <input type="password" id="confirm1" v-model="confirm" required="" placeholder="***********"> <br><br>
+        </div>
         <div class="signupButton">
           <button id="signupButton" type="submit"> Sign Up </button>
         </div>
@@ -121,6 +122,10 @@ form {
   text-align: right;
 }
 
+#registrationInput {
+  padding-right: 50px;
+}
+
 input {
     width: 300px;
     padding: 10px;
@@ -131,17 +136,7 @@ input {
     font-size: 15px;
 }
 
-input[type="email"]::placeholder {
-    font-family: 'Fuzzy Bubbles';
-    font-size: 15px;
-}
-
-input[type="text"]::placeholder {
-    font-family: 'Fuzzy Bubbles';
-    font-size: 15px;
-}
-
-input[type="password"]::placeholder {
+input[type="email"]::placeholder, input[type="text"]::placeholder, input[type="password"]::placeholder {
     font-family: 'Fuzzy Bubbles';
     font-size: 15px;
 }

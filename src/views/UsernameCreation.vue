@@ -98,7 +98,7 @@ input {
     font-size: 15px;
 }
 
-input[type="email"]::placeholder {
+input[type="username"]::placeholder {
     font-family: 'Fuzzy Bubbles';
     font-size: 15px;
 }
