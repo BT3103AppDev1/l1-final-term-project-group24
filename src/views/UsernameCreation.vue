@@ -23,7 +23,7 @@ import { getAuth, updateProfile } from 'firebase/auth';
 export default {
   data() {
     return {
-      user: '',
+      username: '',
     };
   },
   methods: {
