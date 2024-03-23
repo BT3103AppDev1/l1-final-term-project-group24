@@ -25,9 +25,6 @@
 <script>
 import { getAuth, sendPasswordResetEmail } from 'firebase/auth';
 
-
-
-
 export default {
   data() {
     return {
@@ -39,12 +36,14 @@ export default {
       this.$router.push({ name: 'Login' });
     },
     async submitForgetPassword() {
+      const auth = getAuth();
+
       if (!this.email) {
         alert("Please enter your email.");
         return;
       }
       try {
-        await sendPasswordResetEmail(getAuth(), this.email);
+        await sendPasswordResetEmail(auth, this.email);
         alert("Password reset email sent! Check your inbox.");
         this.email = '';
       } catch (error) {

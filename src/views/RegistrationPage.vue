@@ -48,21 +48,14 @@ export default {
       this.$router.push({ name: 'Login' });
     },
     async registerToFB() {
+      const auth = getAuth();
       alert("Registering Account...");
 
-      if (!this.email) {
-        alert("Please Enter Email");
-      } else if (!this.username) {
-        alert("Please Enter Username");
-      } else if (!this.password) {
-        alert("Please Enter Password");
-      } else if (!this.confirm) {
-        alert("Please Enter Confirm Password");
-      } else if (this.password !== this.confirm) {
+      if (this.password !== this.confirm) {
         alert("Passwords do not match!");
       } else {
         try {
-          const userCredentials = await createUserWithEmailAndPassword(getAuth(), this.email, this.password);
+          const userCredentials = await createUserWithEmailAndPassword(auth, this.email, this.password);
           console.log('User Created:', this.email);
 
           await updateProfile(userCredentials.user, {

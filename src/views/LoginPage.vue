@@ -1,5 +1,4 @@
 <template>
-
   <div id="header-container">
     <br>
   </div>
@@ -29,11 +28,12 @@
       <span class="register-prompt">New user?</span>
       <button class="register-button" @click="navigateToRegistration">Create a new Account!</button>
     </div>
+    <button id="googleLoginButton" @click="googleLogin">Sign in with Google</button>
   </div>
 </template>
 
 <script>
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import '@/firebase.js';
 
 export default {
@@ -47,11 +47,12 @@ export default {
     async loginCheck() {
       let email = this.email;
       let password = this.password;
+      const auth = getAuth();
 
       alert("Logging In...");
 
       try {
-        await signInWithEmailAndPassword(getAuth(), email, password);
+        await signInWithEmailAndPassword(auth, email, password);
         alert("You have successfully Logged In!");
         this.$router.push({ name: 'Home' });
       } catch (error) {
@@ -63,7 +64,23 @@ export default {
         }
       }
       
-    }
+    },
+    async googleLogin() {
+      const auth = getAuth();
+      const provider = new GoogleAuthProvider();
+      try {
+        const result = await signInWithPopup(auth, provider);
+        const user = result.user;
+        if (result._tokenResponse.isNewUser) {
+          // Prompt for username creation
+          this.$router.push({ name: 'UsernameCreation'});
+        } else {
+          this.$router.push({ name: 'Home' });
+        }
+      } catch (error) {
+        alert(error.message);
+      }
+    },
   },
   data() {
     return {

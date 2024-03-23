@@ -3,6 +3,7 @@ import LoginPage from '@/views/LoginPage.vue'
 import RegistrationPage from '@/views/RegistrationPage.vue'
 import HomePage from '@/views/HomePage.vue'
 import ForgotPage from '@/views/ForgotPage.vue'
+import UsernameCreation from '@/views/UsernameCreation.vue'
 
 const routes = [
     {
@@ -24,6 +25,11 @@ const routes = [
       path: '/forgot',
       name: 'ForgotPassword',
       component: ForgotPage
+    },
+    {
+      path: '/username-creation',
+      name: 'UsernameCreation',
+      component: UsernameCreation,
     },
   ]
 
