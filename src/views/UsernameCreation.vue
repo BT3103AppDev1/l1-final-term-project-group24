@@ -1,5 +1,5 @@
 <template>
-  <div id="newUsernameContainer">
+  <div id="newUsernameContainer" v-if="username">
     <img id="FoodFolioLogo" src="/foodfolio_logo.png" alt="FoodFolio logo"><br><br>
     <form @submit.prevent="submitUsername">
       <h1>Choose Your Username</h1> <br>
@@ -23,7 +23,7 @@ import { getAuth, updateProfile } from 'firebase/auth';
 export default {
   data() {
     return {
-      username: '',
+      user: '',
     };
   },
   methods: {
