@@ -1,4 +1,8 @@
-<script>
+<template>
+
+</template>
+
+<script src="Ljn/8+fBf3VItM38d5R/cw==7qzsCiFXen3sEHi5">
     query = '3lb carrots and a chicken sandwich'
     $.ajax({
         method: 'GET',
@@ -13,4 +17,3 @@
         }
     });
 </script>
-<script src="Ljn/8+fBf3VItM38d5R/cw==7qzsCiFXen3sEHi5"></script>
