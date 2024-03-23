@@ -36,9 +36,9 @@
     <AddFood v-if="showForm" @close="closeFoodForm" @add-food="addFoodItem" :showForm="showForm"></AddFood>
 
     <div v-for="(item, index) in foodItems" :key="index" class="food-item"> 
-      <p>Name : { item.name }</p>
-      <p>Quantity : {{ item.quantity }}</p>
-      <p>Expiry Date : {{  item.expiryDate  }}</p>
+      <p>Name : {{ item.name }}</p>
+      <p>Qty : {{ item.quantity }}</p>
+      <p>Exp : {{  item.expiryDate  }}</p>
     </div>
 
   </div>
@@ -291,10 +291,19 @@ import '@fortawesome/fontawesome-free/css/all.css';
   }
 
   .food-item {
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
     border: 1px solid black; 
     padding: 10px; 
     margin-bottom: 10px; 
-    border-radius: 5px; 
+    border-radius: 40px; 
+  }
+
+  .food-info {
+    display: flex; 
+    justify-content: space-between; 
+    width: 100%; 
   }
 
 
