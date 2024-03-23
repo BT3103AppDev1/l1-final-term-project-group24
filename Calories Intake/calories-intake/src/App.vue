@@ -1,3 +1,7 @@
+<template>
+  <AddMeal/>
+</template>
+
 <script>
 import AddMeal from './components/AddMeal.vue'
 
@@ -8,10 +12,6 @@ export default {
   },
   }
 </script>
-
-<template>
-  <AddMeal/>
-</template>
 
 <style>
   #app {

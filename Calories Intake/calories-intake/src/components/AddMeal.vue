@@ -22,11 +22,14 @@
 </template>
 
 <script>
+import axios from '@/components/CaloriesAPI.vue';
 import Datepicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
 
 export default {
-  components: { Datepicker },
+  components: { 
+    Datepicker 
+  },
   data() {
     return {
       date: null,
