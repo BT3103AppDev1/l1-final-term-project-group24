@@ -120,11 +120,12 @@ export default {
 }
 
 #FoodFolioLogo {
-    width: 300px;
+  width: 300px;
 }
 
 #PasswordEyeIcon {
-    width: 30px;
+  width: 30px;
+  margin-bottom: -20px;
 }
 
 h1 {
@@ -143,18 +144,22 @@ form {
 }
 
 input {
-    width: 300px;
-    padding: 10px;
-    border-radius: 20px;
-    border-color: #578855;
-    background-color: #FDF0C3;
-    font-family: 'Fuzzy Bubbles', cursive; 
-    font-size: 15px;
+  width: 300px;
+  padding: 10px;
+  border-radius: 20px;
+  border-color: #578855;
+  background-color: #FDF0C3;
+  font-family: 'Fuzzy Bubbles', cursive; 
+  font-size: 15px;
 }
 
 input[type="email"]::placeholder, input[type="password"]::placeholder {
-    font-family: 'Fuzzy Bubbles';
-    font-size: 15px;
+  font-family: 'Fuzzy Bubbles';
+  font-size: 15px;
+}
+
+input:hover {
+  transform: scale(1.02);
 }
 
 .password-wrapper {
@@ -168,6 +173,12 @@ input[type="email"]::placeholder, input[type="password"]::placeholder {
   background: none;
   border: none;
   cursor: pointer;
+  padding-bottom: 0px;
+  padding-top: 0px;  
+}
+
+.password-wrapper button:hover {
+  transform: scale(1.1);
 }
 
 .loginButton {
@@ -180,14 +191,14 @@ input[type="email"]::placeholder, input[type="password"]::placeholder {
 }
 
 button {
-    background-color: #FFB356;
-    border-radius: 20px;
-    color: #578855;
-    padding: 5px 15px;
-    cursor: pointer;
-    font-family: 'Fuzzy Bubbles';
-    font-size: 18px;
-    transition: background-color 0.1s, transform 0.1s;
+  background-color: #FFB356;
+  border-radius: 20px;
+  color: #578855;
+  padding: 5px 15px;
+  cursor: pointer;
+  font-family: 'Fuzzy Bubbles';
+  font-size: 18px;
+  transition: background-color 0.1s, transform 0.1s;
 }
 
 .forgot-container {

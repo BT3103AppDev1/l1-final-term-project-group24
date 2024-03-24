@@ -105,6 +105,10 @@ input[type="email"]::placeholder {
     font-size: 15px;
 }
 
+input:hover {
+  transform: scale(1.02);
+}
+
 button {
     background-color: #FFB356;
     border-radius: 20px;
