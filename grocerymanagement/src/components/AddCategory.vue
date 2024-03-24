@@ -33,28 +33,17 @@
       </button>
     </div>
 
-    <AddFood v-if="showForm" @close="closeFoodForm" @add-food="addFoodItem" :showForm="showForm"></AddFood>
-
-    <div v-for="(item, index) in foodItems" :key="index" class="food-item"> 
-      <p>Name : {{ item.name }}</p>
-      <p>Qty : {{ item.quantity }}</p>
-      <p>Exp : {{  item.expiryDate  }}</p>
-    </div>
-
   </div>
 </template>
 
 <script>
 
-import AddFood from './AddFood.vue'; 
 import '@fortawesome/fontawesome-free/css/all.css'; 
 
 
   export default {
 
-    components: {
-      AddFood, 
-    }, 
+
 
     data() {
       return {
@@ -94,18 +83,12 @@ import '@fortawesome/fontawesome-free/css/all.css';
           this.selectedCategories.push(category);
         }
         this.showDropdown = false; 
+        this.$emit('category-selected', category); 
       }, 
 
       handlePlusButtonClick(index) {
         this.showForm = true; 
-      }, 
-
-      closeFoodForm() {
-        this.showForm = false; 
-      },
-
-      addFoodItem(foodData) {
-        this.foodItems.push(foodData); 
+        this.$emit('show-form', true); 
       }, 
 
       deleteCategory(index) {
@@ -139,7 +122,7 @@ import '@fortawesome/fontawesome-free/css/all.css';
     height: 0;
     border-left: 5px solid transparent;
     border-right: 5px solid transparent;
-    border-top: 5px solid green; /* Triangle color */
+    border-top: 5px solid green; 
     transition: transform 0.3s ease-in-out;
   }
 
@@ -171,7 +154,7 @@ import '@fortawesome/fontawesome-free/css/all.css';
   }
 
   .modal-overlay {
-    display: block; /* Changed from 'none' to 'block' */
+    display: block; 
     position: fixed;
     z-index: 1;
     left: 0;
@@ -179,7 +162,7 @@ import '@fortawesome/fontawesome-free/css/all.css';
     width: 100%;
     height: 100%;
     overflow: auto;
-    background-color: rgba(0,0,0,0.4); /* Semi-transparent overlay */
+    background-color: rgba(0,0,0,0.4); 
   }
 
   .modal-content {
@@ -234,19 +217,19 @@ import '@fortawesome/fontawesome-free/css/all.css';
   }
 
   input[type="text"] {
-    border-radius: 20px; /* Adjust the value as needed to achieve the desired curvature */
-    border: 1px solid green; /* Optional: Add a border if you want */
-    color: #a0d18c; /* Optional: Change the text color */
-    width: 100%; /* Optional: Set the width */
-    height: 30px; /* Optional: Set the height */
-    padding-left: 20px; /* Optional: Add padding to the left */
+    border-radius: 20px; 
+    border: 1px solid green; 
+    color: #a0d18c; 
+    width: 100%;
+    height: 30px; 
+    padding-left: 20px;
     box-sizing: border-box; 
   }
 
   input[type="text"]:focus {
-    outline: none; /* Removes the default outline on focus */
-    border: 1px solid #a0d18c; /* Optional: Change the border color on focus */
-    color: green; /* Optional: Change the text color on focus */
+    outline: none;
+    border: 1px solid #a0d18c; 
+    color: green; 
   }
 
   .category-item {
@@ -269,43 +252,26 @@ import '@fortawesome/fontawesome-free/css/all.css';
     position: absolute;
     left: 0;
     bottom: 0;
-    width: 130%; /* Adjust this value to make the underline longer than the text */
-    height: 2px; /* Adjust the thickness of the underline */
-    background-color: green; /* Color of the underline */
-    transform: translateX(-10%); /* Adjust this value to center the underline */
+    width: 130%; 
+    height: 2px; 
+    background-color: green; 
+    transform: translateX(-10%); 
   }
 
   .plus-button {
     background-color: transparent;
     border: none;
-    color: black; /* Match the color of your plus button with the rest of your UI */
+    color: black; 
     cursor: pointer;
-    font-size: 16px; /* Adjust size as needed */
-    margin-left: 10px; /* Space between the category name and the plus button */
+    font-size: 16px; 
+    margin-left: 10px; 
     
   }
 
   .plus-button:hover {
-    background-color: green; /* Light grey background on hover */
-    border: 1px solid green; /* Optional: Add a border on hover */
+    background-color: green; 
+    border: 1px solid green; 
   }
-
-  .food-item {
-    display: flex; 
-    justify-content: space-between; 
-    align-items: center; 
-    border: 1px solid black; 
-    padding: 10px; 
-    margin-bottom: 10px; 
-    border-radius: 40px; 
-  }
-
-  .food-info {
-    display: flex; 
-    justify-content: space-between; 
-    width: 100%; 
-  }
-
 
   .delete-button {
     background-color: transparent; 

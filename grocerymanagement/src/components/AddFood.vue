@@ -27,7 +27,7 @@
 <script>
     export default {
 
-        props: ['showForm'], 
+        props: ['showForm', 'selectedCategory'], 
 
 
         data() {
@@ -42,7 +42,8 @@
                 const foodData = {
                     name: this.foodName, 
                     quantity: this.foodQuantity, 
-                    expiryDate: this.foodExpiryDate
+                    expiryDate: this.foodExpiryDate, 
+                    category: this.selectedCategory, 
                 }; 
                 this.$emit('add-food', foodData)
                 this.closeFoodForm(); // Close the form after submission
@@ -62,13 +63,13 @@
     .food-form-overlay {
         display: block;
         position: fixed;
-        z-index: 2; /* Ensure it's above other elements */
+        z-index: 2; 
         left: 0;
         top: 0;
         width: 100%;
         height: 100%;
         overflow: auto;
-        background-color: rgba(0,0,0,0.4); /* Semi-transparent overlay */
+        background-color: rgba(0,0,0,0.4); 
     }
 
     .food-form-content {
@@ -91,13 +92,13 @@
     }
 
     .food-form-container .form-group label {
-        flex: 1; /* Take up available space */
-        text-align: right; /* Align text to the right */
-        margin-right: 10px; /* Space between the label and input */
+        flex: 1; 
+        text-align: right; 
+        margin-right: 10px; 
     }
 
     .food-form-container .form-group input {
-        flex: 2; /* Take up more space than the label */
+        flex: 2; 
     }
     .food-form-container button {
         padding: 5px 10px; 
@@ -112,8 +113,8 @@
 
     .food-form-container .button-container {
         display: flex;
-        justify-content: center; /* Center the buttons */
-        gap: 10px; /* Space between buttons */
+        justify-content: center; 
+        gap: 10px; 
     }
 
 
@@ -125,21 +126,21 @@
     .food-form-container input[type="text"],
     .food-form-container input[type="number"],
     .food-form-container input[type="date"] {
-        border-radius: 20px; /* Adjust the value as needed to achieve the desired curvature */
-        border: 1px solid green; /* Optional: Add a border if you want */
-        color: #a0d18c; /* Optional: Change the text color */
-        width: 100%; /* Optional: Set the width */
-        height: 30px; /* Optional: Set the height */
-        padding-left: 20px; /* Optional: Add padding to the left */
+        border-radius: 20px; 
+        border: 1px solid green; 
+        color: #a0d18c; 
+        width: 100%; 
+        height: 30px; 
+        padding-left: 20px; 
         box-sizing: border-box; 
     }
 
     .food-form-container input[type="text"]:focus,
     .food-form-container input[type="number"]:focus,
     .food-form-container input[type="date"]:focus {
-        outline: none; /* Removes the default outline on focus */
-        border: 1px solid #a0d18c; /* Optional: Change the border color on focus */
-        color: green; /* Optional: Change the text color on focus */
+        outline: none; 
+        border: 1px solid #a0d18c; 
+        color: green; 
     }
 
 
