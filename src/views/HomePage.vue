@@ -54,13 +54,13 @@ export default {
 }
 
 button {
-    background-color: #FFB356;
-    border-radius: 20px;
-    color: #578855;
-    padding: 5px 15px;
-    cursor: pointer;
-    font-family: 'Fuzzy Bubbles';
-    font-size: 18px;
-    transition: background-color 0.1s, transform 0.1s;
+  background-color: #FFB356;
+  border-radius: 20px;
+  color: #578855;
+  padding: 5px 15px;
+  cursor: pointer;
+  font-family: 'Fuzzy Bubbles';
+  font-size: 18px;
+  transition: background-color 0.1s, transform 0.1s;
 }
 </style>

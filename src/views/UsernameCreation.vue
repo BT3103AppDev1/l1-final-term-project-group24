@@ -65,7 +65,7 @@ export default {
 }
 
 #FoodFolioLogo {
-    width: 300px;
+  width: 300px;
 }
 
 #newUsernameContainer {
@@ -89,18 +89,18 @@ form {
 }
 
 input {
-    width: 300px;
-    padding: 10px;
-    border-radius: 20px;
-    border-color: #578855;
-    background-color: #FDF0C3;
-    font-family: 'Fuzzy Bubbles', cursive;
-    font-size: 15px;
+  width: 300px;
+  padding: 10px;
+  border-radius: 20px;
+  border-color: #578855;
+  background-color: #FDF0C3;
+  font-family: 'Fuzzy Bubbles', cursive;
+  font-size: 15px;
 }
 
 input[type="username"]::placeholder {
-    font-family: 'Fuzzy Bubbles';
-    font-size: 15px;
+  font-family: 'Fuzzy Bubbles';
+  font-size: 15px;
 }
 
 input:hover {
@@ -108,13 +108,13 @@ input:hover {
 }
 
 button {
-    background-color: #FFB356;
-    border-radius: 20px;
-    color: #578855;
-    padding: 5px 15px;
-    cursor: pointer;
-    font-family: 'Fuzzy Bubbles';
-    transition: background-color 0.1s, transform 0.1s;
+  background-color: #FFB356;
+  border-radius: 20px;
+  color: #578855;
+  padding: 5px 15px;
+  cursor: pointer;
+  font-family: 'Fuzzy Bubbles';
+  transition: background-color 0.1s, transform 0.1s;
 }
 
 .confirmButton {
