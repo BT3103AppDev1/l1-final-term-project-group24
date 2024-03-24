@@ -15,11 +15,21 @@
           <label for="username1"> Username: </label>
           <input type="text" id="username1" v-model="username" required="" placeholder="username123"> <br><br>
 
-          <label for="password1"> Password: </label>
-          <input type="password" id="password1" v-model="password" required="" placeholder="***********"> <br><br>
+          <div class="password-wrapper">
+            <label for="password1"> Password: </label>
+            <input :type="showPassword ? 'text' : 'password'" id="password1" v-model="password" required placeholder="***********">
+            <button type="button" @click="showPassword = !showPassword">
+              <img id="PasswordEyeIcon" src="/password-eye.png" alt="Toggle password visibility"><br><br>
+            </button>
+          </div> <br>
 
-          <label for="confirm1"> Confirm Password: </label>
-          <input type="password" id="confirm1" v-model="confirm" required="" placeholder="***********"> <br><br>
+          <div class="password-wrapper">
+            <label for="confirm1"> Confirm Password: </label>
+            <input :type="showConfirm ? 'text' : 'password'" id="confirm11" v-model="confirm" required placeholder="***********">
+            <button type="button" @click="showConfirm = !showConfirm">
+              <img id="PasswordEyeIcon" src="/password-eye.png" alt="Toggle password visibility"><br><br>
+            </button>
+          </div> <br>
         </div>
         <div class="signupButton">
           <button id="signupButton" type="submit"> Sign Up </button>
@@ -41,7 +51,9 @@ export default {
       email: '',
       username: '',
       password: '',
-      confirm: ''
+      confirm: '',
+      showPassword: false,
+      showConfirm: false,
     };
   },
   methods: {
@@ -107,6 +119,10 @@ export default {
     margin-top: -120px;
 }
 
+#PasswordEyeIcon {
+    width: 30px;
+}
+
 h1 {
   font-weight: bold;
 }
@@ -139,6 +155,19 @@ input {
 input[type="email"]::placeholder, input[type="text"]::placeholder, input[type="password"]::placeholder {
     font-family: 'Fuzzy Bubbles';
     font-size: 15px;
+}
+
+.password-wrapper {
+  position: relative;
+  align-items: center;
+}
+
+.password-wrapper button {
+  position: absolute;
+  right: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
 }
 
 .signupButton {

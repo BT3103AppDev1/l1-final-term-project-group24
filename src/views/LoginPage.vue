@@ -11,13 +11,17 @@
         <label for="email1"> Email: </label>
         <input type="email" id="email1" v-model="email" required="" placeholder="username@email.com"> <br><br>
         
-        <label for="password1"> Password: </label>
-        <input type="password" id="password1" v-model="password" required="" placeholder="***********"> <br><br>
-
+        <div class="password-wrapper">
+          <label for="password1"> Password: </label>
+          <input :type="showPassword ? 'text' : 'password'" id="password1" v-model="password" required placeholder="***********">
+          <button type="button" @click="showPassword = !showPassword">
+            <img id="PasswordEyeIcon" src="/password-eye.png" alt="Toggle password visibility"><br><br>
+          </button>
+        </div> <br>
+        
         <div class="loginButton">
           <button id="loginButton" type="submit"> Login </button>
-        </div>
-        <br><br>
+        </div> <br><br>
       </div>
     </form>
     <div class="forgot-container">
@@ -37,6 +41,13 @@ import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopu
 import '@/firebase.js';
 
 export default {
+  data() {
+    return {
+      email: '',
+      password: '',
+      showPassword: false,
+    };
+  },
   methods: {
     navigateToForgotPassword() {
       this.$router.push({ name: 'ForgotPassword' });
@@ -60,7 +71,7 @@ export default {
         if (errorMessage.includes("auth/invalid-email") || errorMessage.includes("auth/invalid-credential")) {
           alert("Please enter a valid email/password");
         } else { 
-          alert(errorMessage);
+          alert("Error: " + errorMessage);
         }
       }
       
@@ -81,12 +92,6 @@ export default {
         alert(error.message);
       }
     },
-  },
-  data() {
-    return {
-      email: '',
-      password: ''
-    };
   }
 }
 </script>
@@ -112,6 +117,10 @@ export default {
 
 #FoodFolioLogo {
     width: 300px;
+}
+
+#PasswordEyeIcon {
+    width: 30px;
 }
 
 h1 {
@@ -142,6 +151,19 @@ input {
 input[type="email"]::placeholder, input[type="password"]::placeholder {
     font-family: 'Fuzzy Bubbles';
     font-size: 15px;
+}
+
+.password-wrapper {
+  position: relative;
+  align-items: center;
+}
+
+.password-wrapper button {
+  position: absolute;
+  right: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
 }
 
 .loginButton {
