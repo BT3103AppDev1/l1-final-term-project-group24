@@ -89,7 +89,11 @@ export default {
           this.$router.push({ name: 'Home' });
         }
       } catch (error) {
-        alert(error.message);
+        if (!error.message.includes("auth/popup-closed-by-user")) {
+          alert(error.message);
+        } else {
+          console.log("Pop-up closed by user")
+        }
       }
     },
   }
