@@ -1,13 +1,13 @@
 import { initializeApp } from 'firebase/app'; 
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAlzc6qEioBWF1C6jh7Zt4NUUJz6k6qXbs",
-  authDomain: "caloriesintake-57beb.firebaseapp.com",
-  projectId: "caloriesintake-57beb",
-  storageBucket: "caloriesintake-57beb.appspot.com",
-  messagingSenderId: "353010838665",
-  appId: "1:353010838665:web:ef1ec0b93fda2bab7caa58"
-};
+    apiKey: "AIzaSyBrGF69Nftnb4iJ3Ma5-AVAJwyirGixJso",
+    authDomain: "democpp-8b38f.firebaseapp.com",
+    projectId: "democpp-8b38f",
+    storageBucket: "democpp-8b38f.appspot.com",
+    messagingSenderId: "872262808766",
+    appId: "1:872262808766:web:2e64ca7ac99fb45e86daef"
+  };
 
   
 const firebaseApp = initializeApp(firebaseConfig); 

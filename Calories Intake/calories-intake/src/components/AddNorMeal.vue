@@ -23,15 +23,16 @@
       <button id="searchbutton" type="button" v-on:click="inputMeal"> Search </button>
       <pre>{{ calories }} {{ mealName }}</pre>
     </div>
+    <button id="addMealButton" type="button" v-on:click="addMeal"> Add </button>
 
-    <div class="addMeal"> 
-      <button id="addMealButton" type="button" v-on:click="addMeal"> Add </button>
+    <!-- <div class="addMeal"> 
+      
 
       <router-link to="/addCusMeal" tag="button" custom v-slot="{ navigate }"
     >
         <button @click="navigate" role="link"> Add Customise Meal </button>
       </router-link>
-    </div>
+    </div> -->
 </template>
 
 <script>

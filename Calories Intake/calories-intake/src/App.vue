@@ -8,7 +8,7 @@ import AddMeal from './components/AddNorMeal.vue'
 export default {
   name: "App",
   components:{
-    AddMeal,
+    AddMeal
   },
   }
 </script>
