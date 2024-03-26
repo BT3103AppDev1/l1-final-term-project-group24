@@ -16,7 +16,6 @@
             </select>
         </form>
     </div>
-
     <div class="calories">
       <label for="mealName">Meal: </label>
       <input type="text" id="mealName" required="" placeholder="Search meal">
