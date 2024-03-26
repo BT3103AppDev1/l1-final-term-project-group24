@@ -1,4 +1,8 @@
 <template>
+  <div id="header-container">
+    <br>
+  </div>
+  
   <div id="newUsernameContainer" v-if="user">
     <img id="FoodFolioLogo" src="/foodfolio_logo.png" alt="FoodFolio logo"><br><br>
     <form @submit.prevent="submitUsername">
