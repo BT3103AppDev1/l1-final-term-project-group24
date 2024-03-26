@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import AddMeal from './components/AddMeal.vue'
+import AddMeal from './components/AddNorMeal.vue'
 
 export default {
   name: "App",

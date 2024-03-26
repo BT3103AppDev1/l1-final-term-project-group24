@@ -26,6 +26,11 @@
 
     <div class="addMeal"> 
       <button id="addMealButton" type="button" v-on:click="addMeal"> Add </button>
+
+      <router-link to="/addCusMeal" tag="button" custom v-slot="{ navigate }"
+    >
+        <button @click="navigate" role="link"> Add Customise Meal </button>
+      </router-link>
     </div>
 </template>
 
