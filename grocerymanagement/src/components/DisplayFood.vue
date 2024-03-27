@@ -1,18 +1,28 @@
 <template>
-
-
     <div v-for="(category, index) in foodItems" :key="index" > 
         <div v-for="item in category.items" :key="item.name" class="food-item">
             <p>Name : {{ item.name }}</p>
             <p>Qty : {{ item.quantity }}</p>
             <p>Exp : {{  item.expiryDate  }}</p>
+            <button @click="editItem(item)">Edit</button>
+            <button @click="deleteItem(item)">Delete</button>
         </div>
     </div>
 </template>
 
 <script> 
     export default {
+        emits:['edit-item', 'delete-item'], 
         props: ['foodItems'], 
+        methods: {
+            editItem(item) {
+                this.$emit('edit-item', item); 
+            }, 
+
+            deleteItem(item) {
+                this.$emit('delete-item', item); 
+            }
+        }
     }; 
 
 </script>
