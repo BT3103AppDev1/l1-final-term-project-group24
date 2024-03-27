@@ -6,6 +6,5 @@ import '@fortawesome/fontawesome-free/css/all.css';
 
 const app = createApp(App);
 
-app.component('AddCategory', AddCategory);
 
 app.mount('#app');

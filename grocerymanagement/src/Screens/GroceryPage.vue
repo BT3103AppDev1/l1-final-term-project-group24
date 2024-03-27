@@ -60,6 +60,8 @@ export default {
             this.showEditForm = true; 
         }, 
 
+
+        //still debugging : not ready yet 
         handleUpdateItem(updatedItem) {
             console.log('Updating item:', updatedItem);
             const categoryIndex = this.foodItems.findIndex(category => {
@@ -71,7 +73,7 @@ export default {
             }); 
     
             if (categoryIndex != -1) {
-                console.log('hi'); 
+             console.log('hi'); 
                 const itemIndex = this.foodItems[categoryIndex].items.findIndex(item => item.name === updatedItem.name); 
         
                 if (itemIndex !== -1) {

@@ -4,13 +4,20 @@
             <p>Name : {{ item.name }}</p>
             <p>Qty : {{ item.quantity }}</p>
             <p>Exp : {{  item.expiryDate  }}</p>
-            <button @click="editItem(item)">Edit</button>
-            <button @click="deleteItem(item)">Delete</button>
+            <button class="edit-button" @click="editItem(item)">
+                <i class="fa fa-pencil" aria-hidden="true"></i>
+            </button>
+            <button class="deleteItem-button" @click="deleteItem(item)">
+                <i class="fas fa-trash"></i>
+            </button>
         </div>
     </div>
 </template>
 
 <script> 
+
+import '@fortawesome/fontawesome-free/css/all.css'; 
+
     export default {
         emits:['edit-item', 'delete-item'], 
         props: ['foodItems'], 
@@ -43,6 +50,34 @@
         display: flex; 
         justify-content: space-between; 
         width: 100%; 
+    }
+
+
+    .edit-button {
+        background-color: transparent; 
+        border: none; 
+        margin-left: 100px; 
+        cursor: pointer; 
+        color: black;
+    }
+
+    .edit-button:hover {
+        color: green;
+    }
+
+    .deleteItem-button {
+        background-color: transparent; 
+        border: none;
+        color: black; 
+        cursor: pointer; 
+        transition: color 0.3s ease; 
+        margin-right: 100px; 
+
+    }
+
+
+    .deleteItem-button:hover {
+        color:green; 
     }
 
 </style> 
