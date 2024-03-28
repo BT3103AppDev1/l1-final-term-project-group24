@@ -1,14 +1,14 @@
 <template>
     <div v-for="(category, index) in foodItems" :key="index" > 
         <div v-for="item in category.items" :key="item.name" class="food-item">
-            <p>Name : {{ item.name }}</p>
+            <p>{{ item.name }}</p>
             <p>Qty : {{ item.quantity }}</p>
             <p>Exp : {{  item.expiryDate  }}</p>
             <button class="edit-button" @click="editItem(item)">
                 <i class="fa fa-pencil" aria-hidden="true"></i>
             </button>
             <button class="deleteItem-button" @click="deleteItem(item)">
-                <i class="fas fa-trash"></i>
+                <i class="fas fa-times"></i>
             </button>
         </div>
     </div>

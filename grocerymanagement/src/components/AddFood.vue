@@ -25,6 +25,12 @@
 </template>
    
 <script>
+
+import { getFirestore, doc, setDoc } from 'firebase/firestore';
+import firebaseApp from '../firebase.js'; 
+
+const db = getFirestore(firebaseApp);
+
     export default {
 
         props: ['showForm', 'selectedCategory'], 
@@ -38,6 +44,28 @@
             };
         },
         methods: {
+
+
+            /*//firestore code
+            async submitFoodForm() {
+                const foodData = {
+                    name: this.foodName,
+                    quantity: this.foodQuantity,
+                    expiryDate: this.foodExpiryDate,
+                    category: this.selectedCategory,
+                };
+
+                try {
+                // Assuming you have the user ID available, replace 'userId' with the actual user ID
+                    const docRef = await setDoc(doc(db, "users", "userId", "categories", this.selectedCategory, "foodItems", this.foodName), foodData);
+                    console.log("Food item saved:", docRef);
+                    this.closeFoodForm(); // Close the form after submission
+                } catch (error) {
+                    console.error("Error saving food item:", error);
+                }
+            },*/
+
+
             submitFoodForm() {
                 const foodData = {
                     name: this.foodName, 
@@ -51,7 +79,7 @@
 
             closeFoodForm() { 
                 this.$emit('close'); 
-            }
+            },
         },
     };
 </script>

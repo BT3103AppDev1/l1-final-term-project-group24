@@ -39,64 +39,85 @@
 <script>
 
 import '@fortawesome/fontawesome-free/css/all.css'; 
+import firebaseApp from '../firebase.js'; 
+import { getFirestore } from 'firebase/firestore'
+import { doc, setDoc } from 'firebase/firestore';
+const db = getFirestore(firebaseApp); 
 
-
-  export default {
-
-
-
-    data() {
-      return {
-        showDropdown: false, 
-        showModal: false,
-        categoryName: '', 
-        selectedCategory: '', 
-        selectedCategories: [], 
-        showForm: false, 
-        foodItems: [],   
-        };
+export default {
+  data() {
+    return {
+      showDropdown: false, 
+      showModal: false,
+      categoryName: '', 
+      selectedCategory: '', 
+      selectedCategories: [], 
+      showForm: false, 
+      foodItems: [],   
+    };
      
-    },
+  },
 
-    methods: {
-      toggleDropdown() {
-        this.showDropdown = !this.showDropdown;
-      }, 
-      toggleModal() {
-        this.showModal = !this.showModal;
-        if (this.showModal) {
-          this.categoryName = ''; 
-        }
-      },
-      closeModal() {
-        this.showModal = false;
-      },
-      submitForm() {
-        if (this.categoryName.trim() !== '') {
-          this.addCategory(this.categoryName); 
-          this.closeModal(); 
-        }
-      }, 
-
-      addCategory(category) {
-        if (!this.selectedCategories.includes(category)) {
-          this.selectedCategories.push(category);
-        }
-        this.showDropdown = false; 
-        this.$emit('category-selected', category); 
-      }, 
-
-      handlePlusButtonClick(index) {
-        this.showForm = true; 
-        this.$emit('show-form', true); 
-      }, 
-
-      deleteCategory(index) {
-        this.selectedCategories = this.selectedCategories.filter((category, i) => i !== index);
+  methods: {
+    toggleDropdown() {
+      this.showDropdown = !this.showDropdown;
+    }, 
+    toggleModal() {
+      this.showModal = !this.showModal;
+      if (this.showModal) {
+        this.categoryName = ''; 
       }
-      
+    },
+    closeModal() {
+      this.showModal = false;
+    },
+    submitForm() {
+      if (this.categoryName.trim() !== '') {
+        this.addCategory(this.categoryName); 
+        this.closeModal(); 
+      }
+    }, 
+
+
+    /*//firestore code
+    
+    async addCategory(category) {
+      if (!this.selectedCategories.includes(category)) {
+        this.selectedCategories.push(category);
+        try {
+        // Assuming you have the user ID available, replace 'userId' with the actual user ID
+          const docRef = await setDoc(doc(db, "users", "userId", "categories", category), {
+            name: category,
+          });
+          console.log("Category saved:", category);
+        } catch (error) {
+          console.error("Error saving category:", error);
+        }
+      }
+      this.showDropdown = false;
+      this.$emit('category-selected', category);
+    },*/
+
+
+    addCategory(category) {
+      if (!this.selectedCategories.includes(category)) {
+        this.selectedCategories.push(category);
+      }
+      this.showDropdown = false; 
+      this.$emit('category-selected', category); 
+    }, 
+
+    handlePlusButtonClick(index) {
+      this.showForm = true; 
+      this.$emit('show-form', true); 
+    }, 
+
+    deleteCategory(index) {
+      this.selectedCategories = this.selectedCategories.filter((category, i) => i !== index);
     }
-  }; 
+      
+  }
+}; 
 </script>
  
  

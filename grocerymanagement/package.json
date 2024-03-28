@@ -17,8 +17,10 @@
     "@syncfusion/ej2-vue-base": "^24.2.3",
     "@syncfusion/ej2-vue-splitbuttons": "^24.2.7",
     "bootstrap-vue": "^2.23.1",
+    "firebase": "^10.9.0",
     "vue": "^3.4.21",
-    "vue-router": "^4.0.13"
+    "vue-router": "^4.0.13",
+    "vuefire": "^3.1.23"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.0.4",
