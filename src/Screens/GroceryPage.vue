@@ -49,8 +49,8 @@ export default {
       console.log('Received category name:', categoryName);
       if (!this.selectedCategories.includes(categoryName)) {
         this.selectedCategories.push(categoryName);
-        this.selectedCategory = categoryName; 
       }
+      this.selectedCategory = categoryName; 
     },
 
     handleShowForm(show) {{    
@@ -61,17 +61,19 @@ export default {
       this.showForm = false; 
     }, 
 
-    addFoodItem(category, item) {
-      console.log('Received add-food event with category:', category, 'and item:', item);      
-      const categoryIndex = this.foodItems.findIndex(cat => cat.category === category); 
-      if (categoryIndex !== -1) {
-        this.foodItems[categoryIndex].items.push(item);
-        this.foodItem = item; 
+    addFoodItem(food) {
+      const category = this.selectedCategory;
+      console.log('Received add-food event with category:', category, ' and item:', food.item);      
+      const categoryIndex = this.foodItems.findIndex(cat => cat.category == category); 
+      if (categoryIndex != -1) {
+        console.log(this.foodItems[categoryIndex]);
+        this.foodItems[categoryIndex].items.push(food.item);
+        this.foodItem = food.item; 
+        console.log('Food item added:', this.foodItem);
       } else {
-        this.foodItems.push({ category: category, items: [item] });
-        this.foodItem = item; 
+        this.foodItems.push({ category: category, items: [food.item] });
+        this.foodItem = food.item; 
       }
-      
     }, 
 
     handleEditItem(item) {
@@ -80,29 +82,29 @@ export default {
     }, 
 
 
-        //still debugging : not ready yet 
-        handleUpdateItem(updatedItem) {
-            console.log('Updating item:', updatedItem);
-            const categoryIndex = this.foodItems.findIndex(category => {
-                console.log('checking category', category.category); 
-                return category.items.some(item => {
-                    console.log('comparing item', item.name, 'with updateditem', updatedItem.name); 
-                    return item.name === updatedItem.name;
-                });
-            }); 
-    
-            if (categoryIndex != -1) {
-             console.log('hi'); 
-                const itemIndex = this.foodItems[categoryIndex].items.findIndex(item => item.name === updatedItem.name); 
-        
-                if (itemIndex !== -1) {
-                    this.$set(this.foodItems[categoryIndex].items, itemIndex, updatedItem); 
-                    console.log('Food items after update:', this.foodItems);
-                }
-            }
+    //still debugging : not ready yet 
+    handleUpdateItem(updatedItem) {
+      console.log('Updating item:', updatedItem);
+      const categoryIndex = this.foodItems.findIndex(category => {
+        console.log('checking category', category.category); 
+        return category.items.some(item => {
+          console.log('comparing item', item.name, 'with updateditem', updatedItem.name); 
+          return item.name === updatedItem.name;
+        });
+      }); 
 
-            this.showEditForm = false;
-        },
+      if (categoryIndex != -1) {
+        console.log('hi'); 
+          const itemIndex = this.foodItems[categoryIndex].items.findIndex(item => item.name === updatedItem.name); 
+  
+          if (itemIndex !== -1) {
+            this.$set(this.foodItems[categoryIndex].items, itemIndex, updatedItem); 
+            console.log('Food items after update:', this.foodItems);
+          }
+        }
+
+        this.showEditForm = false;
+      },
 
 
 

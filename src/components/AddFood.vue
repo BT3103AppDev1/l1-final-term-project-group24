@@ -2,7 +2,7 @@
     <div v-if="showForm" class="food-form-overlay">
         <div class="food-form-content">
             <h2>Adding New Food</h2>
-            <form @submit.prevent="submitFoodForm" class="food-form-container">
+            <form @submit.prevent="submitFoodForm" class="food-form-container" id="food-form">
                 <div class="form-group">
                     <label for="foodName">Food:</label>
                     <input type="text" id="foodName" v-model="foodName" required placeholder="Enter your Food">
@@ -50,12 +50,17 @@ const db = getFirestore(firebaseApp);
                     name: this.foodName, 
                     quantity: this.foodQuantity, 
                     expiryDate: this.foodExpiryDate, 
-                    category: this.selectedCategory, 
                 }; 
                 
-                console.log('Emitting add-food event with:', { category: this.selectedCategory, item: foodItem });
+                console.log('Emitting add-food event with:', {item: foodItem });
 
-                this.$emit('add-food', { category: this.selectedCategory, item: foodItem })
+                this.$emit('add-food', {item: foodItem })
+
+                // Reset form after submission
+                this.foodName = ''; 
+                this.foodQuantity = '';
+                this.foodExpiryDate = '';
+
                 this.closeFoodForm(); // Close the form after submission
             }, 
 

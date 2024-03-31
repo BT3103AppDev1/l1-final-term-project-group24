@@ -21,7 +21,6 @@
                 </div>
             </form>
         </div>
-   
     </div>
 </template>
    
@@ -37,6 +36,7 @@
 
         methods: {
             submitEditForm() {
+                console.log(this.itemToEdit);
                 this.$emit('update-item', this.editedItem);
                 this.closeEditForm();
         },

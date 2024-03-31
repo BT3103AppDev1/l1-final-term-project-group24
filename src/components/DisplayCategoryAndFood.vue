@@ -1,27 +1,31 @@
 <template>
   <div>
-     <div v-for="(category, index) in selectedCategories" :key="index" class="category-item">
-       <span class="category-name">{{ category }}</span>
-       <button class="plus-button" @click="handlePlusButtonClick(index)">+</button>
-       <button class="delete-button" @click="deleteCategory(index)">
-         <i class="fas fa-trash"></i>
-       </button>
-     </div>
-     <div v-for="foodCategory in foodItems" :key="foodCategory.category">
-       <div v-for="item in foodCategory.items" :key="item.name" class="food-item" v-if="item">
-         <p>{{ item.name }}</p>
-         <p>Qty : {{ item.quantity }}</p>
-         <p>Exp : {{ item.expiryDate }}</p>
-         <button class="edit-button" @click="editItem(item)">
-           <i class="fa fa-pencil" aria-hidden="true"></i>
-         </button>
-         <button class="deleteItem-button" @click="deleteItem(item)">
-           <i class="fas fa-times"></i>
-         </button>
-       </div>
-     </div>
+    <div v-for="(category, index) in selectedCategories" :key="index">
+      <div class="category-item">
+        <span class="category-name">{{ category }}</span>
+        <button class="plus-button" @click="handlePlusButtonClick(index)">+</button>
+        <button class="delete-button" @click="deleteCategory(index)">
+          <i class="fas fa-trash"></i>
+        </button>
+      </div>
+      <div v-for="foodCategory in this.foodItems" :key="foodCategory.category">
+        <div v-if="foodCategory.category == category">
+          <div v-for="item in foodCategory.items" :key="item.name" class="food-item">
+            <p>{{ item.name }}</p>
+            <p>Qty : {{ item.quantity }}</p>
+            <p>Exp : {{ item.expiryDate }}</p>
+            <button class="edit-button" @click="editItem(item)">
+              <i class="fa fa-pencil" aria-hidden="true"></i>
+            </button>
+            <button class="deleteItem-button" @click="deleteItem(item)">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
- </template>
+</template>
  
  
 <script>
