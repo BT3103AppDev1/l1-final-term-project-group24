@@ -62,23 +62,23 @@ export default {
     }, 
 
     addFoodItem(food) {
-      const category = this.selectedCategory;
-      console.log('Received add-food event with category:', category, ' and item:', food.item);      
-      const categoryIndex = this.foodItems.findIndex(cat => cat.category == category); 
+      console.log('Received add-food event with category:', this.selectedCategory, ' and item:', food);      
+      const categoryIndex = this.foodItems.findIndex(cat => cat.category == this.selectedCategory); 
       if (categoryIndex != -1) {
         console.log(this.foodItems[categoryIndex]);
-        this.foodItems[categoryIndex].items.push(food.item);
-        this.foodItem = food.item; 
+        this.foodItems[categoryIndex].items.push(food);
+        // this.foodItem = food; 
         console.log('Food item added:', this.foodItem);
       } else {
-        this.foodItems.push({ category: category, items: [food.item] });
-        this.foodItem = food.item; 
+        this.foodItems.push({ category: this.selectedCategory, items: [food] });
+        // this.foodItem = food; 
       }
     }, 
 
     handleEditItem(item) {
       this.itemToEdit = item; 
       this.showEditForm = true; 
+      console.log(this.itemToEdit);
     }, 
 
 

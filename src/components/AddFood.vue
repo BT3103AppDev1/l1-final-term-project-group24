@@ -52,9 +52,9 @@ const db = getFirestore(firebaseApp);
                     expiryDate: this.foodExpiryDate, 
                 }; 
                 
-                console.log('Emitting add-food event with:', {item: foodItem });
+                console.log('Emitting add-food event with:', foodItem);
 
-                this.$emit('add-food', {item: foodItem })
+                this.$emit('add-food', foodItem )
 
                 // Reset form after submission
                 this.foodName = ''; 

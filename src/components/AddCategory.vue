@@ -70,7 +70,7 @@ export default {
 
     addCategory(category) {
       this.$emit('category-selected',category); 
-      this.showDropdown = !this.showDropdown;
+      this.showDropdown = false;
     }
 
 

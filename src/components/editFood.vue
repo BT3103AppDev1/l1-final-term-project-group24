@@ -5,15 +5,15 @@
             <form @submit.prevent="submitEditForm" class="edit-food-form-container">
                 <div class="form-group">
                     <label for="editFoodName">Food:</label>
-                    <input type="text" id="editFoodName" v-model="editedItem.name" required>
+                    <input type="text" id="editFoodName" v-model="editedName" required>
                 </div>
                 <div class="form-group">
                     <label for="editFoodQuantity">Quantity:</label>
-                    <input type="number" id="editFoodQuantity" v-model="editedItem.quantity" required>
+                    <input type="number" id="editFoodQuantity" v-model="editedQuantity" required>
                 </div>
                 <div class="form-group">
                     <label for="editFoodExpiryDate">Expiry Date:</label>
-                    <input type="date" id="editFoodExpiryDate" v-model="editedItem.expiryDate" required>
+                    <input type="date" id="editFoodExpiryDate" v-model="editedExpiry" required>
                 </div>
                 <div class="button-container"> 
                     <button type="button" @click="closeEditForm">Cancel</button>
@@ -26,23 +26,31 @@
    
 <script>
     export default {
-        props: ['item', 'showEditForm'],
+        props: ['itemToEdit', 'showEditForm'],
 
         data() {
             return {
-                editedItem:  { ...this.item }
+                editedName: this.itemToEdit.name,
+                editedQuantity: this.itemToEdit.quantity,
+                editedExpiry: this.itemToEdit.expiryDate,
             };
         }, 
 
         methods: {
             submitEditForm() {
-                console.log(this.itemToEdit);
-                this.$emit('update-item', this.editedItem);
+                const editedFood = {
+                    name: this.editedName, 
+                    quantity: this.editedQuantity, 
+                    expiryDate: this.editedExpiry, 
+                }; 
+                console.log('Editing food event with:', editedFood );
+
+                this.$emit('update-item', editedFood);
                 this.closeEditForm();
-        },
+            },
             closeEditForm() {
                 this.$emit('close-edit-form');
-            }
+            },
         }
     };
 </script>
