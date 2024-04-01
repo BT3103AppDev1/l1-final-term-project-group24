@@ -1,11 +1,9 @@
 <template>
     <div id="toReplace">
-    <div :is="currentComponent"></div>
-    <div v-show="currentComponent">
-      <button @click="swapComponent()">change</button>
+        <h3 v-if="currentComponent = 'Table'">{{ currentDate }}</h3>
+        <component :is='currentComponent'/>
+        <button @click="swapComponent">change</button>
     </div>
-    </div>
-    <button @click="swapComponent()">Close</button>
 </template>
 
 <script>
@@ -13,18 +11,31 @@ import Table from "./Table.vue"
 import AddMeal from "./AddMeal.vue"
 
 export default {
-    data() {
-        return {
-            currentComponent: Table
-        };
-    },
     components: {
         Table,
         AddMeal
     },
+    data() {
+        return {
+            currentComponent: Table,
+            currentDate: ''
+        };
+    },
+    created() {
+        this.currentDate = this.formatDate(new Date())
+    },
     methods: {
-        swapComponent() {
-            return Table
+        formatDate(date) {
+            let day = date.getDate();
+            let month = date.getMonth() + 1;
+            let year = date.getFullYear();
+
+            day = day < 10 ? '0' + day : day;
+            month = month < 10 ? '0' + month : month;
+            return `${day}/${month}/${year}`;
+        },
+        async swapComponent() {
+            this.currentComponent = AddMeal
         }
     }
 };

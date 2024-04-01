@@ -1,9 +1,5 @@
 
   <template>
-    <div>
-        <h3>Dashboard</h3>
-        <button id="addMeal" type="button" v-on:click="addMeal"> Add Meal </button>
-    </div>
     <div class="dashboard">
       <div class="row">
         <div class="col-md-6">
@@ -46,12 +42,7 @@
   
   <script>
   export default {
-    name: 'Dashboard',
-    methods: {
-        addMeal() {
-
-        }
-    }
+    name: 'Table',
   };
   </script>
   
