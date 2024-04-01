@@ -53,7 +53,7 @@ export default {
   },
   methods: {
     async inputMeal() {
-      axios.get(`https://api.calorieninjas.com/v1/nutrition?query=${document.getElementById("mealName").value}`, {
+      axios.get(`https://api.calorieninjas.com/v1/nutrition?query=one person of ${document.getElementById("mealName").value}`, {
       headers: { 'X-Api-Key': 'Ljn/8+fBf3VItM38d5R/cw==7qzsCiFXen3sEHi5' },
       })
       .then(response => {

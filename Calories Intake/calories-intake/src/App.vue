@@ -1,14 +1,17 @@
 <template>
   <AddMeal/>
+  <Dashboard/>
 </template>
 
 <script>
 import AddMeal from './components/AddMeal.vue'
+import Dashboard from './components/DashBoard.vue'
 
 export default {
   name: "App",
   components:{
     AddMeal,
+    Dashboard
   },
   }
 </script>
