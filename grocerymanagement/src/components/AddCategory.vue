@@ -25,13 +25,6 @@
       </div>
     </div>
 
-    <div v-for="(category, index) in selectedCategories" :key="index" class="category-item">
-       <span class="category-name">{{ category }}</span>
-       <button class="plus-button" @click="handlePlusButtonClick(index)">+</button>
-       <button class="delete-button" @click="deleteCategory(index)">
-        <i class="fas fa-trash"></i>
-      </button>
-    </div>
 
   </div>
 </template>
@@ -49,11 +42,7 @@ export default {
     return {
       showDropdown: false, 
       showModal: false,
-      categoryName: '', 
-      selectedCategory: '', 
-      selectedCategories: [], 
-      showForm: false, 
-      foodItems: [],   
+      categoryName: '',  
     };
      
   },
@@ -79,6 +68,12 @@ export default {
     }, 
 
 
+    addCategory(category) {
+      this.$emit('category-selected',category); 
+      this.showDropdown = !this.showDropdown;
+    }
+
+
     /*//firestore code
     
     async addCategory(category) {
@@ -99,22 +94,7 @@ export default {
     },*/
 
 
-    addCategory(category) {
-      if (!this.selectedCategories.includes(category)) {
-        this.selectedCategories.push(category);
-      }
-      this.showDropdown = false; 
-      this.$emit('category-selected', category); 
-    }, 
-
-    handlePlusButtonClick(index) {
-      this.showForm = true; 
-      this.$emit('show-form', true); 
-    }, 
-
-    deleteCategory(index) {
-      this.selectedCategories = this.selectedCategories.filter((category, i) => i !== index);
-    }
+   
       
   }
 }; 
@@ -250,62 +230,6 @@ export default {
   input[type="text"]:focus {
     outline: none;
     border: 1px solid #a0d18c; 
-    color: green; 
-  }
-
-  .category-item {
-    text-align: center;
-    padding: 10px 0; 
-    margin-bottom: 10px; 
-    display: block; 
-    width: 100%; 
-
-  }
-
-  .category-name {
-    text-align: center; 
-    position: relative; 
-    display: inline-block; 
-  }
-
-  .category-name::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    width: 130%; 
-    height: 2px; 
-    background-color: green; 
-    transform: translateX(-10%); 
-  }
-
-  .plus-button {
-    background-color: transparent;
-    border: none;
-    color: black; 
-    cursor: pointer;
-    font-size: 16px; 
-    margin-left: 10px; 
-    
-  }
-
-  .plus-button:hover {
-    background-color: green; 
-    border: 1px solid green; 
-  }
-
-  .delete-button {
-    background-color: transparent; 
-    border: none; 
-    color: black; 
-    cursor: pointer; 
-    font-size: 10px; 
-    padding: 1px 1px; 
-    transition: color 0.3s ease; 
-  }
-
-
-  .delete-button:hover {
     color: green; 
   }
 

@@ -2,7 +2,7 @@
     <div v-if="showForm" class="food-form-overlay">
         <div class="food-form-content">
             <h2>Adding New Food</h2>
-            <form @submit.prevent="submitFoodForm" class="food-form-container">
+            <form @submit.prevent="submitFoodForm" class="food-form-container" id="food-form">
                 <div class="form-group">
                     <label for="foodName">Food:</label>
                     <input type="text" id="foodName" v-model="foodName" required placeholder="Enter your Food">
@@ -40,40 +40,28 @@ const db = getFirestore(firebaseApp);
             return {
                 foodName: '',
                 foodQuantity: '',
-                foodExpiryDate: '',
+                foodExpiryDate: '', 
             };
         },
         methods: {
 
-
-            /*//firestore code
-            async submitFoodForm() {
-                const foodData = {
-                    name: this.foodName,
-                    quantity: this.foodQuantity,
-                    expiryDate: this.foodExpiryDate,
-                    category: this.selectedCategory,
-                };
-
-                try {
-                // Assuming you have the user ID available, replace 'userId' with the actual user ID
-                    const docRef = await setDoc(doc(db, "users", "userId", "categories", this.selectedCategory, "foodItems", this.foodName), foodData);
-                    console.log("Food item saved:", docRef);
-                    this.closeFoodForm(); // Close the form after submission
-                } catch (error) {
-                    console.error("Error saving food item:", error);
-                }
-            },*/
-
-
             submitFoodForm() {
-                const foodData = {
+                const foodItem = {
                     name: this.foodName, 
                     quantity: this.foodQuantity, 
                     expiryDate: this.foodExpiryDate, 
                     category: this.selectedCategory, 
                 }; 
-                this.$emit('add-food', foodData)
+                
+                console.log('Emitting add-food event with:', {item: foodItem });
+
+                this.$emit('add-food', {item: foodItem })
+
+                // Reset form after submission
+                this.foodName = ''; 
+                this.foodQuantity = '';
+                this.foodExpiryDate = '';
+
                 this.closeFoodForm(); // Close the form after submission
             }, 
 

@@ -21,13 +21,12 @@
                 </div>
             </form>
         </div>
-   
     </div>
 </template>
    
 <script>
     export default {
-        props: ['item', 'showEditForm'],
+        props: ['item', 'showEditForm', 'selectedCategory'], 
 
         data() {
             return {
@@ -37,7 +36,9 @@
 
         methods: {
             submitEditForm() {
+                console.log(this.item); //this is item to be edited : old item 
                 this.$emit('update-item', this.editedItem);
+                console.log(this.editedItem); 
                 this.closeEditForm();
         },
             closeEditForm() {
