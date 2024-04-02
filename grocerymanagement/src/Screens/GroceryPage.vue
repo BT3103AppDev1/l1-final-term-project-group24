@@ -92,22 +92,17 @@ export default {
       // Find the category that contains the item to be updated
       //debugging: currently my category is undefined .... 
       console.log('updating', updatedItem); 
-      console.log('old food item', this.foodItems); 
-
-      const category = this.foodItems.find(category => category.items.some(item => item.name === updatedItem.name)); 
-      if (category) {
-        // Find the item within the category and update it
-        const itemIndex = category.items.findIndex(item => item.name === updatedItem.name);
+      console.log('old food item', this.item); //this is not the old food item 
+      const itemIndex = this.foodItems.findIndex(item => item.name !== updatedItem.name);
+      //findIndex will not give -1 if old item and new item name is different
         if (itemIndex !== -1) {
           // Update the item directly
-          category.items[itemIndex] = updatedItem;
-          console.log('Item updated successfully');
+          this.foodItems[itemIndex] = updatedItem; 
+          this.foodItems.push( {category: this.selectedCategory, items: [updatedItem] }); 
+          console.log('Item updated successfully in', this.selectedCategory);
         } else {
           console.log('Item not found within the category');
         }
-      } else {
-          console.log('Category not found');
-      }
 
       this.showEditForm = false;
     },
