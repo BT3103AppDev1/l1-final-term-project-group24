@@ -27,8 +27,11 @@
                 <label for="meal-selection">Select Meal: </label>
             </div>
         <div class="modal-footer">
-        <button @click="addMeal">Add</button>
-    </div>
+          <button @click="addMeal">Add</button>
+        </div>
+        <div class="customised-meal">
+          <button @click="addCustomMeal">Add Customised Meal</button>
+        </div>
     </div>
 </div>
 </template>
