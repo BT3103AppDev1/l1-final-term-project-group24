@@ -67,6 +67,7 @@
 
         mounted() {
             this.fetchUserProfile();
+
         },
 
         methods : {
@@ -79,8 +80,8 @@
                 onAuthStateChanged(auth, (user) => {
                 if (user) {
                     this.userEmail = user.email;
-                    this.userName = user.displayName;
-                    this.fetchAdditionalInfo(user.uid);
+                    this.userName = user.displayName || user.email;
+                    this.fetchAdditionalInfo(user.email);
 
                     // check the user's sign-in method -- if google sign-in then cannot see change pw btn
                     this.canChangePassword = user.providerData.some(
@@ -90,10 +91,11 @@
                 });
             },
 
-            async fetchAdditionalInfo(userId) {
-                const userDocRef = doc(db, "users", userId);
+            async fetchAdditionalInfo(userEmail) {
+                // const userDocRef = doc(db, "users", userId);
+                const userInfoRef = doc(db, String(userEmail), "profile-info");
                 try {
-                const docSnap = await getDoc(userDocRef);
+                const docSnap = await getDoc(userInfoRef);
                 if (docSnap.exists()) {
                 const data = docSnap.data();
                 this.userWeight = data.weight || '';
@@ -110,12 +112,13 @@
             // This method is responsible for saving info of height,weight,kcal goal to firestore:
             async saveData(field, value) {
                 const auth = getAuth();
-                const userId = auth.currentUser.uid;
-                const userDocRef = doc(db, "users", userId);
-
+                // const userId = auth.currentUser.uid;
+                const userEmail = auth.currentUser.email;
+                // const userDocRef = doc(db, "users", userId);
+                const userInfoRef = doc(db, String(userEmail), "profile-info");
                 try {
                     // Set the "field" data in Firestore
-                    await setDoc(userDocRef, { [field]: value }, { merge: true });
+                    await setDoc(userInfoRef, { [field]: value }, { merge: true });
                     alert(`${field} updated successfully.`);
                 } catch (error) {
                     console.error(`Failed to update ${field}: `, error);
