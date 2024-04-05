@@ -42,7 +42,10 @@ export default {
     }, 
 
     deleteCategory(index) {
-      this.selectedCategories = this.selectedCategories.filter((category, i) => i !== index);
+      const categoryToDelete = this.selectedCategories[index]; 
+      this.selectedCategories.splice(index, 1); 
+      this.foodItems = this.foodItems.filter(foodCategory => foodCategory.category !== categoryToDelete); 
+      //this.selectedCategories = this.selectedCategories.filter((category, i) => i !== index);
     }, 
 
 
@@ -97,7 +100,9 @@ export default {
       //findIndex will not give -1 if old item and new item name is different
         if (itemIndex !== -1) {
           // Update the item directly
+          console.log("Before:" , this.foodItems);
           this.foodItems[itemIndex] = updatedItem; 
+          console.log("After:", this.foodItems);
           this.foodItems.push( {category: this.selectedCategory, items: [updatedItem] }); 
           console.log('Item updated successfully in', this.selectedCategory);
         } else {
@@ -105,77 +110,7 @@ export default {
         }
 
       this.showEditForm = false;
-    },
-
-
-
-
-    /*handleUpdateItem(updatedItem) {
-      console.log('Updating item:', updatedItem);
-      // Find the index of the category that contains the item to be updated
-      const categoryIndex = this.foodItems.findIndex(category => category.category === updatedItem.category);
-
-      if (categoryIndex !== -1) {
-      // Category found, now find the index of the item within that category
-        const itemIndex = this.foodItems[categoryIndex].items.findIndex(item => item.name === updatedItem.name);
-
-        if (itemIndex !== -1) {
-        // Item found, update it using Vue's reactivity system
-          this.$set(this.foodItems[categoryIndex].items, itemIndex, updatedItem);
-          console.log('Item updated successfully');
-        } else {
-          // Item not found within the category, handle accordingly
-          console.log('Item not found within the category');
-        }
-      } else {
-        // Category not found, handle accordingly
-        console.log('Category not found');
-      }
-
-      // Optionally, close the edit form after updating the item
-        this.showEditForm = false;
-      },*/ 
-
-
-    //findIndex will return -1 if category is not found (this is default)
-    //still debugging : not ready yet 
-    /*handleUpdateItem(updatedItem) {
-      console.log('Updating item:', updatedItem);
-      const categoryIndex = this.foodItems.findIndex(category => {
-        console.log('checking category', category.category); 
-        return category.items.some(item => {
-          console.log('comparing item', item.name, 'with updateditem', updatedItem.name); 
-          return item.name === updatedItem.name;
-        });
-      }); 
-
-      console.log('Category index:', categoryIndex); 
-
-      //for now my console log in this if loop does not show means my items not going into my if loop
-      //i should code something similar to addfood item method
-      //my categoryindex is -1 which is found 
-
-      if (categoryIndex != -1) { //category found
-        console.log('Category found'); 
-        const itemIndex = this.foodItems[categoryIndex].items.findIndex(item => item.name === updatedItem.name); 
-        console.log('Item index', itemIndex); 
-        if (itemIndex != -1) {
-          this.$set(this.foodItems[categoryIndex].items, itemIndex, updatedItem); 
-          console.log('Food items after update:', this.foodItems);
-        } else {
-          // This part should not be reached if the item exists within the category.
-          console.log('Item not found within the category, but this should not happen.');
-        }
-
-      } else { //categoryIndex == -1 category not found
-        this.foodItems.push({ category: updatedItem.category, items: [updatedItem] });
-        console.log('New category created with updated item');
-      }
-
-        this.showEditForm = false;
-      },*/ 
-
-
+    },    
 
     handleDeleteItem(itemToDelete) {
       const category = this.foodItems.find(category => category.items.includes(itemToDelete)); 
