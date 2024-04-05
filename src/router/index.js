@@ -4,6 +4,7 @@ import RegistrationPage from '@/views/RegistrationPage.vue'
 import HomePage from '@/views/HomePage.vue'
 import ForgotPage from '@/views/ForgotPage.vue'
 import UsernameCreation from '@/views/UsernameCreation.vue'
+import ProfilePage from '@/views/ProfilePage.vue';
 
 const routes = [
     {
@@ -31,6 +32,11 @@ const routes = [
       name: 'UsernameCreation',
       component: UsernameCreation,
     },
+    {
+      path: '/profile',
+      name: 'Profile',
+      component: ProfilePage
+    }
   ]
 
   const router = createRouter({

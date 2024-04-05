@@ -1,6 +1,7 @@
 <template>
   <div v-if="user">
     <h1>This is a home page</h1>
+    <button @click="goToProfile">Go to Profile</button>
     <div class="logoutButton">
       <button id="logoutButton" @click="logout"> Logout </button>
     </div>
@@ -38,6 +39,10 @@ export default {
       }).catch((error) => {
         alert("Logout Failed: " + error.message);
       });
+    },
+
+    goToProfile() {
+    this.$router.push({ name: 'Profile' });
     }
   }
 };
