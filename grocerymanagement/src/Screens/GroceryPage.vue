@@ -68,7 +68,6 @@ export default {
     addFoodItem(food) {
       console.log('Searching for category:', this.selectedCategory);
       console.log('Categories in foodItems:', this.foodItems.map(cat => cat.category));
-
       const categoryIndex = this.foodItems.findIndex(cat => cat.category === this.selectedCategory);
       console.log('Category index:', categoryIndex);
 
@@ -90,19 +89,17 @@ export default {
     handleEditItem(item) {
       console.log(item); 
       this.itemToEdit = item; //i think this is the issue i cant update correctly
+      this.selectedCategory = item.category; 
       this.showEditForm = true; 
     }, 
-
-
-    //current problem now is the id is not being passed so i cant see the updateditem id because they do not have 
-    //but should have since i created a shallow copy of original food item before i updated the item.. it should stay the same just like the category. 
 
     handleUpdateItem(updatedItem) {
       console.log('received updateditem', updatedItem); 
       console.log('Categories in foodItems:', this.foodItems.map(cat => cat.category));
       // Find the index of the category that contains the item to be updated
       const categoryIndex = this.foodItems.findIndex(cat => cat.category === this.selectedCategory);
-      console.log(categoryIndex); 
+      console.log(categoryIndex);
+      console.log(this.selectedCategory); 
       console.log('Item names in foodItems:', this.foodItems[categoryIndex].items.map(item => item.id));
       console.log('Updated item name:', updatedItem.id);
 
@@ -133,28 +130,6 @@ export default {
     },
   },
 }; 
-
-
-    /*handleUpdateItem(updatedItem) {
-      // Find the category that contains the item to be updated
-      //debugging: currently my category is undefined .... 
-      console.log('updating', updatedItem); 
-      console.log('old food item', this.item); //this is not the old food item 
-      const itemIndex = this.foodItems.findIndex(item => item.name !== updatedItem.name);
-      //findIndex will not give -1 if old item and new item name is different
-        if (itemIndex !== -1) {
-          // Update the item directly
-          console.log("Before:" , this.foodItems);
-          this.foodItems[itemIndex] = updatedItem; 
-          console.log("After:", this.foodItems);
-          this.foodItems.push( {category: this.selectedCategory, items: [updatedItem] }); 
-          console.log('Item updated successfully in', this.selectedCategory);
-        } else {
-          console.log('Item not found within the category');
-        }
-
-      this.showEditForm = false;
-    },    */ 
 
 
 </script>
