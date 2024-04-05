@@ -3,7 +3,7 @@
     <AddCategory @category-selected="handleCategorySelected" @show-form="handleShowForm"/> 
     <DisplayCategoryAndFood :selectedCategories="selectedCategories" :foodItems="foodItems" @show-form="handleShowForm" @category-selected="handleCategorySelected" @delete-category="deleteCategory" @edit-item="handleEditItem" @delete-item="handleDeleteItem" />
     <AddFood :selectedCategory="selectedCategory" :show-form="showForm" @close="handleCloseForm" @add-food="addFoodItem"/>
-    <editFood :show-edit-form="showEditForm" :item="itemToEdit" @update-item="handleUpdateItem" @close-edit-form="handleCloseEditForm"></editFood>
+    <editFood :show-edit-form="showEditForm" :item="itemToEdit" :selectedCategory="this.selectedCategory" :itemToEdit="this.itemToEdit" @update-item="handleUpdateItem" @close-edit-form="handleCloseEditForm"></editFood>
   </div>
 </template>
 
@@ -66,32 +66,76 @@ export default {
     }, 
 
     addFoodItem(food) {
-      console.log('Received add-food event with category:', this.selectedCategory, ' and item:', food.item);      
-      this.foodItems.push( {category: this.selectedCategory, items: [food.item] }); 
+      console.log('Searching for category:', this.selectedCategory);
+      console.log('Categories in foodItems:', this.foodItems.map(cat => cat.category));
+
+      const categoryIndex = this.foodItems.findIndex(cat => cat.category === this.selectedCategory);
+      console.log('Category index:', categoryIndex);
+
+      if (categoryIndex !== -1) {
+        // Category exists, add the item to the existing category
+        this.foodItems[categoryIndex].items.push(food.item);
+        console.log('category found', categoryIndex); 
+        console.log('Categories in foodItems:', this.foodItems.map(cat => cat.category));
+
+      } else {
+        // Category does not exist, create a new category with the item
+        this.foodItems.push({category: this.selectedCategory, items: [food.item]});
+        console.log('category not found')
+      }
     }, 
 
-    //ditching the categoryIndex method 
-      /*const categoryIndex = this.foodItems.findIndex(cat => cat.category === category); 
-      console.log(categoryIndex); 
-      //but when we categoryIndex we always get -1 which is always not found 
-      if (categoryIndex != -1) { //category found 
-        console.log(this.foodItems[categoryIndex]);
-        this.foodItems[categoryIndex].items.push(food.item);
-        this.foodItem = food.item; 
-        console.log('Food item added:', this.foodItem);
-      } else { //category not found -> need create category 
-        //create a new category with the new item 
-        this.foodItems.push({ category: category, items: [food.item] });
-        this.foodItem = food.item; 
-      }
-    }, */ 
+  
 
     handleEditItem(item) {
-      this.itemToEdit = item; 
+      console.log(item); 
+      this.itemToEdit = item; //i think this is the issue i cant update correctly
       this.showEditForm = true; 
     }, 
 
+
+    //current problem now is the id is not being passed so i cant see the updateditem id because they do not have 
+    //but should have since i created a shallow copy of original food item before i updated the item.. it should stay the same just like the category. 
+
     handleUpdateItem(updatedItem) {
+      console.log('received updateditem', updatedItem); 
+      console.log('Categories in foodItems:', this.foodItems.map(cat => cat.category));
+      // Find the index of the category that contains the item to be updated
+      const categoryIndex = this.foodItems.findIndex(cat => cat.category === this.selectedCategory);
+      console.log(categoryIndex); 
+      console.log('Item names in foodItems:', this.foodItems[categoryIndex].items.map(item => item.id));
+      console.log('Updated item name:', updatedItem.id);
+
+      if (categoryIndex !== -1) {
+        // Find the index of the item within the category's items array
+        const itemIndex = this.foodItems[categoryIndex].items.findIndex(item => item.id === updatedItem.id);
+
+        if (itemIndex !== -1) { //can find food item
+          this.foodItems[categoryIndex].items[itemIndex] = updatedItem;
+          console.log('Item updated successfully in', updatedItem.category);
+        } else {
+          console.log('Item not found within the category');
+        }
+      } else {
+        console.log('Category not found');
+      }
+    }, 
+
+    handleDeleteItem(itemToDelete) {
+      const category = this.foodItems.find(category => category.items.includes(itemToDelete)); 
+      if (category) {
+        category.items = category.items.filter(item => item !== itemToDelete); 
+      }
+    },
+
+    handleCloseEditForm() {
+      this.showEditForm = false; 
+    },
+  },
+}; 
+
+
+    /*handleUpdateItem(updatedItem) {
       // Find the category that contains the item to be updated
       //debugging: currently my category is undefined .... 
       console.log('updating', updatedItem); 
@@ -110,21 +154,10 @@ export default {
         }
 
       this.showEditForm = false;
-    },    
-
-    handleDeleteItem(itemToDelete) {
-      const category = this.foodItems.find(category => category.items.includes(itemToDelete)); 
-      if (category) {
-        category.items = category.items.filter(item => item !== itemToDelete); 
-      }
-    },
-
-    handleCloseEditForm() {
-      this.showEditForm = false; 
-    },
-  },
-}; 
+    },    */ 
 
 
 </script>
+
+
 

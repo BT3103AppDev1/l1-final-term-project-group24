@@ -26,19 +26,25 @@
    
 <script>
     export default {
-        props: ['item', 'showEditForm', 'selectedCategory'], 
+        props: ['item', 'showEditForm', 'selectedCategory', 'itemToEdit'], 
 
-        data() {
-            return {
-                editedItem:  { ...this.item }
-            };
+        computed: {
+            editedItem() {
+                return {
+                    ...this.item, 
+                    id: this.item.id, 
+                };
+            }
         }, 
-
+        
         methods: {
             submitEditForm() {
+                this.editedItem.category = this.selectedCategory; 
                 console.log(this.item); //this is item to be edited : old item 
-                this.$emit('update-item', this.editedItem);
                 console.log(this.editedItem); 
+                console.log(this.item.id); 
+                console.log(this.editedItem.id); 
+                this.$emit('update-item', this.editedItem); //new item 
                 this.closeEditForm();
         },
             closeEditForm() {

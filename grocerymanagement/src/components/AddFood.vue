@@ -30,6 +30,10 @@ import { getFirestore, doc, setDoc } from 'firebase/firestore';
 import firebaseApp from '../firebase.js'; 
 
 const db = getFirestore(firebaseApp);
+    
+    function generateUniqueId(prefix = 'food_') {
+        return `${prefix}_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    }
 
     export default {
 
@@ -41,12 +45,15 @@ const db = getFirestore(firebaseApp);
                 foodName: '',
                 foodQuantity: '',
                 foodExpiryDate: '', 
+                category: this.selectedCategory, 
             };
         },
         methods: {
 
             submitFoodForm() {
+
                 const foodItem = {
+                    id: generateUniqueId(), 
                     name: this.foodName, 
                     quantity: this.foodQuantity, 
                     expiryDate: this.foodExpiryDate, 
