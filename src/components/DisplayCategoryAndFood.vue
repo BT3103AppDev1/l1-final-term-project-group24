@@ -30,10 +30,52 @@
  
 <script>
 
+import { db } from '@/firebase'; 
+import { collection, getDocs } from 'firebase/firestore';
+
 export default {
 	props: ['selectedCategories', 'foodItems'],
 
+  data() {
+    return {
+      localFoodItems: [], // Local copy of foodItems
+    };
+  },
+
+
+  created() {
+    this.fetchCategories();
+    this.fetchFoodItems();
+  },
+
+
+
 	methods: {
+
+    async fetchCategories() {
+      try {
+        const categoriesRef = collection(db, 'categories'); // Adjust the path as necessary
+        const categoriesSnapshot = await getDocs(categoriesRef);
+        this.categories = categoriesSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      } catch (error) {
+        console.error('Error fetching categories:', error);
+      }
+    },
+
+    async fetchFoodItems() {
+      try {
+        const foodItemsRef = collection(db, 'foodItems'); // Adjust the path as necessary
+        const foodItemsSnapshot = await getDocs(foodItemsRef);
+        this.localFoodItems = foodItemsSnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+      } catch (error) {
+        console.error('Error fetching food items:', error);
+      }
+    },
+
+
 		handlePlusButtonClick(index) {
       const categoryName = this.selectedCategories[index]; 
 			this.$emit('show-form', true);
@@ -49,8 +91,15 @@ export default {
 
     deleteItem(item) {
       this.$emit('delete-item', item); 
-    }
-	}
+    }, 
+  
+  },
+
+    mounted() {
+      this.fetchCategories();
+    this.fetchFoodItems();
+    },
+    
 };
 </script>
  
