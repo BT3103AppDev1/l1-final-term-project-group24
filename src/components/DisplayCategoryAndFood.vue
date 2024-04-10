@@ -2,7 +2,7 @@
   <div>
     <div v-for="(category, index) in selectedCategories" :key="index">
       <div class="category-item">
-        <span class="category-name">{{ category.name }}</span>
+        <span class="category-name">{{ category }}</span>
         <button class="plus-button" @click="handlePlusButtonClick(index)">+</button>
         <button class="delete-button" @click="deleteCategory(index)">
           <i class="fas fa-trash"></i>
@@ -29,12 +29,8 @@
  
  
 <script>
-
-import { db } from '@/firebase'; 
-
 export default {
 	props: ['selectedCategories', 'foodItems'],
-
 
 	methods: {
 		handlePlusButtonClick(index) {

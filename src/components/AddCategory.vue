@@ -4,7 +4,7 @@
     <div v-if="showDropdown" class="dropdown-menu">
       <a href="#" @click="addCategory('Breakfast Foods')">Breakfast Foods</a>
       <a href="#" @click="addCategory('Fruits')">Fruits</a>
-      <a href="#" @click="addCategory('Vegatables')">Vegatables</a>
+      <a href="#" @click="addCategory('Vegetables')">Vegetables</a>
       <a href="#" @click="addCategory('Cooking Essentials')">Cooking Essentials</a>
       <a href="#" @click="toggleModal">+ Add Custom</a>
 
@@ -31,15 +31,12 @@
 
 <script>
 
-import '@fortawesome/fontawesome-free/css/all.css';  
+import '@fortawesome/fontawesome-free/css/all.css'; 
+import { db } from '../firebase.js'; 
 import { getFirestore } from 'firebase/firestore'
-import { collection, doc, setDoc } from 'firebase/firestore';
-import { db } from '@/firebase'; 
+import { doc, setDoc } from 'firebase/firestore';
 
 export default {
-
-  props: ['selectedCategories'], 
-
   data() {
     return {
       showDropdown: false, 
@@ -69,33 +66,11 @@ export default {
       }
     }, 
 
-    //userid (for all the diff userIDs) => groceryMangement (collection) => categories (subcollection) => categories (document of subcollection) 
-    addCategory(categoryName) {
-      if (!this.selectedCategories.some(cat => cat.name === categoryName)) {
-        const userId = 'yourUserId'; // isit email? 
-        const categoriesRef = collection(db, 'userid', userId, 'grocery management', 'categories', 'categories'); 
-        const categoryRef = doc(categoriesRef, categoryName);
 
-        setDoc(categoryRef, { name: categoryName })
-          .then(() => {
-            console.log("Category added successfully: ", categoryName);
-            this.$emit('category-selected', { name: categoryName} );
-            this.showDropdown = !this.showDropdown; 
-          })
-          .catch(error => {
-            console.error("Error adding category: ", error);
-          });
-      } else {
-        console.log('category already exists'); 
-      }
-    }, 
-
-
-
-    /*addCategory(category) {
+    addCategory(category) {
       this.$emit('category-selected',category); 
       this.showDropdown = !this.showDropdown;
-    }*/ 
+    }
 
 
     /*//firestore code
