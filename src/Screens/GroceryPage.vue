@@ -3,7 +3,7 @@
     <AddCategory @category-selected="handleCategorySelected" @show-form="handleShowForm"/> 
     <DisplayCategoryAndFood :selectedCategories="selectedCategories" :foodItems="foodItems" @show-form="handleShowForm" @category-selected="handleCategorySelected" @delete-category="deleteCategory" @edit-item="handleEditItem" @delete-item="handleDeleteItem" />
     <AddFood :selectedCategory="selectedCategory" :show-form="showForm" :userId="userId" @close="handleCloseForm" @add-food="addFoodItem"/>
-    <editFood :show-edit-form="showEditForm" :item="itemToEdit" :selectedCategory="this.selectedCategory" :itemToEdit="this.itemToEdit" @update-item="handleUpdateItem" @close-edit-form="handleCloseEditForm"></editFood>
+    <editFood :show-edit-form="showEditForm" :item="itemToEdit" :selectedCategory="this.selectedCategory" :userId="userId" :itemToEdit="this.itemToEdit" @update-item="handleUpdateItem" @close-edit-form="handleCloseEditForm"></editFood>
   </div>
 </template>
 
@@ -53,7 +53,7 @@ export default {
       const deletePromises = foodItemsSnapshot.docs.map(snapshot => deleteDoc(snapshot.ref));
       await Promise.all(deletePromises);
       console.log('All items in the category deleted successfully');
-      //this.foodItems = this.foodItems.filter(foodCategory => foodCategory.category !== categoryToDelete);
+      this.foodItems = this.foodItems.filter(foodCategory => foodCategory.category !== categoryToDelete);
 
     }, 
 
@@ -126,6 +126,26 @@ export default {
     }, 
 
     handleUpdateItem(updatedItem) {
+    // Find the index of the category that contains the item to be updated
+    const categoryIndex = this.foodItems.findIndex(cat => cat.category === this.selectedCategory);
+
+    if (categoryIndex !== -1) {
+        // Find the index of the item within the category's items array
+        const itemIndex = this.foodItems[categoryIndex].items.findIndex(item => item.id === updatedItem.id);
+
+        if (itemIndex !== -1) { // Item found
+            this.foodItems[categoryIndex].items[itemIndex] = updatedItem;
+            console.log('Item updated successfully in', updatedItem.category);
+        } else {
+            console.log('Item not found within the category');
+        }
+    } else {
+        console.log('Category not found');
+    }
+  },
+
+
+    /*handleUpdateItem(updatedItem) {
       console.log('received updateditem', updatedItem); 
       console.log('Categories in foodItems:', this.foodItems.map(cat => cat.category));
       // Find the index of the category that contains the item to be updated
@@ -148,7 +168,7 @@ export default {
       } else {
         console.log('Category not found');
       }
-    }, 
+    }, */ 
 
     async handleDeleteItem(item) {
       // Construct the reference to the item in Firestore

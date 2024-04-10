@@ -29,6 +29,7 @@
  
  
 <script>
+
 export default {
 	props: ['selectedCategories', 'foodItems'],
 
