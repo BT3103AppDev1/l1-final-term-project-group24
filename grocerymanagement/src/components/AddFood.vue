@@ -26,10 +26,10 @@
    
 <script>
 
-import { getFirestore, doc, setDoc } from 'firebase/firestore';
-import firebaseApp from '../firebase.js'; 
+import { db } from '../firebase.js'; 
+import { getFirestore } from 'firebase/firestore'
+import { collection, doc, setDoc } from 'firebase/firestore';
 
-const db = getFirestore(firebaseApp);
     
     function generateUniqueId(prefix = 'food_') {
         return `${prefix}_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
@@ -37,7 +37,7 @@ const db = getFirestore(firebaseApp);
 
     export default {
 
-        props: ['showForm', 'selectedCategory'], 
+        props: ['showForm', 'selectedCategory', 'userId'], 
 
 
         data() {
@@ -50,7 +50,7 @@ const db = getFirestore(firebaseApp);
         },
         methods: {
 
-            submitFoodForm() {
+            async submitFoodForm() {
 
                 const foodItem = {
                     id: generateUniqueId(), 
@@ -60,9 +60,15 @@ const db = getFirestore(firebaseApp);
                     category: this.selectedCategory, 
                 }; 
                 
+                
+                const categoryRef = collection(db, `users/${this.userId}/${this.selectedCategory}`); 
+
+                await setDoc(doc(categoryRef, foodItem.id), foodItem); 
+                
+                console.log('food item added to firestore', foodItem); 
                 console.log('Emitting add-food event with:', {item: foodItem });
 
-                this.$emit('add-food', {item: foodItem })
+                this.$emit('add-food', foodItem )
 
                 // Reset form after submission
                 this.foodName = ''; 

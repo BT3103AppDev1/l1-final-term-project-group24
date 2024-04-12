@@ -4,7 +4,7 @@
     <div v-if="showDropdown" class="dropdown-menu">
       <a href="#" @click="addCategory('Breakfast Foods')">Breakfast Foods</a>
       <a href="#" @click="addCategory('Fruits')">Fruits</a>
-      <a href="#" @click="addCategory('Vegatables')">Vegatables</a>
+      <a href="#" @click="addCategory('Vegetables')">Vegetables</a>
       <a href="#" @click="addCategory('Cooking Essentials')">Cooking Essentials</a>
       <a href="#" @click="toggleModal">+ Add Custom</a>
 
@@ -32,10 +32,9 @@
 <script>
 
 import '@fortawesome/fontawesome-free/css/all.css'; 
-import firebaseApp from '../firebase.js'; 
+import { db } from '../firebase.js'; 
 import { getFirestore } from 'firebase/firestore'
 import { doc, setDoc } from 'firebase/firestore';
-const db = getFirestore(firebaseApp); 
 
 export default {
   data() {

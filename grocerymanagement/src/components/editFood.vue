@@ -25,8 +25,13 @@
 </template>
    
 <script>
+
+import { db } from '../firebase.js'; 
+import { getFirestore } from 'firebase/firestore'
+import { collection, doc, setDoc } from 'firebase/firestore';
+
     export default {
-        props: ['item', 'showEditForm', 'selectedCategory', 'itemToEdit'], 
+        props: ['item', 'showEditForm', 'selectedCategory', 'itemToEdit', 'userId'], 
 
         computed: {
             editedItem() {
@@ -38,7 +43,25 @@
         }, 
         
         methods: {
-            submitEditForm() {
+
+            async submitEditForm() {
+                // Assuming you have the item's ID and the updated data
+                this.editedItem.category = this.selectedCategory; 
+                const itemRef = doc(db, `users/${this.userId}/${this.selectedCategory}`, this.item.id);
+
+                try {
+                    console.log('Updating item at path:', itemRef.path);
+                    console.log('Updated item data:', this.editedItem);
+                    await setDoc(itemRef, this.editedItem, { merge: true });
+                    console.log('Food item updated successfully');
+                    this.$emit('update-item', this.editedItem);
+                    this.closeEditForm();
+                } catch (error) {
+                    console.error('Error updating food item:', error);
+                }
+            },
+
+            /*submitEditForm() {
                 this.editedItem.category = this.selectedCategory; 
                 console.log(this.item); //this is item to be edited : old item 
                 console.log(this.editedItem); 
@@ -46,7 +69,7 @@
                 console.log(this.editedItem.id); 
                 this.$emit('update-item', this.editedItem); //new item 
                 this.closeEditForm();
-        },
+            },*/ 
             closeEditForm() {
                 this.$emit('close-edit-form');
             }

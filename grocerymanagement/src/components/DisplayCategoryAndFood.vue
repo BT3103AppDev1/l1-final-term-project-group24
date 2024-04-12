@@ -29,10 +29,58 @@
  
  
 <script>
+
+import { db } from '@/firebase'; 
+import { collection, getDocs } from 'firebase/firestore';
+
 export default {
-	props: ['selectedCategories', 'foodItems'],
+	props: ['selectedCategories', 'foodItems', 'userId'],
+
+
+  created() {
+    this.fetchFoodItems();
+  },
+
+
 
 	methods: {
+
+
+    async fetchFoodItems() {
+      for (const category of this.selectedCategories) {
+        try {
+          const foodItemsRef = collection(db, `users/${this.userId}/${category}`);
+          const foodItemsSnapshot = await getDocs(foodItemsRef);
+          const foodItemsForCategory = foodItemsSnapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data(),
+          }));
+          console.log('Fetched food items:', foodItems);
+          this.$set(this.foodItems, category, { category, items: foodItemsForCategory });
+        } catch (error) {
+          console.error('Error fetching food items for category:', category, error);
+        }
+      }
+    },
+
+    /*async fetchFoodItems(userId, selectedCategory) {
+      try {
+        const foodItemsRef = collection(db, `users/${userId}/${selectedCategory}`);
+        const foodItemsSnapshot = await getDocs(foodItemsRef);
+        const foodItems = foodItemsSnapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data(),
+        }));
+        console.log('Fetched food items:', foodItems);
+        return foodItems;
+      } catch (error) {
+        console.error('Error fetching food items:', error);
+      }
+    }, */ 
+
+
+
+
 		handlePlusButtonClick(index) {
       const categoryName = this.selectedCategories[index]; 
 			this.$emit('show-form', true);
@@ -48,8 +96,15 @@ export default {
 
     deleteItem(item) {
       this.$emit('delete-item', item); 
-    }
-	}
+    }, 
+  
+  },
+
+    mounted() {
+
+      this.fetchFoodItems();
+    },
+    
 };
 </script>
  
