@@ -1,10 +1,7 @@
-import { createApp } from 'vue';
-import App from './App.vue';
-import AddCategory from './components/AddCategory.vue'; // Adjust the path as necessary
+import './assets/main.css'
 import '@fortawesome/fontawesome-free/css/all.css'; 
+import { createApp } from 'vue'
+import App from './App.vue'
+import router from './router/index.js'
 
-
-const app = createApp(App);
-
-
-app.mount('#app');
+createApp(App).use(router).mount('#app')
