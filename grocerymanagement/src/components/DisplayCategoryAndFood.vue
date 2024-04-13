@@ -31,6 +31,7 @@
 <script>
 
 import { db } from '@/firebase'; 
+import '@fortawesome/fontawesome-free/css/all.css'; 
 import { collection, getDocs } from 'firebase/firestore';
 
 export default {
