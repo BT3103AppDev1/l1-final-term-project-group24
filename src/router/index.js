@@ -5,6 +5,8 @@ import HomePage from '@/views/HomePage.vue'
 import ForgotPage from '@/views/ForgotPage.vue'
 import UsernameCreation from '@/views/UsernameCreation.vue'
 import ProfilePage from '@/views/ProfilePage.vue';
+import About from '@/views/About.vue'
+import Calorie from '@/views/Calorie.vue'
 
 const routes = [
     {
@@ -36,7 +38,17 @@ const routes = [
       path: '/profile',
       name: 'Profile',
       component: ProfilePage
-    }
+    },
+    {
+      path: '/about',
+      name: 'About',
+      component: About
+    },
+    {
+      path: '/calorie',
+      name: 'Calorie',
+      component: Calorie
+    },
   ]
 
   const router = createRouter({

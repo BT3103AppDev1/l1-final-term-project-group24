@@ -25,16 +25,7 @@ export default {
 body{
   background-color: #FDF0C3;
   font-family: 'Fuzzy Bubbles';
-  margin: 0; /* To make the green nav bar flushed to the corners, remove if troublesome!*/
 }
 
-#nav {
-  background-color: #578855;
-  padding: 20px 0; /* Increase padding to make the green bar taller */
-  color: white; 
-  text-align: center;
-  top: 0px;
-  min-width: 100%;
-}
 
 </style>

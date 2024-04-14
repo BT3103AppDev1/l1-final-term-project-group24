@@ -121,6 +121,7 @@ export default {
 
 #FoodFolioLogo {
   width: 300px;
+  margin-top: 50px;
 }
 
 #PasswordEyeIcon {
@@ -186,8 +187,8 @@ input:hover {
 }
 
 #loginButton:hover, #googleLoginButton:hover {
-  background-color: #f8961f; /* New color for hover */
-  transform: scale(1.1); /* Increases size by 10% */
+  background-color: #f8961f; 
+  transform: scale(1.1); 
 }
 
 button {
