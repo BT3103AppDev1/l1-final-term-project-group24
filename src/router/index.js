@@ -7,6 +7,7 @@ import UsernameCreation from '@/views/UsernameCreation.vue'
 import ProfilePage from '@/views/ProfilePage.vue';
 import '@fortawesome/fontawesome-free/css/all.css'; 
 
+
 const routes = [
     {
       path: '/',
