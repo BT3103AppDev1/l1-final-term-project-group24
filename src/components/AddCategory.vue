@@ -34,19 +34,32 @@
 import '@fortawesome/fontawesome-free/css/all.css'; 
 import { db } from '../firebase.js'; 
 import { getFirestore } from 'firebase/firestore'
-import { doc, setDoc } from 'firebase/firestore';
+import { doc, setDoc, updateDoc } from 'firebase/firestore';
 
 export default {
+  props: ['userId'], 
+
   data() {
     return {
       showDropdown: false, 
       showModal: false,
       categoryName: '',  
+      allCategories: [],
     };
      
   },
 
   methods: {
+    // async addCategoryTitle(newCategoryTitle) {
+    //   const userDocRef = doc(db, 'users', this.userId);
+
+    //   // Add a new category title to the "categoryTitles" array field
+    //   // If the document or field does not exist, it will be created
+    //   await updateDoc(userDocRef, {
+    //     categoryTitles: arrayUnion(newCategoryTitle)
+    //   });
+    // },
+
     toggleDropdown() {
       this.showDropdown = !this.showDropdown;
     }, 
@@ -66,8 +79,31 @@ export default {
       }
     }, 
 
+    async addCategory(currCategory) {
 
-    addCategory(category) {
+      //Fill up Arrays of Arrays
+      const userDocRef = doc(db, 'users', this.userId);
+
+      // Add a new category title to the "categoryTitles" array field
+      // If the document or field does not exist, it will be created
+      await updateDoc(userDocRef, {
+        Categories: arrayUnion(currCategory)
+      });
+
+
+      //Add category with empty item
+      const emptyItem = {
+        id: "EMPTY", 
+        category: currCategory, 
+      }; 
+
+      const categoryRef = collection(db, `users/${this.userId}/${currCategory}`);
+
+      await setDoc(doc(categoryRef, "EMPTY"), emptyItem); 
+        
+      console.log('Empty item added to firestore', emptyItem); 
+      console.log('Emitting add-food empty event with:', {item: emptyItem });
+
       this.$emit('category-selected',category); 
       this.showDropdown = !this.showDropdown;
     }

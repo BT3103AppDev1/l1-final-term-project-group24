@@ -46,6 +46,7 @@ import { collection, doc, setDoc } from 'firebase/firestore';
                 foodQuantity: '',
                 foodExpiryDate: '', 
                 category: this.selectedCategory, 
+                allCategories: [],
             };
         },
         methods: {

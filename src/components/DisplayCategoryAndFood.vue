@@ -8,16 +8,18 @@
           <i class="fas fa-trash"></i>
         </button>
       </div>
-      <div v-for="(foodItem, index2) in this.allFoods[index]" :key="index2" class="food-item">
-        <p>{{ foodItem.name }}</p>
-        <p>Qty : {{ foodItem.quantity }}</p>
-        <p>Exp : {{ foodItem.expiryDate }}</p>
-        <button class="edit-button" @click="editItem(foodItem)">
-          <i class="fa fa-pencil" aria-hidden="true"></i>
-        </button>
-        <button class="deleteItem-button" @click="deleteItem(foodItem)">
-          <i class="fas fa-times"></i>
-        </button>
+      <div v-for="(foodItem, index2) in this.allFoods[index]" :key="index2">
+        <div v-if="foodItem.id != 'EMPTY'" class="food-item">
+          <p>{{ foodItem.name }}</p>
+          <p>Qty : {{ foodItem.quantity }}</p>
+          <p>Exp : {{ foodItem.expiryDate }}</p>
+          <button class="edit-button" @click="editItem(foodItem)">
+            <i class="fa fa-pencil" aria-hidden="true"></i>
+          </button>
+          <button class="deleteItem-button" @click="deleteItem(foodItem)">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -65,16 +67,7 @@ export default {
       }
     },
 
-    async addCategoryTitle(newCategoryTitle) {
-      const userDocRef = doc(db, 'users', this.userId);
-
-      // Add a new category title to the "categoryTitles" array field
-      // If the document or field does not exist, it will be created
-      await updateDoc(userDocRef, {
-        categoryTitles: arrayUnion(newCategoryTitle)
-      });
-    },
-
+    
     async fetchFoodItems() {
       console.log("Trying to fetch foods...")
 
@@ -95,25 +88,7 @@ export default {
       }
       console.log(this.allFoods);
     },
-
-
-    /*async fetchFoodItems(userId, selectedCategory) {
-      try {
-        const foodItemsRef = collection(db, `users/${userId}/${selectedCategory}`);
-        const foodItemsSnapshot = await getDocs(foodItemsRef);
-        const foodItems = foodItemsSnapshot.docs.map(doc => ({
-            id: doc.id,
-            ...doc.data(),
-        }));
-        console.log('Fetched food items:', foodItems);
-        return foodItems;
-      } catch (error) {
-        console.error('Error fetching food items:', error);
-      }
-    }, */ 
-
-
-
+    
 
 		handlePlusButtonClick(index) {
       const categoryName = this.selectedCategories[index]; 

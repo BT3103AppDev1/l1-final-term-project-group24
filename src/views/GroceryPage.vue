@@ -13,7 +13,7 @@ import AddCategory from '@/components/AddCategory.vue';
 import AddFood from '@/components/AddFood.vue'; 
 import DisplayCategoryAndFood from '@/components/DisplayCategoryAndFood.vue'
 import editFood from '@/components/editFood.vue'; 
-import { deleteDoc, getDocs, doc, collection } from 'firebase/firestore';
+import { updateDoc, arrayUnion, getDoc, deleteDoc, getDocs, doc, collection } from 'firebase/firestore';
 import { db } from '@/firebase'; 
 
 export default {
@@ -28,6 +28,7 @@ export default {
     return {
       selectedCategory: '', 
       selectedCategories: [], 
+      allCategories: [],
       showForm: false, 
       foodItem: '', 
       foodItems: [], 
@@ -38,16 +39,44 @@ export default {
   }, 
 
   methods: {
+    async fetchCategoryTitles() {
+      const userDocRef = doc(db, 'users', this.userId);
+      const userDocSnap = await getDoc(userDocRef);
+
+      if (userDocSnap.exists()) {
+        const userData = userDocSnap.data();
+        // This assumes that your user document has a field called 'categoryTitles'
+        console.log("These are the categories", userData.Categories);
+        this.allCategories = userData.Categories || []; // return the array or an empty array if it doesn't exist
+      } else {
+        // Handle the case where the document does not exist
+        console.log(`No categories yet`);
+        this.allCategories = [];
+      }
+    },
 
     handlePlusButtonClick(show, categoryName) {
       this.showForm = show;
       this.selectedCategory = categoryName; 
     }, 
 
-    async deleteCategory(index) {
-      const categoryToDelete = this.selectedCategories[index]; 
-      this.selectedCategories.splice(index, 1); 
 
+   
+    async deleteCategory(index) {
+      await this.fetchCategoryTitles();
+
+      const categoryToDelete = this.allCategories[index];
+
+      // Delete the category from the array of categories
+      this.allCategories.splice(index, 1); 
+      const userDocRef = doc(db, 'users', this.userId);
+      // Add a new category title to the "categoryTitles" array field
+      // If the document or field does not exist, it will be created
+      await updateDoc(userDocRef, {
+        Categories: this.allCategories
+      });
+
+      // Deleting all food items in the category
       const categoryRef = collection(db, `users/${this.userId}/${categoryToDelete}`); 
       const foodItemsSnapshot = await getDocs(categoryRef); 
       const deletePromises = foodItemsSnapshot.docs.map(snapshot => deleteDoc(snapshot.ref));
@@ -66,10 +95,15 @@ export default {
     }, */ 
 
 
-		handleCategorySelected(categoryName) {
+		async handleCategorySelected(categoryName) {
+      await this.fetchCategoryTitles();
       console.log('Received category name:', categoryName);
-      if (!this.selectedCategories.includes(categoryName)) {
-        this.selectedCategories.push(categoryName);
+
+      const userDocRef = doc(db, 'users', this.userId);
+      if (!this.allCategories.includes(categoryName)) {
+        await updateDoc(userDocRef, {
+          Categories: this.allCategories
+        });
       }
       this.selectedCategory = categoryName; 
     },
