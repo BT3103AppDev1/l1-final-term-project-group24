@@ -96,22 +96,22 @@ export default {
             dateDisplay.value = formatDate(mydate.value);
 
             async function display() {
-                if (breakfastTF === true) {
+                if (breakfastTF.value) {
                     let table = document.getElementById("breakfast")
                     table.deleteRow(0)
                     breakfastTF.value = false
                 } 
-                if (lunchTF === true) {
+                if (lunchTF.value) {
                     let table = document.getElementById("lunch")
                     table.deleteRow(0)
                     lunchTF.value = false
                 } 
-                if (dinnerTF === true) {
+                if (dinnerTF.value) {
                     let table = document.getElementById("dinner")
                     table.deleteRow(0)
                     lunchTF.value = false
                 } 
-                if (snackTF === true) {
+                if (snackTF.value) {
                     let table = document.getElementById("snack")
                     table.deleteRow(0)
                     snackTF.value = false
