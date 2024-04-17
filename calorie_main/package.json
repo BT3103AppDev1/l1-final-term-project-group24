@@ -1,0 +1,24 @@
+{
+  "name": "calorie_intake",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@syncfusion/ej2-vue-calendars": "^25.1.35",
+    "@vuepic/vue-datepicker": "^8.3.1",
+    "axios": "^1.6.8",
+    "firebase": "^10.9.0",
+    "primevue": "^3.50.0",
+    "vue": "^3.4.21",
+    "vue3-datepicker": "^0.4.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.0.4",
+    "vite": "^5.1.5"
+  }
+}
