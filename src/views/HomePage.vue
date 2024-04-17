@@ -4,10 +4,6 @@
     <button @click="goToProfile" class="profile-button">Go to Profile</button>
     <div class="logoutButton">
       <button id="logoutButton" @click="logout" class="logout-button"> Logout </button>
-    <h1>This is a home page</h1>
-    <button @click="goToProfile">Go to Profile</button>
-    <div class="logoutButton">
-      <button id="logoutButton" @click="logout"> Logout </button>
     </div>
   </div>
   <div v-if="!user">
@@ -27,11 +23,6 @@ export default {
     GroceryPage, 
   }, 
 
-
-<script>
-import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
-
-export default {
   data() {
     return {
       user:false,
@@ -45,9 +36,7 @@ export default {
         this.user = user;
       }
     })
-
     console.log(this.user); 
-
   },
 
   methods: {
@@ -78,7 +67,6 @@ export default {
   transform: scale(1.1); /* Increases size by 10% */
 }
 
-
 .profile-button, .logout-button {
   background-color: #FFB356;
   border-radius: 20px;
@@ -89,5 +77,6 @@ export default {
   font-size: 18px;
   transition: background-color 0.1s, transform 0.1s;
 }
+
 
 </style>
