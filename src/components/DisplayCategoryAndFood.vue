@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-for="(category, index) in selectedCategories" :key="index">
+    <div v-for="(category, index) in this.allCategories" :key="index">
       <div class="category-item">
         <span class="category-name">{{ category }}</span>
         <button class="plus-button" @click="handlePlusButtonClick(index)">+</button>
@@ -8,20 +8,16 @@
           <i class="fas fa-trash"></i>
         </button>
       </div>
-      <div v-for="foodCategory in this.foodItems" :key="foodCategory.category">
-        <div v-if="foodCategory.category == category">
-          <div v-for="item in foodCategory.items" :key="item.name" class="food-item">
-            <p>{{ item.name }}</p>
-            <p>Qty : {{ item.quantity }}</p>
-            <p>Exp : {{ item.expiryDate }}</p>
-            <button class="edit-button" @click="editItem(item)">
-              <i class="fa fa-pencil" aria-hidden="true"></i>
-            </button>
-            <button class="deleteItem-button" @click="deleteItem(item)">
-              <i class="fas fa-times"></i>
-            </button>
-          </div>
-        </div>
+      <div v-for="(foodItem, index2) in this.allFoods[index]" :key="index2" class="food-item">
+        <p>{{ foodItem.name }}</p>
+        <p>Qty : {{ foodItem.quantity }}</p>
+        <p>Exp : {{ foodItem.expiryDate }}</p>
+        <button class="edit-button" @click="editItem(foodItem)">
+          <i class="fa fa-pencil" aria-hidden="true"></i>
+        </button>
+        <button class="deleteItem-button" @click="deleteItem(foodItem)">
+          <i class="fas fa-times"></i>
+        </button>
       </div>
     </div>
   </div>
@@ -32,23 +28,57 @@
 
 import { db } from '@/firebase'; 
 import '@fortawesome/fontawesome-free/css/all.css'; 
-import { collection, getDocs } from 'firebase/firestore';
+import { doc, updateDoc, arrayUnion, collection, getDoc, getDocs } from 'firebase/firestore';
 
 export default {
 	props: ['selectedCategories', 'foodItems', 'userId'],
 
+  data() {
+    return {
+      allCategories: [],
+      allFoods: []
+    }
+  },
 
-  created() {
+
+  async created() {
+    await this.fetchCategoryTitles();
     this.fetchFoodItems();
   },
 
 
-
 	methods: {
 
+    async fetchCategoryTitles() {
+      const userDocRef = doc(db, 'users', this.userId);
+      const userDocSnap = await getDoc(userDocRef);
+
+      if (userDocSnap.exists()) {
+        const userData = userDocSnap.data();
+        // This assumes that your user document has a field called 'categoryTitles'
+        console.log("These are the categories", userData.Categories);
+        this.allCategories = userData.Categories || []; // return the array or an empty array if it doesn't exist
+      } else {
+        // Handle the case where the document does not exist
+        console.log(`No categories yet`);
+        this.allCategories = [];
+      }
+    },
+
+    async addCategoryTitle(newCategoryTitle) {
+      const userDocRef = doc(db, 'users', this.userId);
+
+      // Add a new category title to the "categoryTitles" array field
+      // If the document or field does not exist, it will be created
+      await updateDoc(userDocRef, {
+        categoryTitles: arrayUnion(newCategoryTitle)
+      });
+    },
 
     async fetchFoodItems() {
-      for (const category of this.selectedCategories) {
+      console.log("Trying to fetch foods...")
+
+      for (const category of this.allCategories) {
         try {
           const foodItemsRef = collection(db, `users/${this.userId}/${category}`);
           const foodItemsSnapshot = await getDocs(foodItemsRef);
@@ -56,13 +86,16 @@ export default {
             id: doc.id,
             ...doc.data(),
           }));
-          console.log('Fetched food items:', foodItems);
-          this.$set(this.foodItems, category, { category, items: foodItemsForCategory });
+          console.log('Fetched food items:', foodItemsForCategory);
+          this.allFoods.push(foodItemsForCategory);
+          // this.$set(this.foodItems, category, { category, items: foodItemsForCategory });
         } catch (error) {
           console.error('Error fetching food items for category:', category, error);
         }
       }
+      console.log(this.allFoods);
     },
+
 
     /*async fetchFoodItems(userId, selectedCategory) {
       try {
@@ -102,7 +135,6 @@ export default {
   },
 
     mounted() {
-
       this.fetchFoodItems();
     },
     

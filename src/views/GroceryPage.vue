@@ -87,7 +87,7 @@ export default {
       // Update your foodItems data structure as needed
       // For example, if you're storing food items by category:
       const categoryIndex = this.foodItems.findIndex(cat => cat.category === this.selectedCategory);
-      if (categoryIndex !== -1) {
+      if (categoryIndex != -1) {
         this.foodItems[categoryIndex].items.push(foodItem);
         console.log('category found', categoryIndex); 
         console.log('Categories in foodItems:', this.foodItems.map(cat => cat.category));
