@@ -1,13 +1,9 @@
 <script setup>
-import Header from './components/Header.vue'
-import SideBar from './components/SideBar.vue'
-import MealPlan from './components/MealPlan.vue';
+import CaloriesIntake from './view/CaloriesIntake.vue';
 </script>
 
 <template>
-  <Header/>
-  <SideBar/>
-  <MealPlan/>
+  <CaloriesIntake/>
 </template>
 
 <style scoped>
