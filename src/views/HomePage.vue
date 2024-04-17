@@ -1,5 +1,9 @@
 <template>
   <div v-if="user">
+    <GroceryPage />
+    <button @click="goToProfile" class="profile-button">Go to Profile</button>
+    <div class="logoutButton">
+      <button id="logoutButton" @click="logout" class="logout-button"> Logout </button>
     <h1>This is a home page</h1>
     <button @click="goToProfile">Go to Profile</button>
     <div class="logoutButton">
@@ -10,6 +14,19 @@
     <h1>Please Sign In Properly</h1>
   </div>
 </template>
+
+<script scoped>
+import GroceryPage from '@/views/GroceryPage.vue'; 
+import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
+import '@fortawesome/fontawesome-free/css/all.css'; 
+
+
+export default {
+  
+  components: {
+    GroceryPage, 
+  }, 
+
 
 <script>
 import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
@@ -28,6 +45,9 @@ export default {
         this.user = user;
       }
     })
+
+    console.log(this.user); 
+
   },
 
   methods: {
@@ -58,7 +78,8 @@ export default {
   transform: scale(1.1); /* Increases size by 10% */
 }
 
-button {
+
+.profile-button, .logout-button {
   background-color: #FFB356;
   border-radius: 20px;
   color: #578855;
@@ -68,4 +89,5 @@ button {
   font-size: 18px;
   transition: background-color 0.1s, transform 0.1s;
 }
+
 </style>

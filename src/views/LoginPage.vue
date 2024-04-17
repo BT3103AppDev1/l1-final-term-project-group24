@@ -81,7 +81,9 @@ export default {
       const provider = new GoogleAuthProvider();
       try {
         const result = await signInWithPopup(auth, provider);
+
         const user = result.user;
+
         if (result._tokenResponse.isNewUser) {
           // Prompt for username creation
           this.$router.push({ name: 'UsernameCreation'});

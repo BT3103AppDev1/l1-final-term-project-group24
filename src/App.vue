@@ -3,12 +3,16 @@
 </template>
 
 <script>
+
+import '@fortawesome/fontawesome-free/css/all.css'; 
+
 export default {
   name: 'App'
 }
 </script>
 
 <style>
+
 @import url('https://fonts.googleapis.com/css?family=Fuzzy Bubbles');
 
 #app {
