@@ -4,18 +4,30 @@ import SideBar from '@/components/SideBar.vue'
 import MealPlan from '@/components/MealPlan.vue';
 
 export default {
-    components: {
-        Header,
-        SideBar,
-        MealPlan
+  components: {
+      Header,
+      SideBar,
+      MealPlan
+  },
+
+  data() {
+    return {
+      totalCal: 0
+    };
+  },
+
+  methods: {
+    handleUpdateData(newCal) {
+      this.totalCal = newCal;
     }
+  }
 }
 </script>
 
 <template>
   <Header/>
-  <SideBar/>
-  <MealPlan/>
+  <SideBar :totCalories="totalCal"/>
+  <MealPlan :totCalories="totalCal" @update-total-calories = "handleUpdateData"/>
 </template>
 
 <style scoped>

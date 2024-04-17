@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="input-group">
-      <label>Total Calorie: </label>
+      <label>Total Calorie: {{ totCalories }}</label>
     </div>
 
     <div class="input-group">
@@ -41,19 +41,15 @@
 </template>
 
 <script>
-import firebaseApp from '../firebase.js';
-import { getFirestore } from 'firebase/firestore';
-import { collection, getDocs, doc, deleteDoc } from 'firebase/firestore';
-
-const db = getFirestore(firebaseApp);
-
 export default {
   name: "SideBar",
   data() {
-      return {
-        selected: 'avatar1'
-      };
-    }
+    return {
+      selected: 'avatar1'
+    };
+  },
+
+  props:['totCalories']
 }
 </script>
 
