@@ -37,7 +37,7 @@ import { collection, doc, setDoc } from 'firebase/firestore';
 
     export default {
 
-        props: ['showForm', 'selectedCategory', 'userId'], 
+        props: ['showForm', 'selectedCategory', 'userEmail'], 
 
 
         data() {
@@ -49,6 +49,16 @@ import { collection, doc, setDoc } from 'firebase/firestore';
                 allCategories: [],
             };
         },
+
+        watch: {
+            userEmail: {
+            immediate: true,
+                handler(newVal, oldVal) {
+                    console.log("userEmail in AddFood:", newVal);
+                }
+            }
+        },
+
         methods: {
 
             async submitFoodForm() {
@@ -62,7 +72,7 @@ import { collection, doc, setDoc } from 'firebase/firestore';
                 }; 
                 
                 
-                const categoryRef = collection(db, `users/${this.userId}/${this.selectedCategory}`); 
+                const categoryRef = collection(db, `${this.userEmail}/grocery-management/${this.selectedCategory}`); 
 
                 await setDoc(doc(categoryRef, foodItem.id), foodItem); 
                 

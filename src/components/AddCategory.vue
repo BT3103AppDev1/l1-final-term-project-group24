@@ -34,10 +34,10 @@
 import '@fortawesome/fontawesome-free/css/all.css'; 
 import { db } from '../firebase.js'; 
 import { getFirestore } from 'firebase/firestore'
-import { doc, setDoc, updateDoc } from 'firebase/firestore';
+import { doc, setDoc, getDoc, updateDoc } from 'firebase/firestore';
 
 export default {
-  props: ['userId'], 
+  props: ['userEmail'], 
 
   data() {
     return {
@@ -49,16 +49,33 @@ export default {
      
   },
 
-  methods: {
-    // async addCategoryTitle(newCategoryTitle) {
-    //   const userDocRef = doc(db, 'users', this.userId);
+  watch: {
+    userEmail: {
+    immediate: true,
+      async handler(newVal, oldVal) {
+        console.log("userEmail in AddCategory:", newVal);
+        await this.checkAndCreateDocument();
+      }
+    }
+  },
 
-    //   // Add a new category title to the "categoryTitles" array field
-    //   // If the document or field does not exist, it will be created
-    //   await updateDoc(userDocRef, {
-    //     categoryTitles: arrayUnion(newCategoryTitle)
-    //   });
-    // },
+  methods: {
+    async checkAndCreateDocument() {
+      // Construct the document reference
+      const docRef = doc(db, this.userEmail, 'grocery-management');
+
+      // Try to get the document
+      const docSnap = await getDoc(docRef);
+
+      if (!docSnap.exists()) {
+        // Document does not exist, create it
+        console.log('Document does not exist, creating...');
+        await setDoc(docRef, {
+          Categories: [], // Example field, adjust according to your needs
+        });
+        console.log('Document created successfully.');
+      }
+    },
 
     toggleDropdown() {
       this.showDropdown = !this.showDropdown;

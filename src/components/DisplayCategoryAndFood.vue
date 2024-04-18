@@ -33,7 +33,7 @@ import '@fortawesome/fontawesome-free/css/all.css';
 import { doc, updateDoc, arrayUnion, collection, getDoc, getDocs } from 'firebase/firestore';
 
 export default {
-	props: ['selectedCategories', 'foodItems', 'userId'],
+	props: ['userEmail'],
 
   data() {
     return {
@@ -42,17 +42,27 @@ export default {
     }
   },
 
+  // async mounted() {
+  //   console.log("userEmail in Display:", this.userEmail);
+  //   await this.fetchCategoryTitles();
+  //   await this.fetchFoodItems();
+  // },
 
-  async created() {
-    await this.fetchCategoryTitles();
-    this.fetchFoodItems();
+  watch: {
+    userEmail: {
+      immediate: true,
+      async handler(newVal, oldVal) {
+        console.log("userEmail in Display:", newVal);
+        await this.fetchCategoryTitles();
+        await this.fetchFoodItems();
+      }
+    }
   },
-
 
 	methods: {
 
     async fetchCategoryTitles() {
-      const userDocRef = doc(db, 'users', this.userId);
+      const userDocRef = doc(db, this.userEmail, 'grocery-management');
       const userDocSnap = await getDoc(userDocRef);
 
       if (userDocSnap.exists()) {
@@ -72,7 +82,7 @@ export default {
 
       for (const category of this.allCategories) {
         try {
-          const foodItemsRef = collection(db, `users/${this.userId}/${category}`);
+          const foodItemsRef = collection(db, `${this.userEmail}/grocery-management/${category}`);
           const foodItemsSnapshot = await getDocs(foodItemsRef);
           const foodItemsForCategory = foodItemsSnapshot.docs.map(doc => ({
             id: doc.id,

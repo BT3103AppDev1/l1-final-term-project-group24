@@ -1,9 +1,9 @@
 <template> 
   <div> 
-    <AddCategory @category-selected="handleCategorySelected" @show-form="handleShowForm"/> 
-    <DisplayCategoryAndFood :selectedCategories="selectedCategories" :foodItems="foodItems" :userId="userId" @show-form="handleShowForm" @category-selected="handleCategorySelected" @delete-category="deleteCategory" @edit-item="handleEditItem" @delete-item="handleDeleteItem" />
-    <AddFood :selectedCategory="selectedCategory" :show-form="showForm" :userId="userId" @close="handleCloseForm" @add-food="addFoodItem"/>
-    <editFood :show-edit-form="showEditForm" :item="itemToEdit" :selectedCategory="this.selectedCategory" :userId="userId" :itemToEdit="this.itemToEdit" @update-item="handleUpdateItem" @close-edit-form="handleCloseEditForm"></editFood>
+    <AddCategory :userEmail="userEmail"  @category-selected="handleCategorySelected" @show-form="handleShowForm"/> 
+    <DisplayCategoryAndFood :userEmail="userEmail" @show-form="handleShowForm" @category-selected="handleCategorySelected" @delete-category="deleteCategory" @edit-item="handleEditItem" @delete-item="handleDeleteItem" />
+    <AddFood :userEmail="userEmail" :selectedCategory="selectedCategory" :show-form="showForm" @close="handleCloseForm" @add-food="addFoodItem"/>
+    <editFood :userEmail="userEmail" :show-edit-form="showEditForm" :selectedCategory="this.selectedCategory" :itemToEdit="this.itemToEdit" @update-item="handleUpdateItem" @close-edit-form="handleCloseEditForm"></editFood>
   </div>
 </template>
 
@@ -13,6 +13,7 @@ import AddCategory from '@/components/AddCategory.vue';
 import AddFood from '@/components/AddFood.vue'; 
 import DisplayCategoryAndFood from '@/components/DisplayCategoryAndFood.vue'
 import editFood from '@/components/editFood.vue'; 
+import { getAuth, onAuthStateChanged } from 'firebase/auth'
 import { updateDoc, arrayUnion, setDoc, getDoc, deleteDoc, getDocs, doc, collection } from 'firebase/firestore';
 import { db } from '@/firebase'; 
 
@@ -26,21 +27,54 @@ export default {
 
   data() {
     return {
+      userEmail: 'users',
       selectedCategory: '', 
-      selectedCategories: [], 
       allCategories: [],
       showForm: false, 
       foodItem: '', 
-      foodItems: [], 
+      foodItems: [],
       showEditForm: false, 
       itemToEdit: null, 
-      userId: 'yourUserId'
     };
   }, 
 
+  async mounted() {
+    await this.fetchUserProfile();
+    await this.fetchFoodItems();
+    // await this.fetchCategoryTitles();
+    console.log("mounted", this.userEmail);
+  },
+
   methods: {
+    fetchUserProfile() {
+      const auth = getAuth();
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+            this.userEmail = String(user.email);
+        }
+      });
+    },
+
+    async checkAndCreateDocument(userEmail) {
+      // Construct the document reference
+      const docRef = doc(db, userEmail, 'grocery-management');
+
+      // Try to get the document
+      const docSnap = await getDoc(docRef);
+
+      if (!docSnap.exists()) {
+        // Document does not exist, create it
+        console.log('Document does not exist, creating...');
+        await setDoc(docRef, {
+          Categories: [], // Example field, adjust according to your needs
+        });
+        console.log('Document created successfully.');
+      }
+    },
+
     async fetchCategoryTitles() {
-      const userDocRef = doc(db, 'users', this.userId);
+      const userDocRef = doc(db, this.userEmail, 'grocery-management');
+      console.log("FETCHING", userDocRef);
       const userDocSnap = await getDoc(userDocRef);
 
       if (userDocSnap.exists()) {
@@ -53,6 +87,27 @@ export default {
         console.log(`No categories yet`);
         this.allCategories = [];
       }
+    },
+
+    async fetchFoodItems() {
+      console.log("Trying to fetch foods...")
+
+      for (const category of this.allCategories) {
+        try {
+          const foodItemsRef = collection(db, `${this.userEmail}/grocery-management/${category}`);
+          const foodItemsSnapshot = await getDocs(foodItemsRef);
+          const foodItemsForCategory = foodItemsSnapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data(),
+          }));
+          console.log('Fetched food items:', foodItemsForCategory);
+          this.allFoods.push(foodItemsForCategory);
+          // this.$set(this.foodItems, category, { category, items: foodItemsForCategory });
+        } catch (error) {
+          console.error('Error fetching food items for category:', category, error);
+        }
+      }
+      console.log(this.allFoods);
     },
 
     handlePlusButtonClick(show, categoryName) {
@@ -69,7 +124,7 @@ export default {
 
       // Delete the category from the array of categories
       this.allCategories.splice(index, 1); 
-      const userDocRef = doc(db, 'users', this.userId);
+      const userDocRef = doc(db, this.userEmail, 'grocery-management');
       // Add a new category title to the "categoryTitles" array field
       // If the document or field does not exist, it will be created
       await updateDoc(userDocRef, {
@@ -77,7 +132,7 @@ export default {
       });
 
       // Deleting all food items in the category
-      const categoryRef = collection(db, `users/${this.userId}/${categoryToDelete}`); 
+      const categoryRef = collection(db, `${this.userEmail}/grocery-management/${categoryToDelete}`); 
       const foodItemsSnapshot = await getDocs(categoryRef); 
       const deletePromises = foodItemsSnapshot.docs.map(snapshot => deleteDoc(snapshot.ref));
       await Promise.all(deletePromises);
@@ -100,7 +155,7 @@ export default {
 
       console.log('Received category name:', categoryName);
 
-      const userDocRef = doc(db, 'users', this.userId);
+      const userDocRef = doc(db, this.userEmail, 'grocery-management');
       if (!this.allCategories.includes(categoryName)) {
         this.allCategories.push(categoryName);
         
@@ -113,7 +168,7 @@ export default {
           id: "EMPTY", 
           category: categoryName, 
         }; 
-        const categoryRef = collection(db, `users/${this.userId}/${categoryName}`);
+        const categoryRef = collection(db, `${this.userEmail}/grocery-management/${categoryName}`);
         await setDoc(doc(categoryRef, "EMPTY"), emptyItem); 
         console.log('Empty item added to firestore', emptyItem); 
         console.log('Emitting add-food empty event with:', {item: emptyItem });
@@ -220,7 +275,7 @@ export default {
 
     async handleDeleteItem(item) {
       // Construct the reference to the item in Firestore
-      const itemRef = doc(db, `users/${this.userId}/${item.category}`, item.id);
+      const itemRef = doc(db, `${this.userEmail}/grocery-management/${item.category}`, item.id);
 
       // Delete the item from Firestore
       try {
@@ -235,7 +290,7 @@ export default {
       if (categoryIndex !== -1) {
         this.foodItems[categoryIndex].items = this.foodItems[categoryIndex].items.filter(i => i.id !== item.id);
       }
-  },
+    },
 
     /*handleDeleteItem(itemToDelete) {
       const category = this.foodItems.find(category => category.items.includes(itemToDelete)); 
