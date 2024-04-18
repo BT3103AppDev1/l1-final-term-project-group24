@@ -13,7 +13,7 @@ import AddCategory from '@/components/AddCategory.vue';
 import AddFood from '@/components/AddFood.vue'; 
 import DisplayCategoryAndFood from '@/components/DisplayCategoryAndFood.vue'
 import editFood from '@/components/editFood.vue'; 
-import { updateDoc, arrayUnion, getDoc, deleteDoc, getDocs, doc, collection } from 'firebase/firestore';
+import { updateDoc, arrayUnion, setDoc, getDoc, deleteDoc, getDocs, doc, collection } from 'firebase/firestore';
 import { db } from '@/firebase'; 
 
 export default {
@@ -97,13 +97,27 @@ export default {
 
 		async handleCategorySelected(categoryName) {
       await this.fetchCategoryTitles();
+
       console.log('Received category name:', categoryName);
 
       const userDocRef = doc(db, 'users', this.userId);
       if (!this.allCategories.includes(categoryName)) {
+        this.allCategories.push(categoryName);
+        
         await updateDoc(userDocRef, {
           Categories: this.allCategories
         });
+
+        //Add category with empty item
+        const emptyItem = {
+          id: "EMPTY", 
+          category: categoryName, 
+        }; 
+        const categoryRef = collection(db, `users/${this.userId}/${categoryName}`);
+        await setDoc(doc(categoryRef, "EMPTY"), emptyItem); 
+        console.log('Empty item added to firestore', emptyItem); 
+        console.log('Emitting add-food empty event with:', {item: emptyItem });
+
       }
       this.selectedCategory = categoryName; 
     },

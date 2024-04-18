@@ -66,7 +66,6 @@ export default {
         this.allCategories = [];
       }
     },
-
     
     async fetchFoodItems() {
       console.log("Trying to fetch foods...")
@@ -90,8 +89,10 @@ export default {
     },
     
 
-		handlePlusButtonClick(index) {
-      const categoryName = this.selectedCategories[index]; 
+		async handlePlusButtonClick(index) {
+      await this.fetchCategoryTitles();
+
+      const categoryName = this.allCategories[index]; 
 			this.$emit('show-form', true);
       this.$emit('category-selected', categoryName)
 		},
@@ -181,6 +182,7 @@ export default {
     padding: 10px; 
     margin-bottom: 10px; 
     border-radius: 40px; 
+    background-color: rgba(255, 255, 255, 0.5);
   }
 
   .food-info {

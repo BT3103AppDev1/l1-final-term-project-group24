@@ -1,7 +1,7 @@
 <template>
     <div v-if="showForm" class="food-form-overlay">
         <div class="food-form-content">
-            <h2>Adding New Food</h2>
+            <h2>Adding New {{ this.selectedCategory }}</h2>
             <form @submit.prevent="submitFoodForm" class="food-form-container" id="food-form">
                 <div class="form-group">
                     <label for="foodName">Food:</label>
