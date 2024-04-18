@@ -42,14 +42,14 @@ import { collection, doc, setDoc } from 'firebase/firestore';
             }
         }, 
 
-        watch: {
-            userEmail: {
-            immediate: true,
-                handler(newVal, oldVal) {
-                    console.log("userEmail in editFood:", newVal);
-                }
-            }
-        },
+        // watch: {
+        //     userEmail: {
+        //     immediate: true,
+        //         handler(newVal, oldVal) {
+        //             console.log("userEmail in editFood:", newVal);
+        //         }
+        //     }
+        // },
         
         methods: {
 

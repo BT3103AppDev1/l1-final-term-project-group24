@@ -50,14 +50,14 @@ import { collection, doc, setDoc } from 'firebase/firestore';
             };
         },
 
-        watch: {
-            userEmail: {
-            immediate: true,
-                handler(newVal, oldVal) {
-                    console.log("userEmail in AddFood:", newVal);
-                }
-            }
-        },
+        // watch: {
+        //     userEmail: {
+        //     immediate: true,
+        //         handler(newVal, oldVal) {
+        //             console.log("userEmail in AddFood:", newVal);
+        //         }
+        //     }
+        // },
 
         methods: {
 
