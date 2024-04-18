@@ -1,0 +1,123 @@
+<template>
+  <div class="container">
+    <div class="input-group">
+      <label>Total Calorie: </label>
+    </div>
+
+    <div class="input-group">
+      <label>My Goal: </label>
+    </div>
+
+    <div class="input-group">
+      <label>My BMI: </label>
+    </div>
+      <div class="avatar-container">
+        <div v-if="selected=='avatar1'">
+        <img src="@/assets/avatar1.png" class="avatar">
+        </div>
+
+        <div v-if="selected=='avatar2'">
+        <img src="@/assets/avatar2.png" class="avatar">
+        </div>
+
+        <div v-if="selected=='avatar3'">
+        <img src="@/assets/avatar3.png" class="avatar">
+        </div>
+
+        <div v-if="selected=='avatar4'">
+        <img src="@/assets/avatar4.png" class="avatar">
+        </div>
+        <div class="select-container">
+          <select v-model="selected">
+          <option value="avatar1">Avatar 1</option>
+          <option value="avatar2">Avatar 2</option>
+          <option value="avatar3">Avatar 3</option>
+          <option value="avatar4">Avatar 4</option>
+          </select>
+          <br><br>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  name: "SideBar",
+  data() {
+      return {
+        selected: 'avatar1'
+      };
+    }
+}
+</script>
+
+<style scoped>
+.container {
+  width: 300px;
+  height: 600px;
+  background: #ffefd5; 
+  padding: 20px;
+  border-radius: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  position: absolute;
+  left: 30px; 
+  top: 120px;
+  margin: 20px; 
+}
+
+.input-group {
+  background-color: #ffa726; 
+  border-radius: 22px; 
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  padding: 5px 14px; 
+  margin-bottom: 13px; 
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.input-group label {
+  color: white;
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+  font-family: 'Poppins', sans-serif;
+}
+
+.avatar {
+  display: block;
+  width: 210px;
+  height: 210px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin: 20px auto;
+}
+
+.avatar-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center; 
+  justify-content: center;
+  padding: 20px;
+  position: relative;
+  top: 30px;
+}
+
+.select-container {
+  position: relative;
+  top: 30px;
+  font-family: 'Poppins', sans-serif;
+}
+
+.select-container select {    
+  font-size: 15px;  
+  background-color: #ffefd5;
+  border: 2px solid #ffefd5;
+}
+
+.select-container select:focus {
+  outline: none;
+  border-color: #ffefd5;
+}
+
+</style>
