@@ -1,5 +1,11 @@
 <template>
   <div>
+    <button @click="toggleShowExpiryingSoon"> 
+      <i class="fas fa-exclamation-triangle"></i> Show Expiring Soon
+    </button>
+    <p class="date-display"> 
+      {{  currentDate }}
+    </p>
     <div v-for="(category, index) in this.allCategories" :key="index">
       <div class="category-item">
         <span class="category-name">{{ category }}</span>
@@ -8,11 +14,11 @@
           <i class="fas fa-trash"></i>
         </button>
       </div>
-      <div v-for="(foodItem, index2) in this.allFoods[index]" :key="index2">
+      <div v-for="(foodItem, index2) in this.allFoods[index]" :key="index2" :class="{ 'expiring-soon-row': foodItem.isExpiringSoon }">
         <div v-if="foodItem.id != 'EMPTY'" class="food-item">
           <p>{{ foodItem.name }}</p>
           <p>Qty : {{ foodItem.quantity }}</p>
-          <p>Exp : {{ foodItem.expiryDate }}</p>
+          <p :class="{ 'expiring-soon': foodItem.isExpiringSoon }">Exp : {{ foodItem.expiryDate }}</p>
           <button class="edit-button" @click="editItem(foodItem)">
             <i class="fa fa-pencil" aria-hidden="true"></i>
           </button>
@@ -30,7 +36,7 @@
 
 import { db } from '@/firebase'; 
 import '@fortawesome/fontawesome-free/css/all.css'; 
-import { doc, updateDoc, arrayUnion, collection, getDoc, getDocs } from 'firebase/firestore';
+import { doc, updateDoc, arrayUnion, collection, getDoc, getDocs, onSnapshot } from 'firebase/firestore';
 
 export default {
 	props: ['userEmail'],
@@ -38,7 +44,9 @@ export default {
   data() {
     return {
       allCategories: [],
-      allFoods: []
+      allFoods: [], 
+      showExpiringSoon: false, 
+      listeners: [], 
     }
   },
 
@@ -47,6 +55,22 @@ export default {
   //   await this.fetchCategoryTitles();
   //   await this.fetchFoodItems();
   // },
+
+  computed: {
+    currentDate() {
+      const now = new Date(); 
+      const month = now.getMonth() + 1; // Months are zero-based
+      const day = now.getDate();
+      const year = now.getFullYear();
+      return `${month}/${day}/${year}`;
+    }
+
+  }, 
+
+  beforeUnmount() {
+  // Remove all real-time listeners
+    this.listeners.forEach(realTime => realTime());
+  },
 
   watch: {
     userEmail: {
@@ -87,16 +111,64 @@ export default {
           const foodItemsForCategory = foodItemsSnapshot.docs.map(doc => ({
             id: doc.id,
             ...doc.data(),
+            isExpiringSoon: this.isWithinFiveDays(new Date(doc.data().expiryDate))
           }));
+          foodItemsForCategory.sort((a,b) => {
+            const dateA = new Date(a.expiryDate); 
+            const dateB = new Date(b.expiryDate); 
+            return dateA - dateB; 
+          }); 
           console.log('Fetched food items:', foodItemsForCategory);
           this.allFoods.push(foodItemsForCategory);
           // this.$set(this.foodItems, category, { category, items: foodItemsForCategory });
+          
+          const realTime = onSnapshot(foodItemsRef, (snapshot) => {
+            const updatedFoodItemsForCategory = snapshot.docs.map(doc => ({
+              id: doc.id,
+              ...doc.data(),
+              isExpiringSoon: this.isWithinFiveDays(new Date(doc.data().expiryDate))
+            }));
+
+            updatedFoodItemsForCategory.sort((a, b) => {
+              const dateA = new Date(a.expiryDate);
+              const dateB = new Date(b.expiryDate);
+              return dateA - dateB;
+            });
+
+            // Update the corresponding category's food items in allFoods
+            const categoryIndex = this.allCategories.indexOf(category);
+            if (categoryIndex !== -1) {
+              this.allFoods[categoryIndex] = updatedFoodItemsForCategory;
+            }
+          });
+
+            this.listeners.push(realTime);
         } catch (error) {
           console.error('Error fetching food items for category:', category, error);
         }
       }
       console.log(this.allFoods);
     },
+
+    isWithinFiveDays(expiryDate) {
+      const currentDate = new Date(); 
+      const fiveDaysLater = new Date(); 
+      fiveDaysLater.setDate(currentDate.getDate() + 5); 
+      return expiryDate >= currentDate && expiryDate <= fiveDaysLater; 
+    }, 
+
+    toggleShowExpiringSoon() {
+      this.showExpiringSoon = true; 
+    }, 
+
+    filteredFoodItems(index) {
+      if (this.showExpiringSoon) {
+        return this.allFoods[index].filter(item => item.isExpiringSoon);
+      } else {
+        return this.allFoods[index];
+      }
+    },
+    
     
 
 		async handlePlusButtonClick(index) {
@@ -228,5 +300,24 @@ export default {
   .deleteItem-button:hover {
     color:green; 
   }
+
+
+  .expiring-soon-row {
+    color: red; 
+  }
+
+  .expiring-soon-row .fa-pencil,
+  .expiring-soon-row .fa-times {
+    color: red; 
+  }
+
+
+  .date-display {
+    position: absolute; 
+    top: 10px; 
+    right: 30px; 
+    font-size: 18px; 
+  }
+
 </style>
  

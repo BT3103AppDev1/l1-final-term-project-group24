@@ -81,10 +81,12 @@ import { collection, doc, setDoc } from 'firebase/firestore';
 
                 this.$emit('add-food', foodItem )
 
+                //location.reload(); 
                 // Reset form after submission
                 this.foodName = ''; 
                 this.foodQuantity = '';
                 this.foodExpiryDate = '';
+                console.log(foodItem); 
 
                 this.closeFoodForm(); // Close the form after submission
             }, 

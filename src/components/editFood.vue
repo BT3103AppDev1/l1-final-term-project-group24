@@ -35,10 +35,14 @@ import { collection, doc, setDoc } from 'firebase/firestore';
 
         computed: {
             editedItem() {
-                return {
+                console.log('Item:', this.item);
+                const edited = this.item && this.item.name ? { ...this.item, id: this.item.id } : { name: '', quantity: '', expiryDate: '', category: '' };
+                console.log('Edited Item:', edited);
+                return edited;
+                /*return {
                     ...this.item, 
                     id: this.item.id, 
-                };
+                };*/ 
             }
         }, 
 
