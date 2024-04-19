@@ -9,7 +9,7 @@
 
 
 <script> 
-import AddCategory from '@/components/AddCategory.vue'; 
+import AddCategory from '@/components/AddCategory.vue'
 import AddFood from '@/components/AddFood.vue'; 
 import DisplayCategoryAndFood from '@/components/DisplayCategoryAndFood.vue'
 import editFood from '@/components/editFood.vue'; 
