@@ -1,3 +1,9 @@
+<template>
+  <Header/>
+  <SideBar :userWeight = "weight" :userHeight = "height" :caloriesTarget = "target"/>
+  <MealPlan/>
+</template>
+
 <script>
 import Header from '@/components/Header.vue';
 import SideBar from '@/components/SideBar.vue'
@@ -11,12 +17,6 @@ export default {
     }
 }
 </script>
-
-<template>
-  <Header/>
-  <SideBar/>
-  <MealPlan/>
-</template>
 
 <style scoped>
 #app {
