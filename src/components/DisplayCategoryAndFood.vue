@@ -1,11 +1,15 @@
 <template>
   <div>
-    <button @click="toggleShowExpiryingSoon"> 
-      <i class="fas fa-exclamation-triangle"></i> Show Expiring Soon
-    </button>
-    <p class="date-display"> 
-      {{  currentDate }}
-    </p>
+    <div class="top-right-container">
+      <p class="date-display"> 
+        {{ currentDate }}
+      </p>
+      <button @click="toggleShowExpiringSoon" class="toggle-button">
+        <span class="switch" :class="{ 'on': showExpiringSoon, 'off': !showExpiringSoon }"></span>
+        <span class="tooltip">{{ toggleTooltipText }}</span>
+      </button>
+    </div>
+
     <div v-for="(category, index) in this.allCategories" :key="index">
       <div class="category-item">
         <span class="category-name">{{ category }}</span>
@@ -14,7 +18,7 @@
           <i class="fas fa-trash"></i>
         </button>
       </div>
-      <div v-for="(foodItem, index2) in this.allFoods[index]" :key="index2" :class="{ 'expiring-soon-row': foodItem.isExpiringSoon }">
+      <div v-for="(foodItem, index2) in filteredFoodItems[index]" :key="index2" :class="{ 'expiring-soon-row': foodItem.isExpiringSoon }">
         <div v-if="foodItem.id != 'EMPTY'" class="food-item">
           <p>{{ foodItem.name }}</p>
           <p>Qty : {{ foodItem.quantity }}</p>
@@ -63,6 +67,20 @@ export default {
       const day = now.getDate();
       const year = now.getFullYear();
       return `${month}/${day}/${year}`;
+    }, 
+
+    filteredFoodItems() {
+      return this.allCategories.map((category, index) => {
+        if (this.showExpiringSoon) {
+          return this.allFoods[index].filter(item => item.isExpiringSoon);
+        } else {
+          return this.allFoods[index];
+        }
+      });
+    }, 
+
+    toggleTooltipText() {
+      return this.showExpiringSoon ? 'Show all items' : 'Show expiring items';
     }
 
   }, 
@@ -85,7 +103,7 @@ export default {
 
 	methods: {
 
-    async fetchCategoryTitles() {
+    /*async fetchCategoryTitles() {
       const userDocRef = doc(db, this.userEmail, 'grocery-management');
       const userDocSnap = await getDoc(userDocRef);
 
@@ -99,8 +117,24 @@ export default {
         console.log(`No categories yet`);
         this.allCategories = [];
       }
+    },*/ 
+    async fetchCategoryTitles() {
+      const userDocRef = doc(db, this.userEmail, 'grocery-management');
+      const realTime = onSnapshot(userDocRef, (docSnapshot) => {
+      if (docSnapshot.exists()) {
+        const userData = docSnapshot.data();
+        this.allCategories = userData.Categories || []; // Update the categories array in real-time
+        // Call fetchFoodItems after updating allCategories
+        this.fetchFoodItems();
+      } else {
+        console.log(`No categories yet`);
+        this.allCategories = [];
+      }
+    });
+
+    this.listeners.push(realTime);
     },
-    
+
     async fetchFoodItems() {
       console.log("Trying to fetch foods...")
 
@@ -113,11 +147,13 @@ export default {
             ...doc.data(),
             isExpiringSoon: this.isWithinFiveDays(new Date(doc.data().expiryDate))
           }));
+
           foodItemsForCategory.sort((a,b) => {
             const dateA = new Date(a.expiryDate); 
             const dateB = new Date(b.expiryDate); 
             return dateA - dateB; 
           }); 
+          
           console.log('Fetched food items:', foodItemsForCategory);
           this.allFoods.push(foodItemsForCategory);
           // this.$set(this.foodItems, category, { category, items: foodItemsForCategory });
@@ -158,17 +194,8 @@ export default {
     }, 
 
     toggleShowExpiringSoon() {
-      this.showExpiringSoon = true; 
-    }, 
-
-    filteredFoodItems(index) {
-      if (this.showExpiringSoon) {
-        return this.allFoods[index].filter(item => item.isExpiringSoon);
-      } else {
-        return this.allFoods[index];
-      }
+      this.showExpiringSoon = !this.showExpiringSoon; 
     },
-    
     
 
 		async handlePlusButtonClick(index) {
@@ -311,13 +338,73 @@ export default {
     color: red; 
   }
 
-
-  .date-display {
-    position: absolute; 
-    top: 10px; 
-    right: 30px; 
-    font-size: 18px; 
+  .top-right-container {
+    position: absolute;
+    top: 10px;
+    right: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
   }
 
+
+  .date-display {
+    margin-bottom: 10px; 
+    font-size: 18px;
+  }
+
+  .toggle-button {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+    background-color: #ccc;
+    border-radius: 34px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .tooltip {
+    visibility: hidden;
+    width: 120px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    padding: 5px 0;
+    border-radius: 6px;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%; 
+    left: 50%;
+    margin-left: -60px; 
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .toggle-button:hover .tooltip {
+    visibility: visible;
+    opacity: 1;
+  }
+
+  .switch {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 28px;
+    height: 28px;
+    background-color: white;
+    border-radius: 50%;
+    transition: transform 0.3s ease;
+  }
+
+  .switch.on {
+    transform: translateX(26px);
+    background-color: #4CAF50;
+  }
+
+  .switch.off {
+    background-color: #FFB356;
+  }
+
+
 </style>
- 
