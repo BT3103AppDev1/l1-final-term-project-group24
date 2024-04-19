@@ -1,13 +1,11 @@
 <script>
 import SideBar from '@/components/SideBar.vue';
 import MealPlan from '@/components/MealPlan.vue';
-import PopUp from '@/components/PopUp.vue';
 
 export default {
   components: {
       SideBar,
       MealPlan,
-      PopUp
   },
 
   data() {
@@ -27,7 +25,6 @@ export default {
 <template>
   <SideBar :totCalories="totalCal"/>
   <MealPlan :totCalories="totalCal" @update-total-calories = "handleUpdateData"/>
-  <PopUp/>
 </template>
 
 <style scoped>

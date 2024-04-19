@@ -29,17 +29,13 @@
           <div class="field search-field">
             <input type="text" id="meal-name" v-model="mealName" placeholder="Type meal name">
             <button @click="inputMeal" class="button">Search Meal</button>
-            {{ mealName }}: {{ calories }} 
+            {{ mealName }}: {{ calories }}
           </div>
         </div>
 
-
-      <div class="error-message" v-if="showError">
-        No meal found
-      </div>
       <Customise @addedCus = "update"/>
       <div class="modal-footer">
-        <button @click="addMeal" class="add-button">Add</button>
+        <button @click="addMeal" class="button">Add</button>
       </div>
     </div>
   </div>
@@ -72,13 +68,22 @@ export default {
   },
   methods: {
     async inputMeal() {
-      axios.get(`https://api.calorieninjas.com/v1/nutrition?query=one person of ${document.getElementById("meal-name").value}`, {
-      headers: { 'X-Api-Key': 'Ljn/8+fBf3VItM38d5R/cw==7qzsCiFXen3sEHi5' },
+      axios.get(`https://api.calorieninjas.com/v1/nutrition?query=one person of ${this.mealName}`, {
+        headers: { 'X-Api-Key': 'Ljn/8+fBf3VItM38d5R/cw==7qzsCiFXen3sEHi5' },
       })
       .then(response => {
-        this.calories = response.data.items[0].calories;
-        this.mealName = document.getElementById("meal-name").value;
+        if (response.data.items.length > 0) {
+          this.calories = response.data.items[0].calories;
+          this.showError = false;  // Hide error message if items are found
+        } else {
+          this.calories = null;
+          this.showError = true;  // Show error message if no items are found
+        }
       })
+      .catch(error => {
+        console.error("Error fetching meal information: ", error);
+        this.showError = true;  // Show error message on API error
+      });
     },
 
     selectMeal(meal) {
@@ -126,6 +131,7 @@ export default {
   padding: 20px;
   border-radius: 20px;
   width: 350px; 
+  height: 500px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   position: relative; 
 }

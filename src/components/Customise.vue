@@ -1,9 +1,9 @@
 <template>
-  <button @click="showModal = true" class="add-meal-button"> + Add Customised Meal</button>
+  <button @click="showModal = true" class="add-custom-meal-button"> + Add Customised Meal</button>
   <div v-if="showModal" class="modal-overlay" @click.self="showModal = false">
     <div class="modal">
       <div class="modal-header">
-        <h2>Add Meal 🍅</h2>
+        <h2>Add Customized Meal 🍅</h2>
         <button @click="showModal = false" class="close-button">&times;</button>
       </div>
 
@@ -85,6 +85,11 @@ export default {
 </script>
 
 <style>
+.add-custom-meal-button {
+  position: absolute;
+  top: 20px;
+}
+
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -162,10 +167,26 @@ export default {
   display: inline-block;
   font-size: 16px;
   cursor: pointer;
-  border-radius: 20px;
+  border-radius: 30px;
   width: 100%; 
 }
+.add-custom-meal-button {
+  position: absolute;
+  left: 17px;
+  top: 465px;
+  background-color: #FFA500; 
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  margin-top: 10px; 
+  text-align: center;
+  display: inline-block;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 30px;
+  width: 90%; 
 
+}
 .modal-footer .button {
   width: 100%; 
   margin-top: 10px; 
