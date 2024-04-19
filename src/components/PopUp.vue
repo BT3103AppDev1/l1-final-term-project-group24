@@ -88,7 +88,8 @@ export default {
 
     async addMeal() {
       try {
-        const docRef = await setDoc(doc(db, this.mealDate, this.mealType),{
+        const selectPage = collection(db, `users/${this.userId}/'caloriesIntake'`); 
+        const docRef = await setDoc(doc(selectPage, this.mealType),{
         mealName: this.mealName, calories: this.calories
         })
         this.showModal = false
