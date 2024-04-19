@@ -1,3 +1,4 @@
+App.vue
 <template>
   <router-link to="/home">HomePage</router-link>
   <router-link to="/caloriesIntake">CaloriesIntake</router-link>
@@ -45,3 +46,4 @@ body{
 }
 
 </style>
+
