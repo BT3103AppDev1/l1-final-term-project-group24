@@ -1,15 +1,15 @@
 <template>
   <div class="container">
     <div class="input-group">
-      <label>Total Calorie: </label>
+      <label>Total Calorie: {{ totCalories }}</label>
     </div>
 
     <div class="input-group">
-      <label>My Goal: </label>
+      <label>My Goal: {{ calorieIntakeGoal }}</label>
     </div>
 
     <div class="input-group">
-      <label>My BMI: </label>
+      <label>My BMI: {{ userBMI }}</label>
     </div>
       <div class="avatar-container">
         <div v-if="selected=='avatar1'">
@@ -41,13 +41,59 @@
 </template>
 
 <script>
+import { getAuth, reauthenticateWithCredential, EmailAuthProvider, onAuthStateChanged } from 'firebase/auth';
+import firebaseApp from '../firebase.js';
+import { getFirestore } from 'firebase/firestore';
+import { collection, getDocs, doc } from 'firebase/firestore';
+
+const db = getFirestore(firebaseApp);
+
 export default {
   name: "SideBar",
   data() {
-      return {
-        selected: 'avatar1'
-      };
+    return {
+      selected: 'avatar1',
+      userEmail: '',
+      userHeight: 0,
+      userHeight: 0,
+      calorieIntakeGoal: ''
+    };
+  },
+
+  computed: {
+    userBMI() {
+      return this.userWeight / (this.userHeight * this.userHeight / 10000)
     }
+  },
+
+  props:['totCalories'],
+
+  mounted() {
+    async function updateBMIandTarget() {
+      let auth = getAuth();
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          this.userEmail = user.email;
+        }
+      });
+      let userInfoRef = doc(db, String(userEmail), "profile-info");
+      try {
+        const docSnap = await getDocs(userInfoRef);
+        if (docSnap.exists()) {
+          let data = docSnap.data();
+          this.userWeight = data.weight || 0;
+          this.userHeight = data.height || 0;
+          this.calorieIntakeGoal = data.calorieIntakeGoal || '';
+        } else {
+          console.log("No data available");
+        }
+      } catch (error) {
+          console.error("Failed to fetch user data:", error);
+      }
+    }
+
+    updateBMIandTarget()
+  }
 }
 </script>
 

@@ -75,7 +75,11 @@ export default {
         }
     },
 
-    setup() {
+    props:['totCalories'],
+        //totCalories: totalCalories
+    
+
+    setup(props, {emit}) {
         const mydate = ref(new Date().toISOString().substr(0, 10)) 
         const showDatePicker = ref(false)
         const buttonText = ref('Select Date')
@@ -84,6 +88,7 @@ export default {
         const lunchTF = ref(false)
         const dinnerTF = ref(false)
         const snackTF = ref(false)
+        const totalCalories = ref(0)
 
         function formatDate(date) {
             return new Date(date).toLocaleDateString('en-US', {
@@ -96,26 +101,27 @@ export default {
             dateDisplay.value = formatDate(mydate.value);
 
             async function display() {
-                if (breakfastTF === true) {
+                if (breakfastTF.value) {
                     let table = document.getElementById("breakfast")
                     table.deleteRow(0)
                     breakfastTF.value = false
                 } 
-                if (lunchTF === true) {
+                if (lunchTF.value) {
                     let table = document.getElementById("lunch")
                     table.deleteRow(0)
                     lunchTF.value = false
                 } 
-                if (dinnerTF === true) {
+                if (dinnerTF.value) {
                     let table = document.getElementById("dinner")
                     table.deleteRow(0)
                     lunchTF.value = false
                 } 
-                if (snackTF === true) {
+                if (snackTF.value) {
                     let table = document.getElementById("snack")
                     table.deleteRow(0)
                     snackTF.value = false
                 }
+                totalCalories.value = 0
                 let allDocuments = await getDocs(collection(db, mydate.value))
                 allDocuments.forEach((docs) => {
                     if (docs.id === "breakfast") {
@@ -130,6 +136,7 @@ export default {
                     let mealNameCal = docs.data()
                     let mealName = mealNameCal.mealName
                     let calories = mealNameCal.calories
+                    totalCalories.value += parseFloat(calories)
                     let table = document.getElementById(docs.id)
                     let row = table.insertRow(mealName)
                     let cell0 = row.insertCell(0)
@@ -145,6 +152,7 @@ export default {
                         deleteMeal(docs.id)
                     }
                 })
+                emit('update-total-calories', totalCalories.value);
                 console.log("display")
             }
 
@@ -182,6 +190,7 @@ export default {
                 table.deleteRow(0)
                 snackTF.value = false
             }
+            totalCalories.value = 0
             let allDocuments = await getDocs(collection(db, mydate.value))
             allDocuments.forEach((docs) => {
                 if (docs.id === "breakfast") {
@@ -196,6 +205,7 @@ export default {
                 let mealNameCal = docs.data()
                 let mealName = mealNameCal.mealName
                 let calories = mealNameCal.calories
+                totalCalories.value += parseFloat(calories)
                 let table = document.getElementById(docs.id)
                 let row = table.insertRow(mealName)
                 let cell0 = row.insertCell(0)
@@ -211,6 +221,7 @@ export default {
                     deleteMeal(docs.id)
                 }
             })
+            emit('update-total-calories', totalCalories.value);
             console.log("display")
         }
 
