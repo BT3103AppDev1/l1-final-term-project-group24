@@ -35,10 +35,14 @@ import { collection, doc, setDoc } from 'firebase/firestore';
 
         computed: {
             editedItem() {
-                console.log('Item:', this.item);
+                return {
+                    ...this.itemToEdit, 
+                    id: this.itemToEdit.id, 
+                }
+                /*console.log('Item:', this.item);
                 const edited = this.item && this.item.name ? { ...this.item, id: this.item.id } : { name: '', quantity: '', expiryDate: '', category: '' };
                 console.log('Edited Item:', edited);
-                return edited;
+                return edited;*/ 
                 /*return {
                     ...this.item, 
                     id: this.item.id, 
@@ -60,7 +64,7 @@ import { collection, doc, setDoc } from 'firebase/firestore';
             async submitEditForm() {
                 // Assuming you have the item's ID and the updated data
                 this.editedItem.category = this.selectedCategory; 
-                const itemRef = doc(db, `${this.userEmail}/grocery-management/${this.selectedCategory}`, this.item.id);
+                const itemRef = doc(db, `${this.userEmail}/grocery-management/${this.selectedCategory}`, this.itemToEdit.id);
 
                 try {
                     console.log('Updating item at path:', itemRef.path);
