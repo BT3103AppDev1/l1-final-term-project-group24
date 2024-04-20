@@ -5,7 +5,7 @@
          <ul>
            <li v-for="item in expiredItems" :key="item.id">{{ item.name }}</li>
          </ul>
-         <button @click="closePopup">Close</button>
+         <!-- <button @click="closePopup">Close</button> -->
        </div>
     </div>
 </template>

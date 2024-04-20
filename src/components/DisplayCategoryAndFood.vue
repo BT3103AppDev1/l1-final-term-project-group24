@@ -18,25 +18,30 @@
           <i class="fas fa-trash"></i>
         </button>
       </div>
-      <div v-for="(foodItem, index2) in filteredFoodItems[index]" :key="index2" :class="{ 'expiring-soon-row': foodItem.isExpiringSoon, 'expired-row': foodItem.isExpired }">
-        <div v-if="foodItem.id != 'EMPTY'" class="food-item">
-          <p class="food-name">{{ foodItem.name }}</p>
-          <p ckass="food-quantity">Qty : {{ foodItem.quantity }}</p>
-          <p :class="{ 'expiring-soon': foodItem.isExpiringSoon }">Exp : {{ this.convertDateFormat(foodItem.expiryDate) }}</p>
-          <button class="edit-button" @click="editItem(foodItem)">
-            <i class="fa fa-pencil" aria-hidden="true"></i>
-          </button>
-          <button class="deleteItem-button" @click="deleteItem(foodItem)">
-            <i class="fas fa-times"></i>
-          </button>
-          <img v-if="foodItem.isExpired" src="/expiredstamp.png" alt="Expired" class="expired-icon">
-        </div>
-    </div>
+
+      <table>
+        <tr v-for="(foodItem, index2) in filteredFoodItems[index]" :key="index2" class="food-row" :class="{ 'expiring-soon-row': foodItem.isExpiringSoon, 'expired-row': foodItem.isExpired }">
+          <td v-if="foodItem.id != 'EMPTY'">{{ foodItem.name }}</td>
+          <td v-if="foodItem.id != 'EMPTY'">Qty: {{ foodItem.quantity }}</td>
+          <td v-if="foodItem.id != 'EMPTY'" :class="{ 'expiring-soon': foodItem.isExpiringSoon }">Exp: {{ this.convertDateFormat(foodItem.expiryDate) }}</td>
+          <td v-if="foodItem.id != 'EMPTY'"><img v-if="foodItem.isExpired" src="/expiredstamp.png" alt="Expired" class="expired-icon"></td>
+          <td v-if="foodItem.id != 'EMPTY'">
+            <button class="edit-button" @click="editItem(foodItem)">
+              <i class="fa fa-pencil" aria-hidden="true"></i>
+            </button>
+          </td>
+          <td v-if="foodItem.id != 'EMPTY'">
+            <button class="deleteItem-button" @click="deleteItem(foodItem)">
+              <i class="fas fa-times"></i>
+            </button>
+          </td>
+        </tr>
+      </table>
     </div>  
 
-      <div v-if="showExpiringSoon" class="expired-warning">
-        <i class="fas fa-exclamation-triangle"></i> Please do not consume expired food items!
-      </div>
+    <div v-if="showExpiringSoon" class="expired-warning">
+      <i class="fas fa-exclamation-triangle"></i> Please do not consume expired food items!
+    </div>
   </div>
 </template>
  
@@ -245,214 +250,239 @@ export default {
 </script>
  
 <style scoped>
-  .category-item {
-    text-align: center;
-    padding: 10px 0; 
-    margin-bottom: 10px; 
-    display: block; 
-    width: 100%; 
-
-  }
-
-  .category-name {
-    text-align: center; 
-    position: relative; 
-    display: inline-block; 
-  }
-
-  .category-name::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    width: 130%; 
-    height: 2px; 
-    background-color: green; 
-    transform: translateX(-10%); 
-  }
-
-  .plus-button {
-    background-color: transparent;
-    border: none;
-    color: black; 
-    cursor: pointer;
-    font-size: 16px; 
-    margin-left: 10px; 
-    
-  }
-
-  .plus-button:hover {
-    background-color: green; 
-    border: 1px solid green; 
-  }
-
-  .delete-button {
-    background-color: transparent; 
-    border: none; 
-    color: black; 
-    cursor: pointer; 
-    font-size: 10px; 
-    padding: 1px 1px; 
-    transition: color 0.3s ease; 
-  }
-
-
-  .delete-button:hover {
-    color: green; 
-  }
-
-  .food-item {
-    display: flex; 
-    justify-content: space-between; 
-    align-items: center; 
-    border: 1px solid black; 
-    padding: 10px; 
-    margin-bottom: 10px; 
-    border-radius: 40px; 
-    background-color: rgba(255, 255, 255, 0.5);
-  }
-
-  .food-item .food-name,
-.food-item .food-quantity,
-.food-item .food-exp-date {
- margin-right: 20px; /* Adjust the value as needed */
+table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: separate;
+  border-spacing: 0px 10px; /* Horizontal spacing 0, Vertical spacing 10px */
+  margin-top: -20px;
+  margin-bottom: 20px;
 }
 
+.food-row td {
+  background-color: rgba(255, 255, 255, 1);
+  height: 40px;
+  padding: 10px;
+  border-top: 1px solid black;
+  border-bottom: 1px solid black;
   
-  .edit-button {
-    background-color: transparent; 
-    border: none; 
-    margin-left: 100px; 
-    cursor: pointer; 
-    color: black;
-  }
+}
 
-  .edit-button:hover {
-    color: green;
-  }
+.food-row td:first-child {
+  border-top-left-radius: 50px;
+  border-bottom-left-radius: 50px;
+  border-left: 1px solid black;
+}
 
-  .deleteItem-button {
-    background-color: transparent; 
-    border: none;
-    color: black; 
-    cursor: pointer; 
-    transition: color 0.3s ease; 
-    margin-right: 100px; 
+.food-row td:last-child {
+  border-top-right-radius: 50px;
+  border-bottom-right-radius: 50px;
+}
 
-  }
+.category-item {
+  text-align: center;
+  padding: 10px 0; 
+  margin-bottom: 10px; 
+  display: block; 
+  width: 100%; 
 
+}
 
-  .deleteItem-button:hover {
-    color:green; 
-  }
+.category-name {
+  text-align: center; 
+  position: relative; 
+  display: inline-block; 
+}
 
+.category-name::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 130%; 
+  height: 2px; 
+  background-color: green; 
+  transform: translateX(-10%); 
+}
 
-  .expiring-soon-row {
-    color: red; 
-  }
-
-  .expiring-soon-row .fa-pencil,
-  .expiring-soon-row .fa-times {
-    color: red; 
-  }
-
-  .expired-row {
-    color: red; 
-  }
-
-  .expired-row .fa-pencil,
-  .expired-row .fa-times {
-    color: red; 
-  }
-
-  .top-right-container {
-    position: absolute;
-    top: 10px;
-    right: 30px;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-  }
-
-
-  .date-display {
-    margin-bottom: 10px; 
-    font-size: 18px;
-  }
-
-  .toggle-button {
-    position: relative;
-    display: inline-block;
-    width: 60px;
-    height: 34px;
-    background-color: #ccc;
-    border-radius: 34px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-
-  .tooltip {
-    visibility: hidden;
-    width: 120px;
-    background-color: black;
-    color: #fff;
-    text-align: center;
-    padding: 5px 0;
-    border-radius: 6px;
-    position: absolute;
-    z-index: 1;
-    bottom: 125%; 
-    left: 50%;
-    margin-left: -60px; 
-    opacity: 0;
-    transition: opacity 0.3s;
-  }
-
-  .toggle-button:hover .tooltip {
-    visibility: visible;
-    opacity: 1;
-  }
-
-  .switch {
-    position: absolute;
-    top: 2px;
-    left: 2px;
-    width: 28px;
-    height: 28px;
-    background-color: white;
-    border-radius: 50%;
-    transition: transform 0.3s ease;
-  }
-
-  .switch.on {
-    transform: translateX(26px);
-    background-color: #4CAF50;
-  }
-
-  .switch.off {
-    background-color: #FFB356;
-  }
-
-
-  .expired-warning {
-    color: red;
-    font-weight: bold;
-    text-align: center;
-    margin-top: 10px;
-  }
-
-  .expired-warning i {
-    color: red;
-    margin-right: 5px;
-  }
+.plus-button {
+  background-color: transparent;
+  border: none;
+  color: black; 
+  cursor: pointer;
+  font-size: 16px; 
+  margin-left: 10px; 
   
-  .expired-icon {
-    width: 40px;
-    height: 40px;
-    margin-right: 20px;
-  }
+}
+
+.plus-button:hover {
+  background-color: green; 
+  border: 1px solid green; 
+}
+
+.delete-button {
+  background-color: transparent; 
+  border: none; 
+  color: black; 
+  cursor: pointer; 
+  font-size: 10px; 
+  padding: 1px 1px; 
+  transition: color 0.3s ease; 
+}
 
 
+.delete-button:hover {
+  color: green; 
+}
+
+.food-item {
+  display: flex; 
+  justify-content: space-between; 
+  align-items: center; 
+  border: 1px solid black; 
+  padding: 10px; 
+  margin-bottom: 10px; 
+  border-radius: 40px; 
+  background-color: rgba(255, 255, 255, 0.5);
+}
+
+.food-item .food-name,
+.food-item .food-quantity,
+.food-item .food-exp-date {
+margin-right: 20px; /* Adjust the value as needed */
+}
 
 
+.edit-button {
+  background-color: transparent; 
+  border: none; 
+  margin-left: 100px; 
+  cursor: pointer; 
+  color: black;
+}
+
+.edit-button:hover {
+  color: green;
+}
+
+.deleteItem-button {
+  background-color: transparent; 
+  border: none;
+  color: black; 
+  cursor: pointer; 
+  transition: color 0.3s ease; 
+  margin-right: 100px; 
+
+}
+
+
+.deleteItem-button:hover {
+  color:green; 
+}
+
+
+.expiring-soon-row {
+  color: red; 
+}
+
+.expiring-soon-row .fa-pencil,
+.expiring-soon-row .fa-times {
+  color: red; 
+}
+
+.expired-row {
+  color: red; 
+}
+
+.expired-row .fa-pencil,
+.expired-row .fa-times {
+  color: red; 
+}
+
+.top-right-container {
+  position: absolute;
+  top: 10px;
+  right: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+
+.date-display {
+  margin-bottom: 10px; 
+  font-size: 18px;
+}
+
+.toggle-button {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+  background-color: #ccc;
+  border-radius: 34px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.tooltip {
+  visibility: hidden;
+  width: 120px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  padding: 5px 0;
+  border-radius: 6px;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%; 
+  left: 50%;
+  margin-left: -60px; 
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.toggle-button:hover .tooltip {
+  visibility: visible;
+  opacity: 1;
+}
+
+.switch {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 28px;
+  height: 28px;
+  background-color: white;
+  border-radius: 50%;
+  transition: transform 0.3s ease;
+}
+
+.switch.on {
+  transform: translateX(26px);
+  background-color: #4CAF50;
+}
+
+.switch.off {
+  background-color: #FFB356;
+}
+
+
+.expired-warning {
+  color: red;
+  font-weight: bold;
+  text-align: center;
+  margin-top: 10px;
+}
+
+.expired-warning i {
+  color: red;
+  margin-right: 5px;
+}
+
+.expired-icon {
+  width: 40px;
+  height: 40px;
+  margin-right: 20px;
+}
 </style>
