@@ -2,9 +2,10 @@
   <div> 
     <AddCategory :userEmail="userEmail"  @category-selected="handleCategorySelected" @show-form="handleShowForm"/> 
     <h1>My Groceries</h1>
-    <DisplayCategoryAndFood :userEmail="userEmail" @show-form="handleShowForm" @category-selected="handleCategorySelected" @delete-category="deleteCategory" @edit-item="handleEditItem" @delete-item="handleDeleteItem" />
+    <DisplayCategoryAndFood :userEmail="userEmail" @show-form="handleShowForm" @category-selected="handleCategorySelected" @delete-category="deleteCategory" @edit-item="handleEditItem" @delete-item="handleDeleteItem" @expired-items-updated="handleExpiredItemsUpdated" />
     <AddFood :userEmail="userEmail" :selectedCategory="selectedCategory" :show-form="showForm" @close="handleCloseForm" @add-food="addFoodItem"/>
     <editFood :userEmail="userEmail" :show-edit-form="showEditForm" :selectedCategory="this.selectedCategory" :itemToEdit="this.itemToEdit" @update-item="handleUpdateItem" @close-edit-form="handleCloseEditForm"></editFood>
+    <ExpiredFoodPopup :show="showExpiredFoodPopup" :expiredItems="expiredAndExpiringFoodItems" @close="handleClosePopup"></ExpiredFoodPopup>
   </div>
 </template>
 
@@ -14,6 +15,7 @@ import AddCategory from '@/components/AddCategory.vue';
 import AddFood from '@/components/AddFood.vue'; 
 import DisplayCategoryAndFood from '@/components/DisplayCategoryAndFood.vue'
 import editFood from '@/components/editFood.vue'; 
+import ExpiredFoodPopup from '@/components/ExpiredFoodPopup.vue'
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
 import { updateDoc, arrayUnion, setDoc, getDoc, deleteDoc, getDocs, doc, collection } from 'firebase/firestore';
 import { db } from '@/firebase'; 
@@ -24,6 +26,7 @@ export default {
     DisplayCategoryAndFood,
     AddFood, 
     editFood, 
+    ExpiredFoodPopup, 
   }, 
 
   data() {
@@ -36,17 +39,38 @@ export default {
       foodItems: [],
       showEditForm: false, 
       itemToEdit: null, 
+      showExpiredFoodPopup: true, 
+      expiredAndExpiringFoodItems: [], 
     };
   }, 
+
 
   async mounted() {
     await this.fetchUserProfile();
     await this.fetchFoodItems();
     // await this.fetchCategoryTitles();
     console.log("mounted", this.userEmail);
+    if (!localStorage.getItem('hasShownExpiredFoodPopup')) {
+      this.showExpiredFoodPopup = true;
+    }
+
   },
 
+
   methods: {
+
+    handleClosePopup() {
+      // Set a flag in localStorage to indicate the popup has been shown
+      localStorage.setItem('hasShownExpiredFoodPopup', 'true');
+      this.showExpiredFoodPopup = false;
+    },
+
+    handleExpiredItemsUpdated(expiringAndExpiredItems) {
+      console.log("expiring", expiringAndExpiredItems); 
+      this.expiredAndExpiringFoodItems = expiringAndExpiredItems; 
+    }, 
+
+
     fetchUserProfile() {
       const auth = getAuth();
       onAuthStateChanged(auth, (user) => {
@@ -113,14 +137,7 @@ export default {
             const updatedFoodItemsForCategory = snapshot.docs.map(doc => ({
               id: doc.id,
               ...doc.data(),
-              isExpiringSoon: this.isWithinFiveDays(new Date(doc.data().expiryDate))
             }));
-
-            updatedFoodItemsForCategory.sort((a, b) => {
-              const dateA = new Date(a.expiryDate);
-              const dateB = new Date(b.expiryDate);
-              return dateA - dateB;
-            });
 
             // Update the corresponding category's food items in allFoods
             const categoryIndex = this.allCategories.indexOf(category);

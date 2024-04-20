@@ -66,6 +66,12 @@ export default {
   // },
 
   computed: {
+
+    expiredFoodItems() {
+      const allFoodItems = [].concat(...this.allFoods); 
+      return allFoodItems.filter(item => item.isExpired || item.isExpiringSoon); 
+    }, 
+
     currentDate() {
       const now = new Date(); 
       now.setHours(0, 0, 0, 0);
@@ -104,8 +110,15 @@ export default {
         await this.fetchCategoryTitles();
         await this.fetchFoodItems();
       }
-    }
-  },
+    }, 
+    allFoods: {
+      deep: true, // Watch for nested changes in the array
+      handler() {
+        const expiredAndExpiringItems = this.expiredFoodItems;
+        this.$emit('expired-items-updated', expiredAndExpiringItems);
+      }
+    },
+  }, 
 
 	methods: {
 
@@ -228,7 +241,7 @@ export default {
       this.fetchFoodItems();
     },
     
-};
+}; 
 </script>
  
 <style scoped>
