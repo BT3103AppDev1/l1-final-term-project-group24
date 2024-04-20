@@ -2,10 +2,10 @@
   <div> 
     <AddCategory :userEmail="userEmail"  @category-selected="handleCategorySelected" @show-form="handleShowForm"/> 
     <h1>My Groceries</h1>
-    <DisplayCategoryAndFood :userEmail="userEmail" @show-form="handleShowForm" @category-selected="handleCategorySelected" @delete-category="deleteCategory" @edit-item="handleEditItem" @delete-item="handleDeleteItem" @expired-items-updated="handleExpiredItemsUpdated" />
+    <DisplayCategoryAndFood :userEmail="userEmail" @show-form="handleShowForm" @category-selected="handleCategorySelected" @delete-category="deleteCategory" @edit-item="handleEditItem" @delete-item="handleDeleteItem" @expired-items-updated="handleExpiredItemsUpdated" @expiring-items-updated="handleExpiringItemsUpdated" />
     <AddFood :userEmail="userEmail" :selectedCategory="selectedCategory" :show-form="showForm" @close="handleCloseForm" @add-food="addFoodItem"/>
     <editFood :userEmail="userEmail" :show-edit-form="showEditForm" :selectedCategory="this.selectedCategory" :itemToEdit="this.itemToEdit" @update-item="handleUpdateItem" @close-edit-form="handleCloseEditForm"></editFood>
-    <ExpiredFoodPopup :show="showExpiredFoodPopup" :expiredItems="expiredAndExpiringFoodItems" @close="handleClosePopup"></ExpiredFoodPopup>
+    <ExpiredFoodPopup :show="showExpiredFoodPopup" :expiredFoodItems="expiredFoodItems" :expiringFoodItems="expiringFoodItems" @close="handleClosePopup"></ExpiredFoodPopup>
   </div>
 </template>
 
@@ -40,7 +40,9 @@ export default {
       showEditForm: false, 
       itemToEdit: null, 
       showExpiredFoodPopup: true, 
-      expiredAndExpiringFoodItems: [], 
+      //expiredAndExpiringFoodItems: [], 
+      expiredFoodItems: [], 
+      expiringFoodItems: [], 
     };
   }, 
 
@@ -65,10 +67,22 @@ export default {
       this.showExpiredFoodPopup = false;
     },
 
-    handleExpiredItemsUpdated(expiringAndExpiredItems) {
+    /*handleExpiredItemsUpdated(expiringAndExpiredItems) {
       console.log("expiring", expiringAndExpiredItems); 
       this.expiredAndExpiringFoodItems = expiringAndExpiredItems; 
-    }, 
+    }, */ 
+
+    handleExpiredItemsUpdated(expiredItems) {
+       console.log("Expired items:", expiredItems);
+       this.expiredFoodItems = expiredItems; 
+    // Handle expired items here
+    },
+    
+    handleExpiringItemsUpdated(expiringItems) {
+      console.log("Expiring items:", expiringItems);
+      this.expiringFoodItems = expiringItems;
+    // Handle expiring items here
+    },
 
 
     fetchUserProfile() {

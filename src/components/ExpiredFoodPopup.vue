@@ -1,18 +1,27 @@
 <template>
- <div v-if="show && expiredItems.length > 0" class="modal-backdrop" @click="closePopup">
-    <div class="popup-content">
-         <h2>Expired and Expiring Food Items</h2>
-         <ul>
-           <li v-for="item in expiredItems" :key="item.id">{{ item.name }}</li>
-         </ul>
+    <div v-if="show && (expiredFoodItems.length > 0 || expiringFoodItems.length > 0)" class="modal-backdrop" @click="closePopup">
+        <div class="popup-content">
+             <h2>Expired and Expiring Food Items</h2>
+            <div v-if="expiredFoodItems.length > 0">
+                <h3>Expired Food Items:</h3>
+                <ul>
+                    <li v-for="item in expiredFoodItems" :key="item.id">{{ item.name }}</li>
+                </ul>
+            </div>
+            <div v-if="expiringFoodItems.length > 0">
+                <h3>Expiring Food Items:</h3>
+                <ul>
+                    <li v-for="item in expiringFoodItems" :key="item.id">{{ item.name }}</li>
+                </ul>
+            </div>
+        </div>
          <!-- <button @click="closePopup">Close</button> -->
-       </div>
     </div>
 </template>
    
 <script>
    export default {
-    props: ['show', 'expiredItems'],
+    props: ['show', 'expiredFoodItems', 'expiringFoodItems'],
     methods: {
        closePopup() {
          this.$emit('close');

@@ -121,8 +121,12 @@ export default {
     allFoods: {
       deep: true, // Watch for nested changes in the array
       handler() {
-        const expiredAndExpiringItems = this.expiredFoodItems;
-        this.$emit('expired-items-updated', expiredAndExpiringItems);
+        /*const expiredAndExpiringItems = this.expiredFoodItems;
+        this.$emit('expired-items-updated', expiredAndExpiringItems);*/ 
+        const expiredItems = this.allFoods.flat().filter(item => item.isExpired);
+        const expiringItems = this.allFoods.flat().filter(item => item.isExpiringSoon);
+        this.$emit('expired-items-updated', expiredItems);
+        this.$emit('expiring-items-updated', expiringItems);
       }
     },
   }, 
@@ -359,7 +363,7 @@ table {
 .food-item .food-name,
 .food-item .food-quantity,
 .food-item .food-exp-date {
-margin-right: 20px; /* Adjust the value as needed */
+margin-right: 20px; 
 }
 
 
@@ -382,7 +386,6 @@ margin-right: 20px; /* Adjust the value as needed */
   color: black; 
   cursor: pointer; 
   transition: color 0.3s ease; 
-  margin-right: 100px; 
 }
 
 
@@ -403,6 +406,7 @@ margin-right: 20px; /* Adjust the value as needed */
 
 .expired-row {
   color: red; 
+  /*white-space: nowrap;*/
 }
 
 .expired-row .fa-pencil,
