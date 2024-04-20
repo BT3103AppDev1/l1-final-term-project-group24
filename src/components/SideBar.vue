@@ -44,9 +44,10 @@
 import { getAuth, reauthenticateWithCredential, EmailAuthProvider, onAuthStateChanged } from 'firebase/auth';
 import firebaseApp from '../firebase.js';
 import { getFirestore } from 'firebase/firestore';
-import { collection, getDocs, doc } from 'firebase/firestore';
+import { getDoc, doc } from 'firebase/firestore';
+import { db } from '@/firebase';
 
-const db = getFirestore(firebaseApp);
+//const db = getFirestore(firebaseApp);
 
 export default {
   name: "SideBar",
@@ -69,21 +70,53 @@ export default {
   props:['totCalories'],
 
   mounted() {
-    async function updateBMIandTarget() {
-      let auth = getAuth();
+    // async function updateBMIandTarget() {
+    //   let auth = getAuth();
+    //   onAuthStateChanged(auth, (user) => {
+    //     if (user) {
+    //       this.userEmail = user.email;
+    //     }
+    //   });
+    //   let userInfoRef = doc(db, String(userEmail), "profile-info");
+    //   try {
+    //     const docSnap = await getDocs(userInfoRef);
+    //     if (docSnap.exists()) {
+    //       let data = docSnap.data();
+    //       this.userWeight = data.weight || 0;
+    //       this.userHeight = data.height || 0;
+    //       this.calorieIntakeGoal = data.calorieIntakeGoal || '';
+    //     } else {
+    //       console.log("No data available");
+    //     }
+    //   } catch (error) {
+    //       console.error("Failed to fetch user data:", error);
+    //   }
+    // }
+    this.updateSideBar()
+  },
+
+  methods: {
+    updateSideBar() {
+      const auth = getAuth();
       onAuthStateChanged(auth, (user) => {
         if (user) {
           this.userEmail = user.email;
+          this.updateBMIandTarget(user.email)
         }
       });
-      let userInfoRef = doc(db, String(userEmail), "profile-info");
+    },
+
+    async updateBMIandTarget(userEmail) {
+      const userInfoRef = doc(db, String(userEmail), "profile-info");
       try {
-        const docSnap = await getDocs(userInfoRef);
+        console.log("try")
+        const docSnap = await getDoc(userInfoRef);
         if (docSnap.exists()) {
-          let data = docSnap.data();
+          const data = docSnap.data();
           this.userWeight = data.weight || 0;
           this.userHeight = data.height || 0;
           this.calorieIntakeGoal = data.calorieIntakeGoal || '';
+          console.log(this.calorieIntakeGoal)
         } else {
           console.log("No data available");
         }
@@ -91,8 +124,6 @@ export default {
           console.error("Failed to fetch user data:", error);
       }
     }
-
-    updateBMIandTarget()
   }
 }
 </script>
