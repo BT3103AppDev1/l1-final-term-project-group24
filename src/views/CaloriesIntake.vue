@@ -1,6 +1,7 @@
 <script>
 import SideBar from '@/components/SideBar.vue';
 import MealPlan from '@/components/MealPlan.vue';
+import '@fortawesome/fontawesome-free/css/all.css'; 
 
 export default {
   components: {
@@ -28,8 +29,14 @@ export default {
 </template>
 
 <style scoped>
+@import url('https://fonts.googleapis.com/css?family=Fuzzy Bubbles');
+
+* {
+  font-family: 'Fuzzy Bubbles';
+}
+
 #app {
-  font-family: Avenir, Arial, Helvetica, sans-serif;
+  font-family: 'Fuzzy Bubbles';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;

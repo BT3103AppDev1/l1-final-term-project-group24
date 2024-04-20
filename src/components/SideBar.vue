@@ -44,8 +44,11 @@
 import { getAuth, reauthenticateWithCredential, EmailAuthProvider, onAuthStateChanged } from 'firebase/auth';
 import firebaseApp from '../firebase.js';
 import { getFirestore } from 'firebase/firestore';
+import { collection, getDocs, doc } from 'firebase/firestore';
+import '@fortawesome/fontawesome-free/css/all.css'; 
 import { getDoc, doc } from 'firebase/firestore';
 import { db } from '@/firebase';
+
 
 //const db = getFirestore(firebaseApp);
 
@@ -129,6 +132,13 @@ export default {
 </script>
 
 <style scoped>
+@import url('https://fonts.googleapis.com/css?family=Fuzzy Bubbles');
+@import url('https://fonts.googleapis.com/css?family=Poppins');
+
+* {
+  font-family: 'Fuzzy Bubbles'
+}
+
 .container {
   width: 300px;
   height: 600px;
@@ -157,8 +167,6 @@ export default {
   color: white;
   display: block;
   margin-bottom: 5px;
-  font-weight: bold;
-  font-family: 'Poppins', sans-serif;
 }
 
 .avatar {
@@ -183,7 +191,6 @@ export default {
 .select-container {
   position: relative;
   top: 30px;
-  font-family: 'Poppins', sans-serif;
 }
 
 .select-container select {    

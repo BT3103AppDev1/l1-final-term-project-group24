@@ -152,28 +152,21 @@
                 alert('Failed to update password. ' + error.message);
                 }
             }
-            },
+        },
 
-        }
     }
+}
 </script>
 
 <style scoped>
-#header-container {
-    background-color: #578855;
-    padding: 16px;
-    margin: 0;
-    width: 100%;
-    position: absolute;
-    top: 0;
-    left: 0;
-}
 
 .profile-container {
   display: flex;
   flex-direction: column;
   align-items: center; 
   margin: 0 auto;
+  position: relative;
+  top: 50px;
 }
 
 .input-text {

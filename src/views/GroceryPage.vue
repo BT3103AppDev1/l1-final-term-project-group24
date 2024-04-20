@@ -201,9 +201,11 @@ export default {
     },
   },
 }; 
-
-
 </script>
 
-
+<style scoped>
+* {
+  padding-top: 50px;
+}
+</style>
 

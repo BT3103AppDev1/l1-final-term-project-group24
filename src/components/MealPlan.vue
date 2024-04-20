@@ -61,6 +61,7 @@ import { ref, onMounted } from 'vue'
 import firebaseApp from '../firebase.js';
 import { getFirestore } from 'firebase/firestore';
 import { collection, getDocs, doc, deleteDoc } from 'firebase/firestore';
+import '@fortawesome/fontawesome-free/css/all.css'; 
 
 const db = getFirestore(firebaseApp);
 
@@ -262,7 +263,14 @@ export default {
 }
 
 </script>
+
 <style>
+@import url('https://fonts.googleapis.com/css?family=Fuzzy Bubbles');
+
+* {
+  font-family: 'Fuzzy Bubbles';
+}
+
 .meal-container {
   width: 1000px;
   height: 600px;
@@ -276,10 +284,6 @@ export default {
   margin: 20px; 
 }
 
-.meal {
-    font-family: sans-serif;
-}
-
 .select-date-button, .add-meal-button {
   margin-top: 10px;
   margin-right: 10px;
@@ -289,7 +293,6 @@ export default {
   color: white;
   border-radius: 20px;
   cursor: pointer;
-  font-size: 16px;
 }
 
 .select-date-button {
@@ -316,11 +319,6 @@ export default {
     position: absolute;
     left: 40px;
     top: 10px;
-    font-family: sans-serif;
-}
-
-.meals {
-    font-family: sans-serif;
 }
 
 .bf {
