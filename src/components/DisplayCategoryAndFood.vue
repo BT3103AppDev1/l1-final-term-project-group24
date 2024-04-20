@@ -1,5 +1,15 @@
 <template>
   <div>
+    <div class="top-right-container">
+      <p class="date-display"> 
+        {{ currentDate }}
+      </p>
+      <button @click="toggleShowExpiringSoon" class="toggle-button">
+        <span class="switch" :class="{ 'on': showExpiringSoon, 'off': !showExpiringSoon }"></span>
+        <span class="tooltip">{{ toggleTooltipText }}</span>
+      </button>
+    </div>
+
     <div v-for="(category, index) in this.allCategories" :key="index">
       <div class="category-item">
         <span class="category-name">{{ category }}</span>
@@ -8,11 +18,11 @@
           <i class="fas fa-trash"></i>
         </button>
       </div>
-      <div v-for="(foodItem, index2) in this.allFoods[index]" :key="index2">
+      <div v-for="(foodItem, index2) in filteredFoodItems[index]" :key="index2" :class="{ 'expiring-soon-row': foodItem.isExpiringSoon }">
         <div v-if="foodItem.id != 'EMPTY'" class="food-item">
           <p>{{ foodItem.name }}</p>
           <p>Qty : {{ foodItem.quantity }}</p>
-          <p>Exp : {{ foodItem.expiryDate }}</p>
+          <p :class="{ 'expiring-soon': foodItem.isExpiringSoon }">Exp : {{ foodItem.expiryDate }}</p>
           <button class="edit-button" @click="editItem(foodItem)">
             <i class="fa fa-pencil" aria-hidden="true"></i>
           </button>
@@ -30,7 +40,7 @@
 
 import { db } from '@/firebase'; 
 import '@fortawesome/fontawesome-free/css/all.css'; 
-import { doc, updateDoc, arrayUnion, collection, getDoc, getDocs } from 'firebase/firestore';
+import { doc, updateDoc, arrayUnion, collection, getDoc, getDocs, onSnapshot } from 'firebase/firestore';
 
 export default {
 	props: ['userEmail'],
@@ -38,7 +48,9 @@ export default {
   data() {
     return {
       allCategories: [],
-      allFoods: []
+      allFoods: [], 
+      showExpiringSoon: false, 
+      listeners: [], 
     }
   },
 
@@ -47,6 +59,36 @@ export default {
   //   await this.fetchCategoryTitles();
   //   await this.fetchFoodItems();
   // },
+
+  computed: {
+    currentDate() {
+      const now = new Date(); 
+      const month = now.getMonth() + 1; // Months are zero-based
+      const day = now.getDate();
+      const year = now.getFullYear();
+      return `${month}/${day}/${year}`;
+    }, 
+
+    filteredFoodItems() {
+      return this.allCategories.map((category, index) => {
+        if (this.showExpiringSoon) {
+          return this.allFoods[index].filter(item => item.isExpiringSoon);
+        } else {
+          return this.allFoods[index];
+        }
+      });
+    }, 
+
+    toggleTooltipText() {
+      return this.showExpiringSoon ? 'Show all items' : 'Show expiring items';
+    }
+
+  }, 
+
+  beforeUnmount() {
+  // Remove all real-time listeners
+    this.listeners.forEach(realTime => realTime());
+  },
 
   watch: {
     userEmail: {
@@ -61,7 +103,7 @@ export default {
 
 	methods: {
 
-    async fetchCategoryTitles() {
+    /*async fetchCategoryTitles() {
       const userDocRef = doc(db, this.userEmail, 'grocery-management');
       const userDocSnap = await getDoc(userDocRef);
 
@@ -75,8 +117,24 @@ export default {
         console.log(`No categories yet`);
         this.allCategories = [];
       }
+    },*/ 
+    async fetchCategoryTitles() {
+      const userDocRef = doc(db, this.userEmail, 'grocery-management');
+      const realTime = onSnapshot(userDocRef, (docSnapshot) => {
+      if (docSnapshot.exists()) {
+        const userData = docSnapshot.data();
+        this.allCategories = userData.Categories || []; // Update the categories array in real-time
+        // Call fetchFoodItems after updating allCategories
+        this.fetchFoodItems();
+      } else {
+        console.log(`No categories yet`);
+        this.allCategories = [];
+      }
+    });
+
+    this.listeners.push(realTime);
     },
-    
+
     async fetchFoodItems() {
       console.log("Trying to fetch foods...")
   
@@ -87,15 +145,56 @@ export default {
           const foodItemsForCategory = foodItemsSnapshot.docs.map(doc => ({
             id: doc.id,
             ...doc.data(),
+            isExpiringSoon: this.isWithinFiveDays(new Date(doc.data().expiryDate))
           }));
+
+          foodItemsForCategory.sort((a,b) => {
+            const dateA = new Date(a.expiryDate); 
+            const dateB = new Date(b.expiryDate); 
+            return dateA - dateB; 
+          }); 
+          
           console.log('Fetched food items:', foodItemsForCategory);
           this.allFoods.push(foodItemsForCategory);
           // this.$set(this.foodItems, category, { category, items: foodItemsForCategory });
+          
+          const realTime = onSnapshot(foodItemsRef, (snapshot) => {
+            const updatedFoodItemsForCategory = snapshot.docs.map(doc => ({
+              id: doc.id,
+              ...doc.data(),
+              isExpiringSoon: this.isWithinFiveDays(new Date(doc.data().expiryDate))
+            }));
+
+            updatedFoodItemsForCategory.sort((a, b) => {
+              const dateA = new Date(a.expiryDate);
+              const dateB = new Date(b.expiryDate);
+              return dateA - dateB;
+            });
+
+            // Update the corresponding category's food items in allFoods
+            const categoryIndex = this.allCategories.indexOf(category);
+            if (categoryIndex !== -1) {
+              this.allFoods[categoryIndex] = updatedFoodItemsForCategory;
+            }
+          });
+
+            this.listeners.push(realTime);
         } catch (error) {
           console.error('Error fetching food items for category:', category, error);
         }
       }
       console.log(this.allFoods);
+    },
+
+    isWithinFiveDays(expiryDate) {
+      const currentDate = new Date(); 
+      const fiveDaysLater = new Date(); 
+      fiveDaysLater.setDate(currentDate.getDate() + 5); 
+      return expiryDate >= currentDate && expiryDate <= fiveDaysLater; 
+    }, 
+
+    toggleShowExpiringSoon() {
+      this.showExpiringSoon = !this.showExpiringSoon; 
     },
     
 
@@ -228,5 +327,84 @@ export default {
   .deleteItem-button:hover {
     color:green; 
   }
+
+
+  .expiring-soon-row {
+    color: red; 
+  }
+
+  .expiring-soon-row .fa-pencil,
+  .expiring-soon-row .fa-times {
+    color: red; 
+  }
+
+  .top-right-container {
+    position: absolute;
+    top: 10px;
+    right: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+  }
+
+
+  .date-display {
+    margin-bottom: 10px; 
+    font-size: 18px;
+  }
+
+  .toggle-button {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+    background-color: #ccc;
+    border-radius: 34px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .tooltip {
+    visibility: hidden;
+    width: 120px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    padding: 5px 0;
+    border-radius: 6px;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%; 
+    left: 50%;
+    margin-left: -60px; 
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .toggle-button:hover .tooltip {
+    visibility: visible;
+    opacity: 1;
+  }
+
+  .switch {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 28px;
+    height: 28px;
+    background-color: white;
+    border-radius: 50%;
+    transition: transform 0.3s ease;
+  }
+
+  .switch.on {
+    transform: translateX(26px);
+    background-color: #4CAF50;
+  }
+
+  .switch.off {
+    background-color: #FFB356;
+  }
+
+
 </style>
- 

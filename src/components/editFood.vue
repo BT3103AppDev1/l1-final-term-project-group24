@@ -38,7 +38,15 @@ import { collection, doc, setDoc } from 'firebase/firestore';
                 return {
                     ...this.itemToEdit, 
                     id: this.itemToEdit.id, 
-                };
+                }
+                /*console.log('Item:', this.item);
+                const edited = this.item && this.item.name ? { ...this.item, id: this.item.id } : { name: '', quantity: '', expiryDate: '', category: '' };
+                console.log('Edited Item:', edited);
+                return edited;*/ 
+                /*return {
+                    ...this.item, 
+                    id: this.item.id, 
+                };*/ 
             }
         }, 
 

@@ -1,6 +1,7 @@
 <template> 
   <div> 
     <AddCategory :userEmail="userEmail"  @category-selected="handleCategorySelected" @show-form="handleShowForm"/> 
+    <h1>My Groceries</h1>
     <DisplayCategoryAndFood :userEmail="userEmail" @show-form="handleShowForm" @category-selected="handleCategorySelected" @delete-category="deleteCategory" @edit-item="handleEditItem" @delete-item="handleDeleteItem" />
     <AddFood :userEmail="userEmail" :selectedCategory="selectedCategory" :show-form="showForm" @close="handleCloseForm" @add-food="addFoodItem"/>
     <editFood :userEmail="userEmail" :show-edit-form="showEditForm" :selectedCategory="this.selectedCategory" :itemToEdit="this.itemToEdit" @update-item="handleUpdateItem" @close-edit-form="handleCloseEditForm"></editFood>
@@ -99,9 +100,36 @@ export default {
           const foodItemsForCategory = foodItemsSnapshot.docs.map(doc => ({
             id: doc.id,
             ...doc.data(),
+            isExpiringSoon: this.isWithinFiveDays(new Date(doc.data().expiryDate))
           }));
+          foodItemsForCategory.sort((a,b) => {
+            const dateA = new Date(a.expiryDate); 
+            const dateB = new Date(b.expiryDate); 
+            return dateA - dateB; 
+          }); 
           console.log('Fetched food items:', foodItemsForCategory);
           this.allFoods.push(foodItemsForCategory);
+          const realTime = onSnapshot(foodItemsRef, (snapshot) => {
+            const updatedFoodItemsForCategory = snapshot.docs.map(doc => ({
+              id: doc.id,
+              ...doc.data(),
+              isExpiringSoon: this.isWithinFiveDays(new Date(doc.data().expiryDate))
+            }));
+
+            updatedFoodItemsForCategory.sort((a, b) => {
+              const dateA = new Date(a.expiryDate);
+              const dateB = new Date(b.expiryDate);
+              return dateA - dateB;
+            });
+
+            // Update the corresponding category's food items in allFoods
+            const categoryIndex = this.allCategories.indexOf(category);
+            if (categoryIndex !== -1) {
+              this.allFoods[categoryIndex] = updatedFoodItemsForCategory;
+            }
+          });
+
+            this.listeners.push(realTime);
           // this.$set(this.foodItems, category, { category, items: foodItemsForCategory });
         } catch (error) {
           console.error('Error fetching food items for category:', category, error);
