@@ -1,4 +1,8 @@
+App.vue
 <template>
+  <router-link to="/home">HomePage</router-link>
+  <router-link to="/caloriesIntake">CaloriesIntake</router-link>
+  <router-link to="profile">ProfilePage</router-link>
   <router-view/>
 </template>
 
@@ -42,3 +46,4 @@ body{
 }
 
 </style>
+

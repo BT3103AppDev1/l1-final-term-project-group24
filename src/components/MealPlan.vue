@@ -261,7 +261,7 @@ export default {
   border-radius: 20px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   position: absolute;
-  left: 350px; 
+  left: 370px; 
   top: 120px;
   margin: 20px; 
 }
@@ -303,8 +303,8 @@ export default {
 }
 
 .date-display{
-    position: relative;
-    left: 50px;
+    position: absolute;
+    left: 40px;
     top: 10px;
     font-family: sans-serif;
 }
@@ -314,26 +314,26 @@ export default {
 }
 
 .bf {
-    position: relative;
-    left: 50px;
-    top: 50px;
+    position: absolute;
+    left: 40px;
+    top: 110px;
 }
 
 .lch {
-    position: relative;
+    position: absolute;
     left: 500px;
-    top: 20px;
+    top: 110px;
 }
 
 .din {
-    position: relative;
-    left: 50px;
-    top: 200px;
+    position: absolute;
+    left: 40px;
+    top: 350px;
 }
 
 .snk {
-    position: relative;
+    position: absolute;
     left: 500px;
-    top: 170px;
+    top: 350px;
 }
 </style>

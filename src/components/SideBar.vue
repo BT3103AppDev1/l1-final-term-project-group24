@@ -106,7 +106,7 @@ export default {
   border-radius: 20px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   position: absolute;
-  left: 30px; 
+  left: 10px; 
   top: 120px;
   margin: 20px; 
 }
