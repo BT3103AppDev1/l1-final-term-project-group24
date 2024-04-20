@@ -22,7 +22,7 @@
         <div v-if="foodItem.id != 'EMPTY'" class="food-item">
           <p>{{ foodItem.name }}</p>
           <p>Qty : {{ foodItem.quantity }}</p>
-          <p :class="{ 'expiring-soon': foodItem.isExpiringSoon }">Exp : {{ foodItem.expiryDate }}</p>
+          <p :class="{ 'expiring-soon': foodItem.isExpiringSoon }">Exp : {{ this.convertDateFormat(foodItem.expiryDate) }}</p>
           <button class="edit-button" @click="editItem(foodItem)">
             <i class="fa fa-pencil" aria-hidden="true"></i>
           </button>
@@ -66,7 +66,7 @@ export default {
       const month = now.getMonth() + 1; // Months are zero-based
       const day = now.getDate();
       const year = now.getFullYear();
-      return `${month}/${day}/${year}`;
+      return `${day}/${month}/${year}`;
     }, 
 
     filteredFoodItems() {
@@ -188,9 +188,10 @@ export default {
 
     isWithinFiveDays(expiryDate) {
       const currentDate = new Date(); 
+      currentDate.setHours(0, 0, 0, 0);
       const fiveDaysLater = new Date(); 
       fiveDaysLater.setDate(currentDate.getDate() + 5); 
-      return expiryDate >= currentDate && expiryDate <= fiveDaysLater; 
+      return currentDate <= expiryDate && expiryDate <= fiveDaysLater; 
     }, 
 
     toggleShowExpiringSoon() {
@@ -216,6 +217,11 @@ export default {
     deleteItem(item) {
       this.$emit('delete-item', item); 
     }, 
+
+    convertDateFormat(expiryDate) {
+      const [year, month, date] = expiryDate.split('-');
+      return `${date}/${month}/${year}`; 
+    }
   
   },
 

@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <button @click="toggleDropdown" class="add-categories-btn" :class="{ rotate: showDropdown }">Add Categories</button>
+  <div @mouseover="cancelCloseDropdown" @mouseout="scheduleCloseDropdown">
+    <button @mouseover="openDropdown" class="add-categories-btn" :class="{ rotate: showDropdown }">Add Categories</button>
     <div v-if="showDropdown" class="dropdown-menu">
       <a href="#" @click="addCategory('Breakfast Foods')">Breakfast Foods</a>
       <a href="#" @click="addCategory('Fruits')">Fruits</a>
@@ -77,9 +77,21 @@ export default {
       }
     },
 
-    toggleDropdown() {
-      this.showDropdown = !this.showDropdown;
-    }, 
+    openDropdown() {
+      this.showDropdown = true;
+      this.cancelCloseDropdown(); // Cancel any pending close action
+    },
+    scheduleCloseDropdown() {
+      // Schedule to close dropdown after 500 ms
+      this.closeTimeout = setTimeout(() => {
+        this.showDropdown = false;
+      }, 200);
+    },
+    cancelCloseDropdown() {
+      // Cancel the scheduled close if still within the hover area
+      clearTimeout(this.closeTimeout);
+    },
+
     toggleModal() {
       this.showModal = !this.showModal;
       if (this.showModal) {
@@ -174,7 +186,7 @@ export default {
     position: relative; 
     display: block; 
   }
- 
+
   .add-categories-btn::after {
     content: '';
     position: absolute;
