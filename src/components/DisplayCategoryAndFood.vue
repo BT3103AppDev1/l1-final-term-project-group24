@@ -79,7 +79,7 @@ export default {
     
     async fetchFoodItems() {
       console.log("Trying to fetch foods...")
-
+  
       for (const category of this.allCategories) {
         try {
           const foodItemsRef = collection(db, `${this.userEmail}/grocery-management/${category}`);

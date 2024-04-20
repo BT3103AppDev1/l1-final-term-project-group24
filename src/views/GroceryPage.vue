@@ -222,7 +222,7 @@ export default {
   
 
     handleEditItem(item) {
-      console.log(item); 
+      console.log("editItem",item); 
       this.itemToEdit = item; //i think this is the issue i cant update correctly
       this.selectedCategory = item.category; 
       this.showEditForm = true; 
