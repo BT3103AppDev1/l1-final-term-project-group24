@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <button @click="toggleDropdown" class="add-categories-btn" :class="{ rotate: showDropdown }">Add Categories</button>
+  <div @mouseover="cancelCloseDropdown" @mouseout="scheduleCloseDropdown">
+    <button @mouseover="openDropdown" class="add-categories-btn" :class="{ rotate: showDropdown }">Add Categories</button>
     <div v-if="showDropdown" class="dropdown-menu">
       <a href="#" @click="addCategory('Breakfast Foods')">Breakfast Foods</a>
       <a href="#" @click="addCategory('Fruits')">Fruits</a>
@@ -34,22 +34,64 @@
 import '@fortawesome/fontawesome-free/css/all.css'; 
 import { db } from '../firebase.js'; 
 import { getFirestore } from 'firebase/firestore'
-import { doc, setDoc } from 'firebase/firestore';
+import { doc, setDoc, getDoc, updateDoc } from 'firebase/firestore';
 
 export default {
+  props: ['userEmail'], 
+
   data() {
     return {
       showDropdown: false, 
       showModal: false,
       categoryName: '',  
+      allCategories: [],
     };
      
   },
 
+  watch: {
+    userEmail: {
+    immediate: true,
+      async handler(newVal, oldVal) {
+        console.log("userEmail in AddCategory:", newVal);
+        await this.checkAndCreateDocument();
+      }
+    }
+  },
+
   methods: {
-    toggleDropdown() {
-      this.showDropdown = !this.showDropdown;
-    }, 
+    async checkAndCreateDocument() {
+      // Construct the document reference
+      const docRef = doc(db, this.userEmail, 'grocery-management');
+
+      // Try to get the document
+      const docSnap = await getDoc(docRef);
+
+      if (!docSnap.exists()) {
+        // Document does not exist, create it
+        console.log('Document does not exist, creating...');
+        await setDoc(docRef, {
+          Categories: [], // Example field, adjust according to your needs
+        });
+        console.log('Document created successfully.');
+      }
+    },
+
+    openDropdown() {
+      this.showDropdown = true;
+      this.cancelCloseDropdown(); // Cancel any pending close action
+    },
+    scheduleCloseDropdown() {
+      // Schedule to close dropdown after 500 ms
+      this.closeTimeout = setTimeout(() => {
+        this.showDropdown = false;
+      }, 200);
+    },
+    cancelCloseDropdown() {
+      // Cancel the scheduled close if still within the hover area
+      clearTimeout(this.closeTimeout);
+    },
+
     toggleModal() {
       this.showModal = !this.showModal;
       if (this.showModal) {
@@ -66,11 +108,39 @@ export default {
       }
     }, 
 
-
     addCategory(category) {
       this.$emit('category-selected',category); 
       this.showDropdown = !this.showDropdown;
-    }
+    },
+
+    // async addCategory(currCategory) {
+
+    //   //Fill up Arrays of Arrays
+    //   const userDocRef = doc(db, 'users', this.userId);
+
+    //   // Add a new category title to the "categoryTitles" array field
+    //   // If the document or field does not exist, it will be created
+    //   await updateDoc(userDocRef, {
+    //     Categories: arrayUnion(currCategory)
+    //   });
+
+
+    //   //Add category with empty item
+    //   const emptyItem = {
+    //     id: "EMPTY", 
+    //     category: currCategory, 
+    //   }; 
+
+    //   const categoryRef = collection(db, `users/${this.userId}/${currCategory}`);
+
+    //   await setDoc(doc(categoryRef, "EMPTY"), emptyItem); 
+        
+    //   console.log('Empty item added to firestore', emptyItem); 
+    //   console.log('Emitting add-food empty event with:', {item: emptyItem });
+
+    //   this.$emit('category-selected',category); 
+    //   this.showDropdown = !this.showDropdown;
+    // }
 
 
     /*//firestore code
@@ -116,7 +186,7 @@ export default {
     position: relative; 
     display: block; 
   }
- 
+
   .add-categories-btn::after {
     content: '';
     position: absolute;

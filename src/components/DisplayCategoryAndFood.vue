@@ -1,5 +1,15 @@
 <template>
   <div>
+    <div class="top-right-container">
+      <p class="date-display"> 
+        {{ currentDate }}
+      </p>
+      <button @click="toggleShowExpiringSoon" class="toggle-button">
+        <span class="switch" :class="{ 'on': showExpiringSoon, 'off': !showExpiringSoon }"></span>
+        <span class="tooltip">{{ toggleTooltipText }}</span>
+      </button>
+    </div>
+
     <div v-for="(category, index) in this.allCategories" :key="index">
       <div class="category-item">
         <span class="category-name">{{ category }}</span>
@@ -8,18 +18,25 @@
           <i class="fas fa-trash"></i>
         </button>
       </div>
-      <div v-for="(foodItem, index2) in this.allFoods[index]" :key="index2" class="food-item">
-        <p>{{ foodItem.name }}</p>
-        <p>Qty : {{ foodItem.quantity }}</p>
-        <p>Exp : {{ foodItem.expiryDate }}</p>
-        <button class="edit-button" @click="editItem(foodItem)">
-          <i class="fa fa-pencil" aria-hidden="true"></i>
-        </button>
-        <button class="deleteItem-button" @click="deleteItem(foodItem)">
-          <i class="fas fa-times"></i>
-        </button>
-      </div>
+      <div v-for="(foodItem, index2) in filteredFoodItems[index]" :key="index2" :class="{ 'expiring-soon-row': foodItem.isExpiringSoon, 'expired-row': foodItem.isExpired }">
+        <div v-if="foodItem.id != 'EMPTY'" class="food-item">
+          <p class="food-name">{{ foodItem.name }}</p>
+          <p ckass="food-quantity">Qty : {{ foodItem.quantity }}</p>
+          <p :class="{ 'expiring-soon': foodItem.isExpiringSoon }">Exp : {{ this.convertDateFormat(foodItem.expiryDate) }}</p>
+          <button class="edit-button" @click="editItem(foodItem)">
+            <i class="fa fa-pencil" aria-hidden="true"></i>
+          </button>
+          <button class="deleteItem-button" @click="deleteItem(foodItem)">
+            <i class="fas fa-times"></i>
+          </button>
+          <img v-if="foodItem.isExpired" src="/expiredstamp.png" alt="Expired" class="expired-icon">
+        </div>
     </div>
+    </div>  
+
+      <div v-if="showExpiringSoon" class="expired-warning">
+        <i class="fas fa-exclamation-triangle"></i> Please do not consume expired food items!
+      </div>
   </div>
 </template>
  
@@ -28,67 +45,146 @@
 
 import { db } from '@/firebase'; 
 import '@fortawesome/fontawesome-free/css/all.css'; 
-import { doc, updateDoc, arrayUnion, collection, getDoc, getDocs } from 'firebase/firestore';
+import { doc, updateDoc, arrayUnion, collection, getDoc, getDocs, onSnapshot } from 'firebase/firestore';
 
 export default {
-	props: ['selectedCategories', 'foodItems', 'userId'],
+	props: ['userEmail'],
 
   data() {
     return {
       allCategories: [],
-      allFoods: []
+      allFoods: [], 
+      showExpiringSoon: false, 
+      listeners: [], 
     }
   },
 
+  // async mounted() {
+  //   console.log("userEmail in Display:", this.userEmail);
+  //   await this.fetchCategoryTitles();
+  //   await this.fetchFoodItems();
+  // },
 
-  async created() {
-    await this.fetchCategoryTitles();
-    this.fetchFoodItems();
+  computed: {
+
+    expiredFoodItems() {
+      const allFoodItems = [].concat(...this.allFoods); 
+      return allFoodItems.filter(item => item.isExpired || item.isExpiringSoon); 
+    }, 
+
+    currentDate() {
+      const now = new Date(); 
+      now.setHours(0, 0, 0, 0);
+      const month = now.getMonth() + 1; // Months are zero-based
+      const day = now.getDate();
+      const year = now.getFullYear();
+      return `${day}/${month}/${year}`;
+    }, 
+
+    filteredFoodItems() {
+      return this.allCategories.map((category, index) => {
+        if (this.showExpiringSoon) {
+          return this.allFoods[index].filter(item => item.isExpiringSoon || item.isExpired );
+        } else {
+          return this.allFoods[index];
+        }
+      });
+    }, 
+
+    toggleTooltipText() {
+      return this.showExpiringSoon ? 'Show all items' : 'Show expiring items';
+    }
+
+  }, 
+
+  beforeUnmount() {
+  // Remove all real-time listeners
+    this.listeners.forEach(realTime => realTime());
   },
 
+  watch: {
+    userEmail: {
+      immediate: true,
+      async handler(newVal, oldVal) {
+        console.log("userEmail in Display:", newVal);
+        await this.fetchCategoryTitles();
+        await this.fetchFoodItems();
+      }
+    }, 
+    allFoods: {
+      deep: true, // Watch for nested changes in the array
+      handler() {
+        const expiredAndExpiringItems = this.expiredFoodItems;
+        this.$emit('expired-items-updated', expiredAndExpiringItems);
+      }
+    },
+  }, 
 
 	methods: {
 
     async fetchCategoryTitles() {
-      const userDocRef = doc(db, 'users', this.userId);
-      const userDocSnap = await getDoc(userDocRef);
-
-      if (userDocSnap.exists()) {
-        const userData = userDocSnap.data();
-        // This assumes that your user document has a field called 'categoryTitles'
-        console.log("These are the categories", userData.Categories);
-        this.allCategories = userData.Categories || []; // return the array or an empty array if it doesn't exist
-      } else {
-        // Handle the case where the document does not exist
-        console.log(`No categories yet`);
-        this.allCategories = [];
-      }
-    },
-
-    async addCategoryTitle(newCategoryTitle) {
-      const userDocRef = doc(db, 'users', this.userId);
-
-      // Add a new category title to the "categoryTitles" array field
-      // If the document or field does not exist, it will be created
-      await updateDoc(userDocRef, {
-        categoryTitles: arrayUnion(newCategoryTitle)
+      const userDocRef = doc(db, this.userEmail, 'grocery-management');
+      const realTime = onSnapshot(userDocRef, (docSnapshot) => {
+        if (docSnapshot.exists()) {
+          const userData = docSnapshot.data();
+          this.allCategories = userData.Categories || []; // Update the categories array in real-time
+          // Call fetchFoodItems after updating allCategories
+          this.fetchFoodItems();
+        } else {
+          console.log(`No categories yet`);
+          this.allCategories = [];
+        }
       });
+
+      this.listeners.push(realTime);
     },
 
     async fetchFoodItems() {
       console.log("Trying to fetch foods...")
-
+  
       for (const category of this.allCategories) {
         try {
-          const foodItemsRef = collection(db, `users/${this.userId}/${category}`);
+          const foodItemsRef = collection(db, `${this.userEmail}/grocery-management/${category}`);
           const foodItemsSnapshot = await getDocs(foodItemsRef);
           const foodItemsForCategory = foodItemsSnapshot.docs.map(doc => ({
             id: doc.id,
             ...doc.data(),
+            isExpiringSoon: this.isWithinFiveDays(new Date(doc.data().expiryDate)),
+            isExpired: this.isExpired(new Date(doc.data().expiryDate))
           }));
+
+          foodItemsForCategory.sort((a,b) => {
+            const dateA = new Date(a.expiryDate); 
+            const dateB = new Date(b.expiryDate); 
+            return dateA - dateB; 
+          }); 
+          
           console.log('Fetched food items:', foodItemsForCategory);
           this.allFoods.push(foodItemsForCategory);
           // this.$set(this.foodItems, category, { category, items: foodItemsForCategory });
+          
+          const realTime = onSnapshot(foodItemsRef, (snapshot) => {
+            const updatedFoodItemsForCategory = snapshot.docs.map(doc => ({
+              id: doc.id,
+              ...doc.data(),
+              isExpiringSoon: this.isWithinFiveDays(new Date(doc.data().expiryDate)),
+              isExpired: this.isExpired(new Date(doc.data().expiryDate))
+            }));
+
+            updatedFoodItemsForCategory.sort((a, b) => {
+              const dateA = new Date(a.expiryDate);
+              const dateB = new Date(b.expiryDate);
+              return dateA - dateB;
+            });
+
+            // Update the corresponding category's food items in allFoods
+            const categoryIndex = this.allCategories.indexOf(category);
+            if (categoryIndex !== -1) {
+              this.allFoods[categoryIndex] = updatedFoodItemsForCategory;
+            }
+          });
+
+            this.listeners.push(realTime);
         } catch (error) {
           console.error('Error fetching food items for category:', category, error);
         }
@@ -96,27 +192,29 @@ export default {
       console.log(this.allFoods);
     },
 
+    isWithinFiveDays(expiryDate) {
+      const currentDate = new Date(); 
+      currentDate.setHours(0, 0, 0, 0);
+      const fiveDaysLater = new Date(); 
+      fiveDaysLater.setDate(currentDate.getDate() + 5); 
+      return currentDate <= expiryDate && expiryDate <= fiveDaysLater; 
+    }, 
 
-    /*async fetchFoodItems(userId, selectedCategory) {
-      try {
-        const foodItemsRef = collection(db, `users/${userId}/${selectedCategory}`);
-        const foodItemsSnapshot = await getDocs(foodItemsRef);
-        const foodItems = foodItemsSnapshot.docs.map(doc => ({
-            id: doc.id,
-            ...doc.data(),
-        }));
-        console.log('Fetched food items:', foodItems);
-        return foodItems;
-      } catch (error) {
-        console.error('Error fetching food items:', error);
-      }
-    }, */ 
+    isExpired(expiryDate) {
+      const currentDate = new Date(); 
+      currentDate.setHours(0, 0, 0, 0);
+      return expiryDate < currentDate; 
+    },
 
+    toggleShowExpiringSoon() {
+      this.showExpiringSoon = !this.showExpiringSoon; 
+    },
+    
 
+		async handlePlusButtonClick(index) {
+      await this.fetchCategoryTitles();
 
-
-		handlePlusButtonClick(index) {
-      const categoryName = this.selectedCategories[index]; 
+      const categoryName = this.allCategories[index]; 
 			this.$emit('show-form', true);
       this.$emit('category-selected', categoryName)
 		},
@@ -131,6 +229,11 @@ export default {
     deleteItem(item) {
       this.$emit('delete-item', item); 
     }, 
+
+    convertDateFormat(expiryDate) {
+      const [year, month, date] = expiryDate.split('-');
+      return `${date}/${month}/${year}`; 
+    }
   
   },
 
@@ -138,11 +241,11 @@ export default {
       this.fetchFoodItems();
     },
     
-};
+}; 
 </script>
  
 <style scoped>
-.category-item {
+  .category-item {
     text-align: center;
     padding: 10px 0; 
     margin-bottom: 10px; 
@@ -206,15 +309,16 @@ export default {
     padding: 10px; 
     margin-bottom: 10px; 
     border-radius: 40px; 
+    background-color: rgba(255, 255, 255, 0.5);
   }
 
-  .food-info {
-    display: flex; 
-    justify-content: space-between; 
-    width: 100%; 
-  }
+  .food-item .food-name,
+.food-item .food-quantity,
+.food-item .food-exp-date {
+ margin-right: 20px; /* Adjust the value as needed */
+}
 
-
+  
   .edit-button {
     background-color: transparent; 
     border: none; 
@@ -241,5 +345,114 @@ export default {
   .deleteItem-button:hover {
     color:green; 
   }
+
+
+  .expiring-soon-row {
+    color: red; 
+  }
+
+  .expiring-soon-row .fa-pencil,
+  .expiring-soon-row .fa-times {
+    color: red; 
+  }
+
+  .expired-row {
+    color: red; 
+  }
+
+  .expired-row .fa-pencil,
+  .expired-row .fa-times {
+    color: red; 
+  }
+
+  .top-right-container {
+    position: absolute;
+    top: 10px;
+    right: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+  }
+
+
+  .date-display {
+    margin-bottom: 10px; 
+    font-size: 18px;
+  }
+
+  .toggle-button {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+    background-color: #ccc;
+    border-radius: 34px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .tooltip {
+    visibility: hidden;
+    width: 120px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    padding: 5px 0;
+    border-radius: 6px;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%; 
+    left: 50%;
+    margin-left: -60px; 
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .toggle-button:hover .tooltip {
+    visibility: visible;
+    opacity: 1;
+  }
+
+  .switch {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 28px;
+    height: 28px;
+    background-color: white;
+    border-radius: 50%;
+    transition: transform 0.3s ease;
+  }
+
+  .switch.on {
+    transform: translateX(26px);
+    background-color: #4CAF50;
+  }
+
+  .switch.off {
+    background-color: #FFB356;
+  }
+
+
+  .expired-warning {
+    color: red;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 10px;
+  }
+
+  .expired-warning i {
+    color: red;
+    margin-right: 5px;
+  }
+  
+  .expired-icon {
+    width: 40px;
+    height: 40px;
+    margin-right: 20px;
+  }
+
+
+
+
 </style>
- 
