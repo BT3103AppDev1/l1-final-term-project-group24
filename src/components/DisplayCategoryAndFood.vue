@@ -63,6 +63,7 @@ export default {
   computed: {
     currentDate() {
       const now = new Date(); 
+      now.setHours(0, 0, 0, 0);
       const month = now.getMonth() + 1; // Months are zero-based
       const day = now.getDate();
       const year = now.getFullYear();
@@ -72,7 +73,7 @@ export default {
     filteredFoodItems() {
       return this.allCategories.map((category, index) => {
         if (this.showExpiringSoon) {
-          return this.allFoods[index].filter(item => item.isExpiringSoon);
+          return this.allFoods[index].filter(item => item.isExpiringSoon || item.isExpired );
         } else {
           return this.allFoods[index];
         }
