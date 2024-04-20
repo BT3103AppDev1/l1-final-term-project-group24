@@ -6,6 +6,7 @@ import ForgotPage from '@/views/ForgotPage.vue'
 import UsernameCreation from '@/views/UsernameCreation.vue'
 import ProfilePage from '@/views/ProfilePage.vue';
 import CaloriesIntake from '@/views/CaloriesIntake.vue'
+import About from '@/views/About.vue'
 import '@fortawesome/fontawesome-free/css/all.css'; 
 
 
@@ -15,6 +16,12 @@ const routes = [
       name: 'Login',
       component: LoginPage
     },
+    {
+      path: "/about",
+      name: 'About',
+      component: About
+    },
+    
     {
       path: '/registration',
       name: 'Registration',
