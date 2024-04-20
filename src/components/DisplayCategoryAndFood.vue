@@ -12,11 +12,13 @@
 
     <div v-for="(category, index) in this.allCategories" :key="index">
       <div class="category-item">
-        <span class="category-name">{{ category }}</span>
-        <button class="plus-button" @click="handlePlusButtonClick(index)">+</button>
-        <button class="delete-button" @click="deleteCategory(index)">
-          <i class="fas fa-trash"></i>
-        </button>
+        <div class="category-name">
+          <span>{{ category }}</span>
+          <button class="plus-button" @click="handlePlusButtonClick(index)">+</button>
+          <button class="delete-button" @click="deleteCategory(index)">
+            <i class="fas fa-trash"></i>
+          </button>
+        </div>
       </div>
 
       <table>
@@ -265,18 +267,20 @@ table {
   padding: 10px;
   border-top: 1px solid black;
   border-bottom: 1px solid black;
-  
+  box-shadow: 5px 2px 4px rgba(0,0,0,0.5);
 }
 
 .food-row td:first-child {
   border-top-left-radius: 50px;
   border-bottom-left-radius: 50px;
   border-left: 1px solid black;
+  box-shadow: 5px 2px 4px rgba(0,0,0,0.5); /* Optional: adds shadow for depth */
 }
 
 .food-row td:last-child {
   border-top-right-radius: 50px;
   border-bottom-right-radius: 50px;
+  box-shadow: 5px 2px 4px rgba(0,0,0,0.5); /* Optional: adds shadow for depth */
 }
 
 .category-item {
@@ -292,6 +296,7 @@ table {
   text-align: center; 
   position: relative; 
   display: inline-block; 
+  font-size: 20px;
 }
 
 .category-name::after {
@@ -299,7 +304,7 @@ table {
   position: absolute;
   left: 0;
   bottom: 0;
-  width: 130%; 
+  width: 120%; 
   height: 2px; 
   background-color: green; 
   transform: translateX(-10%); 
@@ -316,8 +321,10 @@ table {
 }
 
 .plus-button:hover {
-  background-color: green; 
-  border: 1px solid green; 
+  /* background-color: green;  */
+  /* border: 1px solid green;  */
+  color: green;
+  transform: scale(1.5);
 }
 
 .delete-button {
@@ -325,14 +332,17 @@ table {
   border: none; 
   color: black; 
   cursor: pointer; 
-  font-size: 10px; 
+  font-size: 15px; 
   padding: 1px 1px; 
   transition: color 0.3s ease; 
+  margin-bottom: 0 px;
+  background-color: none;
 }
 
 
 .delete-button:hover {
   color: green; 
+  transform: scale(1.3);
 }
 
 .food-item {
@@ -363,6 +373,7 @@ margin-right: 20px; /* Adjust the value as needed */
 
 .edit-button:hover {
   color: green;
+  transform: scale(1.5);
 }
 
 .deleteItem-button {
@@ -372,12 +383,12 @@ margin-right: 20px; /* Adjust the value as needed */
   cursor: pointer; 
   transition: color 0.3s ease; 
   margin-right: 100px; 
-
 }
 
 
 .deleteItem-button:hover {
   color:green; 
+  transform: scale(1.5);
 }
 
 
