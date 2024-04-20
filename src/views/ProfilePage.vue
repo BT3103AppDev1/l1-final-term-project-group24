@@ -165,6 +165,8 @@
   flex-direction: column;
   align-items: center; 
   margin: 0 auto;
+  position: relative;
+  top: 50px;
 }
 
 .input-text {
