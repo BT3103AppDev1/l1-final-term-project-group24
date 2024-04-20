@@ -66,7 +66,7 @@ export default {
 
   computed: {
     userBMI() {
-      return this.userWeight / (this.userHeight * this.userHeight / 10000)
+      return (this.userWeight / (this.userHeight * this.userHeight / 10000)).toFixed(2)
     }
   },
 
