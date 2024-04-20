@@ -49,9 +49,9 @@
 </template>
 
 <script>
-import axios from 'axios';
 import firebaseApp from '../firebase.js';
 import { getFirestore, doc, setDoc } from 'firebase/firestore';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 const db = getFirestore(firebaseApp);
 
 export default {
@@ -64,13 +64,24 @@ export default {
       calories: null,
       searchResults: [], 
       selectedMeal: null,
-      showError: false  
+      showError: false  ,
+      userEmail: ''
     };
   },
   methods: {
-    async addMeal() {
+    addMeal() {
+      const auth = getAuth();
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          this.userEmail = user.email;
+          this.addToDB(user.email)
+        }
+      });
+    },
+
+    async addToDB(email) {
       try {
-        const docRef = await setDoc(doc(db, this.mealDate, this.mealType),{
+        const docRef = await setDoc(doc(db, email, 'calories-intake', this.mealDate, this.mealType),{
         mealName: this.mealName, calories: this.calories
         })
         this.showModal = false

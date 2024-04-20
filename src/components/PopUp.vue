@@ -46,6 +46,7 @@
 import axios from 'axios';
 import firebaseApp from '../firebase.js';
 import { getFirestore, doc, setDoc } from 'firebase/firestore';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import Customise from './Customise.vue';
 const db = getFirestore(firebaseApp);
 
@@ -63,9 +64,11 @@ export default {
       calories: null,
       searchResults: [], 
       selectedMeal: null,
-      showError: false  
+      showError: false,
+      userEmail: ''
     };
   },
+
   methods: {
     async inputMeal() {
       axios.get(`https://api.calorieninjas.com/v1/nutrition?query=one person of ${this.mealName}`, {
@@ -91,10 +94,10 @@ export default {
       this.calories = meal.calories;
     },
 
-    async addMeal() {
+    async addToDB(email) {
       try {
-        const selectPage = collection(db, `users/${this.userId}/'caloriesIntake'`); 
-        const docRef = await setDoc(doc(selectPage, this.mealType),{
+        //const selectPage = collection(db, email, 'calories-intake', this.mealDate); 
+        const docRef = await setDoc(doc(db, email, 'calories-intake', this.mealDate, this.mealType),{
         mealName: this.mealName, calories: this.calories
         })
         this.showModal = false
@@ -108,6 +111,16 @@ export default {
     update() {
         this.$emit("added")
         this.showModal = false
+    },
+
+    addMeal() {
+      const auth = getAuth();
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          this.userEmail = user.email;
+          this.addToDB(user.email)
+        }
+      });
     }
   }
 }

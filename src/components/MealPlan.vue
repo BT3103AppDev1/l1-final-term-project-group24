@@ -58,6 +58,7 @@
 <script>
 import PopUp from './PopUp.vue'
 import { ref, onMounted } from 'vue'
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import firebaseApp from '../firebase.js';
 import { getFirestore } from 'firebase/firestore';
 import { collection, getDocs, doc, deleteDoc } from 'firebase/firestore';
@@ -90,6 +91,7 @@ export default {
         const dinnerTF = ref(false)
         const snackTF = ref(false)
         const totalCalories = ref(0)
+        const userEmail = ref('')
 
         function formatDate(date) {
             return new Date(date).toLocaleDateString('en-US', {
@@ -101,17 +103,17 @@ export default {
         onMounted(() => {
             dateDisplay.value = formatDate(mydate.value);
 
-            function getUser() {
+            function display() {
                 const auth = getAuth();
                 onAuthStateChanged(auth, (user) => {
                     if (user) {
-                        this.userEmail = user.email;
-                        this.display(user.email)
+                        userEmail.value = user.email;
+                        dp(user.email)
                     }
                 });
             }
 
-            async function display() {
+            async function dp(email) {
                 if (breakfastTF.value) {
                     let table = document.getElementById("breakfast")
                     table.deleteRow(0)
@@ -133,7 +135,7 @@ export default {
                     snackTF.value = false
                 }
                 totalCalories.value = 0
-                let allDocuments = await getDocs(collection(db, mydate.value))
+                let allDocuments = await getDocs(collection(db, email, 'calories-intake', mydate.value))
                 allDocuments.forEach((docs) => {
                     if (docs.id === "breakfast") {
                         breakfastTF.value = true
@@ -160,18 +162,18 @@ export default {
                     deleteButton.innerHTML = "Delete"
                     cell1.appendChild(deleteButton)
                     deleteButton.onclick = function(){
-                        deleteMeal(docs.id)
+                        deleteMeal(email, docs.id)
                     }
                 })
                 emit('update-total-calories', totalCalories.value);
                 console.log("display")
             }
 
-            getUser()
+            display()
 
-            async function deleteMeal(mealType){
+            async function deleteMeal(email, mealType){
                 alert("You are going to delete " + mealType)
-                await deleteDoc(doc(db, mydate.value, mealType))
+                await deleteDoc(doc(db, email, 'calories-intake', mydate.value, mealType))
                 console.log("Document successfully deleted!", mealType);
                 let tb = document.getElementById(mealType)
                 tb.deleteRow(0)
@@ -179,7 +181,17 @@ export default {
             }
         })
 
-        async function refresh() {
+        function refresh() {
+                const auth = getAuth();
+                onAuthStateChanged(auth, (user) => {
+                    if (user) {
+                        userEmail.value = user.email;
+                        rf(user.email)
+                    }
+                });
+            }
+
+        async function rf(email) {
             console.log(breakfastTF)
             if (breakfastTF.value) {
                 let table = document.getElementById("breakfast")
@@ -202,7 +214,7 @@ export default {
                 snackTF.value = false
             }
             totalCalories.value = 0
-            let allDocuments = await getDocs(collection(db, mydate.value))
+            let allDocuments = await getDocs(collection(db, email, 'calories-intake', mydate.value))
             allDocuments.forEach((docs) => {
                 if (docs.id === "breakfast") {
                     breakfastTF.value = true
@@ -229,16 +241,16 @@ export default {
                 deleteButton.innerHTML = "Delete"
                 cell1.appendChild(deleteButton)
                 deleteButton.onclick = function(){
-                    deleteMeal(docs.id)
+                    deleteMeal(email, docs.id)
                 }
             })
             emit('update-total-calories', totalCalories.value);
             console.log("display")
         }
 
-        async function deleteMeal(mealType){
+        async function deleteMeal(email, mealType){
             alert("You are going to delete " + mealType)
-            await deleteDoc(doc(db, mydate.value, mealType))
+            await deleteDoc(doc(db, email, 'calories-intake', mydate.value, mealType))
             console.log("Document successfully deleted!", mealType);
             let tb = document.getElementById(mealType)
             tb.deleteRow(0)
