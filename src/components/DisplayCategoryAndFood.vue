@@ -18,7 +18,7 @@
           <i class="fas fa-trash"></i>
         </button>
       </div>
-      <div v-for="(foodItem, index2) in filteredFoodItems[index]" :key="index2" :class="{ 'expiring-soon-row': foodItem.isExpiringSoon }">
+      <div v-for="(foodItem, index2) in filteredFoodItems[index]" :key="index2" :class="{ 'expiring-soon-row': foodItem.isExpiringSoon, 'expired-row': foodItem.isExpired }">
         <div v-if="foodItem.id != 'EMPTY'" class="food-item">
           <p>{{ foodItem.name }}</p>
           <p>Qty : {{ foodItem.quantity }}</p>
@@ -103,36 +103,21 @@ export default {
 
 	methods: {
 
-    /*async fetchCategoryTitles() {
-      const userDocRef = doc(db, this.userEmail, 'grocery-management');
-      const userDocSnap = await getDoc(userDocRef);
-
-      if (userDocSnap.exists()) {
-        const userData = userDocSnap.data();
-        // This assumes that your user document has a field called 'categoryTitles'
-        console.log("These are the categories", userData.Categories);
-        this.allCategories = userData.Categories || []; // return the array or an empty array if it doesn't exist
-      } else {
-        // Handle the case where the document does not exist
-        console.log(`No categories yet`);
-        this.allCategories = [];
-      }
-    },*/ 
     async fetchCategoryTitles() {
       const userDocRef = doc(db, this.userEmail, 'grocery-management');
       const realTime = onSnapshot(userDocRef, (docSnapshot) => {
-      if (docSnapshot.exists()) {
-        const userData = docSnapshot.data();
-        this.allCategories = userData.Categories || []; // Update the categories array in real-time
-        // Call fetchFoodItems after updating allCategories
-        this.fetchFoodItems();
-      } else {
-        console.log(`No categories yet`);
-        this.allCategories = [];
-      }
-    });
+        if (docSnapshot.exists()) {
+          const userData = docSnapshot.data();
+          this.allCategories = userData.Categories || []; // Update the categories array in real-time
+          // Call fetchFoodItems after updating allCategories
+          this.fetchFoodItems();
+        } else {
+          console.log(`No categories yet`);
+          this.allCategories = [];
+        }
+      });
 
-    this.listeners.push(realTime);
+      this.listeners.push(realTime);
     },
 
     async fetchFoodItems() {
@@ -145,7 +130,8 @@ export default {
           const foodItemsForCategory = foodItemsSnapshot.docs.map(doc => ({
             id: doc.id,
             ...doc.data(),
-            isExpiringSoon: this.isWithinFiveDays(new Date(doc.data().expiryDate))
+            isExpiringSoon: this.isWithinFiveDays(new Date(doc.data().expiryDate)),
+            isExpired: this.isExpired(new Date(doc.data().expiryDate))
           }));
 
           foodItemsForCategory.sort((a,b) => {
@@ -162,7 +148,8 @@ export default {
             const updatedFoodItemsForCategory = snapshot.docs.map(doc => ({
               id: doc.id,
               ...doc.data(),
-              isExpiringSoon: this.isWithinFiveDays(new Date(doc.data().expiryDate))
+              isExpiringSoon: this.isWithinFiveDays(new Date(doc.data().expiryDate)),
+              isExpired: this.isExpired(new Date(doc.data().expiryDate))
             }));
 
             updatedFoodItemsForCategory.sort((a, b) => {
@@ -193,6 +180,12 @@ export default {
       fiveDaysLater.setDate(currentDate.getDate() + 5); 
       return currentDate <= expiryDate && expiryDate <= fiveDaysLater; 
     }, 
+
+    isExpired(expiryDate) {
+      const currentDate = new Date(); 
+      currentDate.setHours(0, 0, 0, 0);
+      return expiryDate < currentDate; 
+    },
 
     toggleShowExpiringSoon() {
       this.showExpiringSoon = !this.showExpiringSoon; 
@@ -342,6 +335,15 @@ export default {
   .expiring-soon-row .fa-pencil,
   .expiring-soon-row .fa-times {
     color: red; 
+  }
+
+  .expired-row {
+    color: blue; 
+  }
+
+  .expired-row .fa-pencil,
+  .expired-row .fa-times {
+    color: blue; 
   }
 
   .top-right-container {
