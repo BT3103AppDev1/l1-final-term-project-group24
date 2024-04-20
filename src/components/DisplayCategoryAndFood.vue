@@ -20,8 +20,8 @@
       </div>
       <div v-for="(foodItem, index2) in filteredFoodItems[index]" :key="index2" :class="{ 'expiring-soon-row': foodItem.isExpiringSoon, 'expired-row': foodItem.isExpired }">
         <div v-if="foodItem.id != 'EMPTY'" class="food-item">
-          <p>{{ foodItem.name }}</p>
-          <p>Qty : {{ foodItem.quantity }}</p>
+          <p class="food-name">{{ foodItem.name }}</p>
+          <p ckass="food-quantity">Qty : {{ foodItem.quantity }}</p>
           <p :class="{ 'expiring-soon': foodItem.isExpiringSoon }">Exp : {{ this.convertDateFormat(foodItem.expiryDate) }}</p>
           <button class="edit-button" @click="editItem(foodItem)">
             <i class="fa fa-pencil" aria-hidden="true"></i>
@@ -29,9 +29,14 @@
           <button class="deleteItem-button" @click="deleteItem(foodItem)">
             <i class="fas fa-times"></i>
           </button>
+          <img v-if="foodItem.isExpired" src="/expiredstamp.png" alt="Expired" class="expired-icon">
         </div>
-      </div>
     </div>
+    </div>  
+
+      <div v-if="showExpiringSoon" class="expired-warning">
+        <i class="fas fa-exclamation-triangle"></i> Please do not consume expired food items!
+      </div>
   </div>
 </template>
  
@@ -227,7 +232,7 @@ export default {
 </script>
  
 <style scoped>
-.category-item {
+  .category-item {
     text-align: center;
     padding: 10px 0; 
     margin-bottom: 10px; 
@@ -294,13 +299,13 @@ export default {
     background-color: rgba(255, 255, 255, 0.5);
   }
 
-  .food-info {
-    display: flex; 
-    justify-content: space-between; 
-    width: 100%; 
-  }
+  .food-item .food-name,
+.food-item .food-quantity,
+.food-item .food-exp-date {
+ margin-right: 20px; /* Adjust the value as needed */
+}
 
-
+  
   .edit-button {
     background-color: transparent; 
     border: none; 
@@ -339,12 +344,12 @@ export default {
   }
 
   .expired-row {
-    color: blue; 
+    color: red; 
   }
 
   .expired-row .fa-pencil,
   .expired-row .fa-times {
-    color: blue; 
+    color: red; 
   }
 
   .top-right-container {
@@ -414,6 +419,27 @@ export default {
   .switch.off {
     background-color: #FFB356;
   }
+
+
+  .expired-warning {
+    color: red;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 10px;
+  }
+
+  .expired-warning i {
+    color: red;
+    margin-right: 5px;
+  }
+  
+  .expired-icon {
+    width: 40px;
+    height: 40px;
+    margin-right: 20px;
+  }
+
+
 
 
 </style>
