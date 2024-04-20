@@ -101,6 +101,16 @@ export default {
         onMounted(() => {
             dateDisplay.value = formatDate(mydate.value);
 
+            function getUser() {
+                const auth = getAuth();
+                onAuthStateChanged(auth, (user) => {
+                    if (user) {
+                        this.userEmail = user.email;
+                        this.display(user.email)
+                    }
+                });
+            }
+
             async function display() {
                 if (breakfastTF.value) {
                     let table = document.getElementById("breakfast")
@@ -157,7 +167,7 @@ export default {
                 console.log("display")
             }
 
-            display()
+            getUser()
 
             async function deleteMeal(mealType){
                 alert("You are going to delete " + mealType)
