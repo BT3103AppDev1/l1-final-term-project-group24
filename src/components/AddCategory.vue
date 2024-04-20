@@ -120,7 +120,7 @@ export default {
   .add-categories-btn::after {
     content: '';
     position: absolute;
-    right: 5px; /* Adjust as needed */
+    right: 5px; 
     top: 50%;
     transform: translateY(-50%) rotate(0deg);
     width: 0;
