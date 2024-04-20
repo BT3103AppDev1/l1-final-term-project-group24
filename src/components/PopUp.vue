@@ -77,17 +77,14 @@ export default {
       .then(response => {
         if (response.data.items.length > 0) {
           this.calories = response.data.items[0].calories;
-          this.showError = false;  // Hide error message if items are found
+          alert("Meal found !")
+
         } else {
           this.calories = null;
-          this.showError = true;  // Show error message if no items are found
+          alert("Fail to fetch meal. Please add customised meal.")
         }
-      })
-      .catch(error => {
-        console.error("Error fetching meal information: ", error);
-        this.showError = true;  // Show error message on API error
-      });
-    },
+      }
+    )},
 
     selectMeal(meal) {
       this.mealName = meal.name;
