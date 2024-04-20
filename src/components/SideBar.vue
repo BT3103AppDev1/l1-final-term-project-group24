@@ -44,7 +44,7 @@
 import { getAuth, reauthenticateWithCredential, EmailAuthProvider, onAuthStateChanged } from 'firebase/auth';
 import firebaseApp from '../firebase.js';
 import { getFirestore } from 'firebase/firestore';
-import { collection, getDocs, doc } from 'firebase/firestore';
+import { collection } from 'firebase/firestore';
 import '@fortawesome/fontawesome-free/css/all.css'; 
 import { getDoc, doc } from 'firebase/firestore';
 import { db } from '@/firebase';
