@@ -4,7 +4,7 @@
     <GroceryPage />
   </div>
   <div v-if="!user">
-    <h1>Please Sign In Properly</h1>
+    <h1>Please Sign In!</h1>
   </div>
 </template>
 

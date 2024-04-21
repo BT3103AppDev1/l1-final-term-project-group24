@@ -4,7 +4,7 @@
     <h1>My Groceries</h1>
     <DisplayCategoryAndFood :userEmail="userEmail" @show-form="handleShowForm" @category-selected="handleCategorySelected" @delete-category="deleteCategory" @edit-item="handleEditItem" @delete-item="handleDeleteItem" @expired-items-updated="handleExpiredItemsUpdated" @expiring-items-updated="handleExpiringItemsUpdated" />
     <AddFood :userEmail="userEmail" :selectedCategory="selectedCategory" :show-form="showForm" @close="handleCloseForm" @add-food="addFoodItem"/>
-    <editFood :userEmail="userEmail" :show-edit-form="showEditForm" :selectedCategory="this.selectedCategory" :itemToEdit="this.itemToEdit" @update-item="handleUpdateItem" @close-edit-form="handleCloseEditForm"></editFood>
+    <EditFood :userEmail="userEmail" :show-edit-form="showEditForm" :selectedCategory="this.selectedCategory" :itemToEdit="this.itemToEdit" @update-item="handleUpdateItem" @close-edit-form="handleCloseEditForm"></editFood>
     <ExpiredFoodPopup :show="showExpiredFoodPopup" :expiredFoodItems="expiredFoodItems" :expiringFoodItems="expiringFoodItems" @close="handleClosePopup"></ExpiredFoodPopup>
   </div>
 </template>
@@ -14,7 +14,7 @@
 import AddCategory from '@/components/AddCategory.vue'; 
 import AddFood from '@/components/AddFood.vue'; 
 import DisplayCategoryAndFood from '@/components/DisplayCategoryAndFood.vue'
-import editFood from '@/components/editFood.vue'; 
+import EditFood from '@/components/EditFood.vue'; 
 import ExpiredFoodPopup from '@/components/ExpiredFoodPopup.vue'
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
 import { updateDoc, arrayUnion, setDoc, getDoc, deleteDoc, getDocs, doc, collection } from 'firebase/firestore';
@@ -25,7 +25,7 @@ export default {
     AddCategory, 
     DisplayCategoryAndFood,
     AddFood, 
-    editFood, 
+    EditFood, 
     ExpiredFoodPopup, 
   }, 
 
