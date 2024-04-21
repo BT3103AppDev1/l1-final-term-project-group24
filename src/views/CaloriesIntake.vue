@@ -27,14 +27,8 @@ export default {
 
 <template>
   <NavBar />
-  <div id="calorie-container">
-    <div id="side-bar">
-      <SideBar :totCalories="totalCal"/>
-    </div>
-    <div id="meal-plan">
-      <MealPlan :totCalories="totalCal" @update-total-calories = "handleUpdateData"/>
-    </div>
-  </div>
+    <SideBar :totCalories="totalCal"/>
+    <MealPlan :totCalories="totalCal" @update-total-calories = "handleUpdateData"/>
 </template>
 
 <style scoped>
