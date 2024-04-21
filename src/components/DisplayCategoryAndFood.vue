@@ -25,7 +25,7 @@
         <tr v-for="(foodItem, index2) in filteredFoodItems[index]" :key="index2" class="food-row" :class="{ 'expiring-soon-row': foodItem.isExpiringSoon, 'expired-row': foodItem.isExpired }">
           <td v-if="foodItem.id != 'EMPTY'">{{ foodItem.name }}</td>
           <td v-if="foodItem.id != 'EMPTY'">Qty: {{ foodItem.quantity }}</td>
-          <td v-if="foodItem.id != 'EMPTY'" :class="{ 'expiring-soon': foodItem.isExpiringSoon }">Exp: {{ this.convertDateFormat(foodItem.expiryDate) }}</td>
+          <td v-if="foodItem.id != 'EMPTY'">Exp: {{ this.convertDateFormat(foodItem.expiryDate) }}</td>
           <td v-if="foodItem.id != 'EMPTY'"><img v-if="foodItem.isExpired" src="/expiredstamp.png" alt="Expired" class="expired-icon"></td>
           <td v-if="foodItem.id != 'EMPTY'">
             <button class="edit-button" @click="editItem(foodItem)">
@@ -258,9 +258,9 @@ export default {
 <style scoped>
 table {
   width: 100%;
-  table-layout: fixed;
+  /* table-layout: fixed; */
   border-collapse: separate;
-  border-spacing: 0px 10px; /* Horizontal spacing 0, Vertical spacing 10px */
+  border-spacing: 0px 10px;
   margin-top: -20px;
   margin-bottom: 20px;
 }
@@ -278,13 +278,33 @@ table {
   border-top-left-radius: 50px;
   border-bottom-left-radius: 50px;
   border-left: 1px solid black;
-  box-shadow: 5px 2px 4px rgba(0,0,0,0.5); /* Optional: adds shadow for depth */
+  box-shadow: 5px 2px 4px rgba(0,0,0,0.5);
 }
 
 .food-row td:last-child {
   border-top-right-radius: 50px;
   border-bottom-right-radius: 50px;
-  box-shadow: 5px 2px 4px rgba(0,0,0,0.5); /* Optional: adds shadow for depth */
+  box-shadow: 5px 2px 4px rgba(0,0,0,0.5);
+}
+
+.food-row td:nth-child(5), .food-row td:nth-child(6) {
+  width: 7.5%;
+}
+
+.food-row td:nth-child(2) {
+  width: 10%;
+}
+
+.food-row td:nth-child(4) {
+  width: 20%;
+}
+
+.food-row td:nth-child(1) {
+  width: 25%;
+}
+
+.food-row td:nth-child(3) {
+  width: 30%;
 }
 
 .category-item {
@@ -370,7 +390,6 @@ margin-right: 20px;
 .edit-button {
   background-color: transparent; 
   border: none; 
-  margin-left: 100px; 
   cursor: pointer; 
   color: black;
 }
