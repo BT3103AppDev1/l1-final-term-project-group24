@@ -31,23 +31,40 @@ import { getFirestore } from 'firebase/firestore'
 import { collection, doc, setDoc } from 'firebase/firestore';
 
     export default {
-        props: ['item', 'showEditForm', 'selectedCategory', 'itemToEdit', 'userId'], 
+        props: ['item', 'showEditForm', 'selectedCategory', 'itemToEdit', 'userEmail'], 
 
         computed: {
             editedItem() {
                 return {
+                    ...this.itemToEdit, 
+                    id: this.itemToEdit.id, 
+                }
+                /*console.log('Item:', this.item);
+                const edited = this.item && this.item.name ? { ...this.item, id: this.item.id } : { name: '', quantity: '', expiryDate: '', category: '' };
+                console.log('Edited Item:', edited);
+                return edited;*/ 
+                /*return {
                     ...this.item, 
                     id: this.item.id, 
-                };
+                };*/ 
             }
         }, 
+
+        watch: {
+            userEmail: {
+            immediate: true,
+                handler(newVal, oldVal) {
+                    console.log("userEmail in editFood:", newVal);
+                }
+            }
+        },
         
         methods: {
 
             async submitEditForm() {
                 // Assuming you have the item's ID and the updated data
                 this.editedItem.category = this.selectedCategory; 
-                const itemRef = doc(db, `users/${this.userId}/${this.selectedCategory}`, this.item.id);
+                const itemRef = doc(db, `${this.userEmail}/grocery-management/${this.selectedCategory}`, this.itemToEdit.id);
 
                 try {
                     console.log('Updating item at path:', itemRef.path);
