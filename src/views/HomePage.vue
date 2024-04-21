@@ -1,10 +1,7 @@
 <template>
   <div v-if="user">
+    <NavBar />
     <GroceryPage />
-    <button @click="goToProfile" class="profile-button">Go to Profile</button>
-    <div class="logoutButton">
-      <button id="logoutButton" @click="logout" class="logout-button"> Logout </button>
-    </div>
   </div>
   <div v-if="!user">
     <h1>Please Sign In Properly</h1>
@@ -15,12 +12,14 @@
 import GroceryPage from '@/views/GroceryPage.vue'; 
 import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
 import '@fortawesome/fontawesome-free/css/all.css'; 
+import NavBar from '@/components/NavBar.vue';
 
 
 export default {
   
   components: {
-    GroceryPage
+    GroceryPage,
+    NavBar
   }, 
 
   data() {
@@ -38,22 +37,6 @@ export default {
     })
     console.log(this.user); 
   },
-
-  methods: {
-    logout() {
-      const auth = getAuth();
-      signOut(auth).then(() => {
-        alert("Logged out successfully!")
-        this.$router.push({ name: 'Login' });
-      }).catch((error) => {
-        alert("Logout Failed: " + error.message);
-      });
-    },
-
-    goToProfile() {
-    this.$router.push({ name: 'Profile' });
-    }
-  }
 };
 </script>
 

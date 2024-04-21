@@ -51,7 +51,12 @@ const routes = [
       path: '/caloriesIntake',
       name: 'CaloriesIntakePage',
       component: CaloriesIntake
-    }
+    },
+    {
+      path: '/about',
+      name: 'About',
+      component: About
+    },
   ]
 
   const router = createRouter({

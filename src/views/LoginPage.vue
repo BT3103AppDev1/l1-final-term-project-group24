@@ -4,7 +4,7 @@
   </div>
 
   <div id="loginContainer">
-    <img id="FoodFolioLogo" src="/foodfolio_logo.png" alt="FoodFolio logo"><br><br>
+    <img id="FoodFolioLogo" src="/foodfolio_logo.png" alt="FoodFolio logo"><br>
     <form @submit.prevent="loginCheck">
       <h1>Welcome to Foodfolio!</h1> <br>
       <div id="loginForm">
@@ -32,7 +32,9 @@
       <span class="register-prompt">New user?</span>
       <button class="register-button" @click="navigateToRegistration">Create a new Account!</button>
     </div>
-    <button id="googleLoginButton" @click="googleLogin">Sign in with Google</button>
+    <button id="googleLoginButton" @click="googleLogin">
+      <img src="/google-icon.png" alt="Google Icon" class="google-icon"> Sign in with Google
+    </button>
   </div>
 </template>
 
@@ -123,6 +125,7 @@ export default {
 
 #FoodFolioLogo {
   width: 300px;
+  margin-top: 30px;
 }
 
 #PasswordEyeIcon {
@@ -235,5 +238,15 @@ button {
 .forgot-button:hover, .register-button:hover {
   font-weight: bold;
   color:#FFB356;
+}
+
+#googleLoginButton {
+  margin-top: 5px;
+  background-color: white;
+}
+
+.google-icon {
+  width:20px;
+  margin-bottom:-3px;
 }
 </style>
