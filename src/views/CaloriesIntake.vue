@@ -27,27 +27,16 @@ export default {
 
 <template>
   <NavBar />
-  <SideBar :totCalories="totalCal"/>
-  <MealPlan :totCalories="totalCal" @update-total-calories = "handleUpdateData"/>
+  <div id="calorie-container">
+    <div id="side-bar">
+      <SideBar :totCalories="totalCal"/>
+    </div>
+    <div id="meal-plan">
+      <MealPlan :totCalories="totalCal" @update-total-calories = "handleUpdateData"/>
+    </div>
+  </div>
 </template>
 
 <style scoped>
-@import url('https://fonts.googleapis.com/css?family=Fuzzy Bubbles');
 
-* {
-  font-family: 'Fuzzy Bubbles';
-}
-
-#app {
-  font-family: 'Fuzzy Bubbles';
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: beige;
-}
-
-body {
-  padding:0;
-  margin: 0;
-}
 </style>
