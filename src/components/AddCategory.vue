@@ -101,6 +101,10 @@ export default {
  
  
 <style scoped>
+  .add-categories-container {
+    width: 175px;
+  }
+
   .add-categories-btn {
     background-color: #FFB356;
     border-radius: 20px;
