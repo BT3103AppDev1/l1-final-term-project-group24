@@ -20,7 +20,7 @@ import '@fortawesome/fontawesome-free/css/all.css';
 export default {
   
   components: {
-    GroceryPage, 
+    GroceryPage
   }, 
 
   data() {
