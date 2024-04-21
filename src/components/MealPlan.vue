@@ -283,6 +283,12 @@ export default {
   font-family: 'Fuzzy Bubbles';
 }
 
+button:hover {
+    background-color: #f8961f; 
+    transform: scale(1.1);
+    transition: background-color 0.1s, transform 0.1s;
+}
+
 .meal-container {
   width: 1000px;
   height: 600px;
@@ -333,25 +339,42 @@ export default {
     top: 10px;
 }
 
+.bwt {
+  border:none;
+  background-color: #FFA500;
+  border-radius: 20px;
+  color: white;
+  padding: 4px 12px;
+  cursor: pointer;
+  font-family: 'Fuzzy Bubbles';
+  font-size: 14px;
+  margin-left: 10px;
+  margin-bottom: 5px;
+}
+
 .bf {
+    text-align:left;
     position: absolute;
     left: 40px;
     top: 110px;
 }
 
 .lch {
+    text-align:left;
     position: absolute;
     left: 500px;
     top: 110px;
 }
 
 .din {
+    text-align:left;
     position: absolute;
     left: 40px;
     top: 350px;
 }
 
 .snk {
+    text-align:left;
     position: absolute;
     left: 500px;
     top: 350px;

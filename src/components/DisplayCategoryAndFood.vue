@@ -1,9 +1,6 @@
 <template>
-  <div>
+  <div class="display-container">
     <div class="top-right-container">
-      <p class="date-display"> 
-        {{ currentDate }}
-      </p>
       <button @click="toggleShowExpiringSoon" class="toggle-button">
         <span class="switch" :class="{ 'on': showExpiringSoon, 'off': !showExpiringSoon }"></span>
         <span class="tooltip">{{ toggleTooltipText }}</span>
@@ -77,15 +74,6 @@ export default {
     expiredFoodItems() {
       const allFoodItems = [].concat(...this.allFoods); 
       return allFoodItems.filter(item => item.isExpired || item.isExpiringSoon); 
-    }, 
-
-    currentDate() {
-      const now = new Date(); 
-      now.setHours(0, 0, 0, 0);
-      const month = now.getMonth() + 1; // Months are zero-based
-      const day = now.getDate();
-      const year = now.getFullYear();
-      return `${day}/${month}/${year}`;
     }, 
 
     filteredFoodItems() {
@@ -256,6 +244,11 @@ export default {
 </script>
  
 <style scoped>
+.display-container {
+  width: 95%;
+  margin: auto;
+}
+
 table {
   width: 100%;
   /* table-layout: fixed; */
@@ -435,8 +428,8 @@ margin-right: 20px;
 
 .top-right-container {
   position: absolute;
-  top: 10px;
-  right: 30px;
+  top: 100px;
+  right: 2.5%;
   display: flex;
   flex-direction: column;
   align-items: flex-end;
@@ -449,7 +442,6 @@ margin-right: 20px;
 }
 
 .toggle-button {
-  position: relative;
   display: inline-block;
   width: 60px;
   height: 34px;

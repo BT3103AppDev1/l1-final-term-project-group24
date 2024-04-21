@@ -1,8 +1,5 @@
 <template>
-    <div id="header-container">
-        <br>
-    </div>
-    <br><br><br>
+   <NavBar />
     <div class="profile-container">
         <h1>Profile Page</h1><br>
         <!-- <p>Email: {{ userEmail }}</p>
@@ -40,8 +37,6 @@
             <button id="change-password-btn" @click="promptPasswordChange">Change Password</button>
         </div>
         <br>
-
-        <button @click="goBackHome">Back to Home</button>
     </div>
 
 
@@ -52,8 +47,13 @@
     // Import the db here because we need firestore 
     import { db } from '@/firebase';
     import { doc, getDoc, setDoc } from 'firebase/firestore';
+    import NavBar from '@/components/NavBar.vue';
 
     export default {
+        components: {
+            NavBar
+        },
+
         data() {
             return {
             userEmail: '',
@@ -71,10 +71,6 @@
         },
 
         methods : {
-            goBackHome() {
-            this.$router.push({ name: 'Home' });
-            },
-
             fetchUserProfile() {
                 const auth = getAuth();
                 onAuthStateChanged(auth, (user) => {
@@ -214,6 +210,17 @@ input {
 
 input:hover {
   transform: scale(1.02);
+}
+
+button {
+  background-color: #FFB356;
+  border-radius: 20px;
+  color: #578855;
+  padding: 5px 15px;
+  cursor: pointer;
+  font-family: 'Fuzzy Bubbles';
+  font-size: 18px;
+  transition: background-color 0.1s, transform 0.1s;
 }
 
 #change-password-btn:hover,
