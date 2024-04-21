@@ -245,7 +245,7 @@ export default {
  
 <style scoped>
 .display-container {
-  width: 95%;
+  width: 60%;
   margin: auto;
 }
 
