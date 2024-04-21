@@ -88,7 +88,7 @@ export default {
             return new Date(date).toLocaleDateString('en-US', {
                 month: 'short',
                 day: 'numeric'
-            }) + " Meal Plan 🥕";
+            }) + " Meal Plan 🌱";
         }
 
         onMounted(() => {
@@ -137,11 +137,10 @@ export default {
 
                         const deleteButton = document.createElement("button");
                         deleteButton.textContent = "Delete";
-                        deleteButton.className = "bwt";
+                        deleteButton.className = "btn btn-delete";
                         deleteButton.onclick = () => deleteMeal(email, doc.id);
                         cellAction.appendChild(deleteButton);
                     } else if (change.type === 'removed') {
-                        // Remove the meal from the table if it was deleted
                         const rows = tables[doc.id].getElementsByTagName("tr");
                         Array.from(rows).forEach(row => {
                             if (row.cells[0].textContent === `${mealData.mealName} ${mealData.calories}`) {
@@ -185,6 +184,7 @@ export default {
     }
 }
 </script>
+
 
 
 <style>
@@ -234,6 +234,18 @@ button:hover {
     position: absolute;
     left: 810px;
     top: 30px;
+}
+
+.btn-delete {
+    padding: 6px 16px;
+    border: none;
+    background-color: #FFA500; 
+    color: white;
+    border-radius: 20px;
+    cursor: pointer;
+    position: relative;
+    bottom: 2px;
+    left: 10px;
 }
 
 .date-input {
