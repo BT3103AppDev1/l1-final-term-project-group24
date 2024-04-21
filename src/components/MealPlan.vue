@@ -97,7 +97,7 @@ export default {
             return new Date(date).toLocaleDateString('en-US', {
             month: 'short',
             day: 'numeric'
-            }) + " Meal Plan 🥕";
+            }) + " Meal Plan 🌱";
         }
 
         onMounted(() => {
@@ -298,7 +298,7 @@ button:hover {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   position: absolute;
   left: 370px; 
-  top: 120px;
+  top: 95px;
   margin: 20px; 
 }
 
