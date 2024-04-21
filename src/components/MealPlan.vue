@@ -60,8 +60,7 @@ import PopUp from './PopUp.vue'
 import { ref, onMounted } from 'vue'
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import firebaseApp from '../firebase.js';
-import { getFirestore } from 'firebase/firestore';
-import { collection, getDocs, doc, deleteDoc } from 'firebase/firestore';
+import { getFirestore, collection, onSnapshot, doc, deleteDoc } from 'firebase/firestore';
 import '@fortawesome/fontawesome-free/css/all.css'; 
 
 const db = getFirestore(firebaseApp);
@@ -70,197 +69,108 @@ export default {
     components: {
         PopUp
     },
-
     methods: {
         update() {
             this.$emit("up")
         }
     },
-
-    props:['totCalories'],
-        //totCalories: totalCalories
+    props: ['totCalories'],
     
-
-    setup(props, {emit}) {
-        const mydate = ref(new Date().toISOString().substr(0, 10)) 
-        const showDatePicker = ref(false)
-        const buttonText = ref('Select Date')
-        const dateDisplay = ref('')
-        const breakfastTF = ref(false)
-        const lunchTF = ref(false)
-        const dinnerTF = ref(false)
-        const snackTF = ref(false)
-        const totalCalories = ref(0)
-        const userEmail = ref('')
+    setup(props, { emit }) {
+        const mydate = ref(new Date().toISOString().substr(0, 10));
+        const showDatePicker = ref(false);
+        const buttonText = ref('Select Date');
+        const dateDisplay = ref('');
+        const totalCalories = ref(0);
+        const userEmail = ref('');
 
         function formatDate(date) {
             return new Date(date).toLocaleDateString('en-US', {
-            month: 'short',
-            day: 'numeric'
-            }) + " Meal Plan 🌱";
+                month: 'short',
+                day: 'numeric'
+            }) + " Meal Plan 🥕";
         }
 
         onMounted(() => {
             dateDisplay.value = formatDate(mydate.value);
+            monitorAuthAndFetchData();
+        });
 
-            function display() {
-                const auth = getAuth();
-                onAuthStateChanged(auth, (user) => {
-                    if (user) {
-                        userEmail.value = user.email;
-                        dp(user.email)
-                    }
-                });
-            }
-
-            async function dp(email) {
-                if (breakfastTF.value) {
-                    let table = document.getElementById("breakfast")
-                    table.deleteRow(0)
-                    breakfastTF.value = false
-                } 
-                if (lunchTF.value) {
-                    let table = document.getElementById("lunch")
-                    table.deleteRow(0)
-                    lunchTF.value = false
-                } 
-                if (dinnerTF.value) {
-                    let table = document.getElementById("dinner")
-                    table.deleteRow(0)
-                    lunchTF.value = false
-                } 
-                if (snackTF.value) {
-                    let table = document.getElementById("snack")
-                    table.deleteRow(0)
-                    snackTF.value = false
-                }
-                totalCalories.value = 0
-                let allDocuments = await getDocs(collection(db, email, 'calories-intake', mydate.value))
-                allDocuments.forEach((docs) => {
-                    if (docs.id === "breakfast") {
-                        breakfastTF.value = true
-                    } else if (docs.id === "lunch") {
-                        lunchTF.value = true
-                    } else if (docs.id === "dinner") {
-                        dinnerTF.value = true
-                    } else {
-                        snackTF.value = true
-                    }
-                    let mealNameCal = docs.data()
-                    let mealName = mealNameCal.mealName
-                    let calories = mealNameCal.calories
-                    totalCalories.value += parseFloat(calories)
-                    let table = document.getElementById(docs.id)
-                    let row = table.insertRow(mealName)
-                    let cell0 = row.insertCell(0)
-                    let cell1 = row.insertCell(1)
-                    cell0.innerHTML = mealName + " " + calories
-
-                    let deleteButton = document.createElement("button")
-                    deleteButton.id = String(mealName)
-                    deleteButton.className = "bwt"
-                    deleteButton.innerHTML = "Delete"
-                    cell1.appendChild(deleteButton)
-                    deleteButton.onclick = function(){
-                        deleteMeal(email, docs.id)
-                    }
-                })
-                emit('update-total-calories', totalCalories.value);
-                console.log("display")
-            }
-
-            display()
-
-            async function deleteMeal(email, mealType){
-                alert("You are going to delete " + mealType)
-                await deleteDoc(doc(db, email, 'calories-intake', mydate.value, mealType))
-                console.log("Document successfully deleted!", mealType);
-                let tb = document.getElementById(mealType)
-                tb.deleteRow(0)
-                display()
-            }
-        })
-
-        function refresh() {
-                const auth = getAuth();
-                onAuthStateChanged(auth, (user) => {
-                    if (user) {
-                        userEmail.value = user.email;
-                        rf(user.email)
-                    }
-                });
-            }
-
-        async function rf(email) {
-            console.log(breakfastTF)
-            if (breakfastTF.value) {
-                let table = document.getElementById("breakfast")
-                table.deleteRow(0)
-                breakfastTF.value = false
-            } 
-            if (lunchTF.value) {
-                let table = document.getElementById("lunch")
-                table.deleteRow(0)
-                lunchTF.value = false
-            } 
-            if (dinnerTF.value) {
-                let table = document.getElementById("dinner")
-                table.deleteRow(0)
-                lunchTF.value = false
-            } 
-            if (snackTF.value) {
-                let table = document.getElementById("snack")
-                table.deleteRow(0)
-                snackTF.value = false
-            }
-            totalCalories.value = 0
-            let allDocuments = await getDocs(collection(db, email, 'calories-intake', mydate.value))
-            allDocuments.forEach((docs) => {
-                if (docs.id === "breakfast") {
-                    breakfastTF.value = true
-                } else if (docs.id === "lunch") {
-                    lunchTF.value = true
-                } else if (docs.id === "dinner") {
-                    dinnerTF.value = true
-                } else {
-                    snackTF.value = true
-                }
-                let mealNameCal = docs.data()
-                let mealName = mealNameCal.mealName
-                let calories = mealNameCal.calories
-                totalCalories.value += parseFloat(calories)
-                let table = document.getElementById(docs.id)
-                let row = table.insertRow(mealName)
-                let cell0 = row.insertCell(0)
-                let cell1 = row.insertCell(1)
-                cell0.innerHTML = mealName + " " + calories
-
-                let deleteButton = document.createElement("button")
-                deleteButton.id = String(mealName)
-                deleteButton.className = "bwt"
-                deleteButton.innerHTML = "Delete"
-                cell1.appendChild(deleteButton)
-                deleteButton.onclick = function(){
-                    deleteMeal(email, docs.id)
-                }
-            })
-            emit('update-total-calories', totalCalories.value);
-            console.log("display")
+        function toggleDatePicker() {
+            showDatePicker.value = !showDatePicker.value;
         }
 
-        async function deleteMeal(email, mealType){
-            alert("You are going to delete " + mealType)
-            await deleteDoc(doc(db, email, 'calories-intake', mydate.value, mealType))
-            console.log("Document successfully deleted!", mealType);
-            let tb = document.getElementById(mealType)
-            tb.deleteRow(0)
-            refresh()
+        function monitorAuthAndFetchData() {
+            const auth = getAuth();
+            onAuthStateChanged(auth, (user) => {
+                if (user) {
+                    userEmail.value = user.email;
+                    fetchAndUpdateMeals(user.email);
+                }
+            });
+        }
+
+        function fetchAndUpdateMeals(email) {
+            const dateString = String(mydate.value);
+            const collectionRef = collection(db, email, 'calories-intake', dateString);
+
+            // Clear existing content and set up real-time updates
+            const tables = ["breakfast", "lunch", "dinner", "snack"].reduce((acc, id) => {
+                acc[id] = document.getElementById(id);
+                acc[id].innerHTML = '';  // Clear existing table content
+                return acc;
+            }, {});
+
+            totalCalories.value = 0;
+            const unsubscribe = onSnapshot(collectionRef, (snapshot) => {
+                snapshot.docChanges().forEach(change => {
+                    const doc = change.doc;
+                    const mealData = doc.data();
+
+                    if (change.type === 'added' || change.type === 'modified') {
+                        const row = tables[doc.id].insertRow();
+                        const cellMeal = row.insertCell(0);
+                        const cellAction = row.insertCell(1);
+                        cellMeal.textContent = `${mealData.mealName} ${mealData.calories}`;
+                        totalCalories.value += parseFloat(mealData.calories);
+                        totalCalories.value = parseFloat(totalCalories.value.toFixed(2));
+
+                        const deleteButton = document.createElement("button");
+                        deleteButton.textContent = "Delete";
+                        deleteButton.className = "bwt";
+                        deleteButton.onclick = () => deleteMeal(email, doc.id);
+                        cellAction.appendChild(deleteButton);
+                    } else if (change.type === 'removed') {
+                        // Remove the meal from the table if it was deleted
+                        const rows = tables[doc.id].getElementsByTagName("tr");
+                        Array.from(rows).forEach(row => {
+                            if (row.cells[0].textContent === `${mealData.mealName} ${mealData.calories}`) {
+                                tables[doc.id].deleteRow(row.rowIndex);
+                            }
+                        });
+                        totalCalories.value -= parseFloat(mealData.calories);
+                        totalCalories.value = parseFloat(totalCalories.value.toFixed(2));
+                    }
+                });
+                emit('update-total-calories', totalCalories.value);
+            }, err => {
+                console.error("Error fetching updates:", err);
+            });
+
+            return unsubscribe;
+        }
+
+        function deleteMeal(email, mealType) {
+            alert(`You are going to delete ${mealType}`);
+            deleteDoc(doc(db, email, 'calories-intake', mydate.value, mealType));
         }
 
         function updateDateDisplay() {
-            showDatePicker.value = false
+            showDatePicker.value = false;
             dateDisplay.value = formatDate(mydate.value);
-            refresh()
+            if (userEmail.value) {
+                fetchAndUpdateMeals(userEmail.value);  // Fetch and update meals for the new date
+            }
         }
 
         return {
@@ -268,13 +178,14 @@ export default {
             showDatePicker,
             buttonText,
             dateDisplay,
+            toggleDatePicker,
             updateDateDisplay,
-            refresh
-        }
+            fetchAndUpdateMeals
+        };
     }
 }
-
 </script>
+
 
 <style>
 @import url('https://fonts.googleapis.com/css?family=Fuzzy Bubbles');
