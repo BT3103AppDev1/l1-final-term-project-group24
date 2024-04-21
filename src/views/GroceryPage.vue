@@ -14,7 +14,7 @@
 import AddCategory from '@/components/AddCategory.vue'; 
 import AddFood from '@/components/AddFood.vue'; 
 import DisplayCategoryAndFood from '@/components/DisplayCategoryAndFood.vue'
-import EditFood from '@/components/EditFood.vue'; 
+import EditFood from '@/components/editFood.vue'; 
 import ExpiredFoodPopup from '@/components/ExpiredFoodPopup.vue'
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
 import { updateDoc, arrayUnion, setDoc, getDoc, deleteDoc, getDocs, doc, collection } from 'firebase/firestore';
