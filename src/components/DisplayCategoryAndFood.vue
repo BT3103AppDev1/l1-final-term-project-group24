@@ -461,11 +461,11 @@ margin-right: 20px;
   border-radius: 6px;
   position: absolute;
   z-index: 1;
-  bottom: 125%; 
+  top: 125%; 
   left: 50%;
-  margin-left: -60px; 
-  opacity: 0;
-  transition: opacity 0.3s;
+  margin-left: -70px; 
+  opacity: 0.5;
+  transition: opacity 0.2s ease-in-out;
 }
 
 .toggle-button:hover .tooltip {
