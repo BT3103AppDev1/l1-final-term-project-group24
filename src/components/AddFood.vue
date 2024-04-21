@@ -1,7 +1,7 @@
 <template>
     <div v-if="showForm" class="food-form-overlay">
         <div class="food-form-content">
-            <h2>Adding New Food</h2>
+            <h2>Adding New {{ this.selectedCategory }}</h2>
             <form @submit.prevent="submitFoodForm" class="food-form-container" id="food-form">
                 <div class="form-group">
                     <label for="foodName">Food:</label>
@@ -37,7 +37,7 @@ import { collection, doc, setDoc } from 'firebase/firestore';
 
     export default {
 
-        props: ['showForm', 'selectedCategory', 'userId'], 
+        props: ['showForm', 'selectedCategory', 'userEmail'], 
 
 
         data() {
@@ -46,8 +46,19 @@ import { collection, doc, setDoc } from 'firebase/firestore';
                 foodQuantity: '',
                 foodExpiryDate: '', 
                 category: this.selectedCategory, 
+                allCategories: [],
             };
         },
+
+        // watch: {
+        //     userEmail: {
+        //     immediate: true,
+        //         handler(newVal, oldVal) {
+        //             console.log("userEmail in AddFood:", newVal);
+        //         }
+        //     }
+        // },
+
         methods: {
 
             async submitFoodForm() {
@@ -61,7 +72,7 @@ import { collection, doc, setDoc } from 'firebase/firestore';
                 }; 
                 
                 
-                const categoryRef = collection(db, `users/${this.userId}/${this.selectedCategory}`); 
+                const categoryRef = collection(db, `${this.userEmail}/grocery-management/${this.selectedCategory}`); 
 
                 await setDoc(doc(categoryRef, foodItem.id), foodItem); 
                 
@@ -70,10 +81,12 @@ import { collection, doc, setDoc } from 'firebase/firestore';
 
                 this.$emit('add-food', foodItem )
 
+                //location.reload(); 
                 // Reset form after submission
                 this.foodName = ''; 
                 this.foodQuantity = '';
                 this.foodExpiryDate = '';
+                console.log(foodItem); 
 
                 this.closeFoodForm(); // Close the form after submission
             }, 
