@@ -1,7 +1,6 @@
 <template>
-  <div>
+  <div class="display-container">
     <div class="top-right-container">
-    
       <button @click="toggleShowExpiringSoon" class="toggle-button">
         <span class="switch" :class="{ 'on': showExpiringSoon, 'off': !showExpiringSoon }"></span>
         <span class="tooltip">{{ toggleTooltipText }}</span>
@@ -245,6 +244,11 @@ export default {
 </script>
  
 <style scoped>
+.display-container {
+  width: 95%;
+  margin: auto;
+}
+
 table {
   width: 100%;
   /* table-layout: fixed; */
@@ -424,8 +428,8 @@ margin-right: 20px;
 
 .top-right-container {
   position: absolute;
-  top: 165px;
-  right: 550px;
+  top: 100px;
+  right: 2.5%;
   display: flex;
   flex-direction: column;
   align-items: flex-end;

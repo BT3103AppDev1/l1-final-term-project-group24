@@ -172,8 +172,9 @@ export default {
  
 <style scoped>
 .add-categories-container {
-  padding-top: 40px;
-  width: 175px;
+  left: 3%;
+  top: 100px;
+  position: absolute;
 }
   
 .add-categories-btn {

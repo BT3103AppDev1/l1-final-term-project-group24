@@ -1,25 +1,29 @@
 <template>
-    <nav class="navbar">
+  <nav class="navbar">
     <div class="nav-content">
+      <div class="logo-container">
         <img id="FoodFolioLogo" src="/foodfolio_logo.png" alt="FoodFolio logo">
-        <div class="nav-links">
-            <router-link to="/home" id="home-button">Grocery Management</router-link>
-            <router-link to="/caloriesIntake" id="calorie-button">Calorie Intake</router-link>
-            <router-link to="/about" id="about-button">About Us</router-link>
-        </div>
-        <router-view/>
+      </div>
+      <div class="nav-links">
+          <router-link to="/home" id="home-button">Grocery Management</router-link>
+          <router-link to="/caloriesIntake" id="calorie-button">Calorie Intake</router-link>
+          <router-link to="/about" id="about-button">About Us</router-link>
+      </div>
+      <router-view/>
 
-        <div class="nav-profileicon">
+      <div class="nav-profileicon">
         <span id="current-date">{{ currentDate }}</span>
-        <img id="profile-icon" src="/profile_icon.png" alt="Profile" @click="toggleDropdown">
-        <div v-if="showDropdown" class="dropdown">
+        <div @mouseover="cancelCloseDropdown" @mouseout="scheduleCloseDropdown">
+          <img id="profile-icon" src="/profile_icon.png" alt="Profile" @mouseover="openDropdown">
+          <div v-if="showDropdown" class="dropdown">
             <router-link to="/profile" id="profile-button">Go to Profile</router-link>
             <button id="logoutButton" @click="logout"> Logout </button>
+          </div>
         </div>
-        </div>
+      </div>
     </div>
-    </nav>
-  </template>
+  </nav>
+</template>
   
   <script>
   import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
@@ -28,22 +32,42 @@
     data() {
       return {
         showDropdown: false,
-        currentDate: new Date().toLocaleDateString(),
+        currentDate: this.currentDate(),
       };
     },
     methods: {
-        toggleDropdown() {
-        this.showDropdown = !this.showDropdown;
-        },
-        logout() {
+      currentDate() {
+        const now = new Date(); 
+        now.setHours(0, 0, 0, 0);
+        const month = now.getMonth() + 1; // Months are zero-based
+        const day = now.getDate();
+        const year = now.getFullYear();
+        return `${day}/${month}/${year}`;
+      }, 
+      openDropdown() {
+        this.showDropdown = true;
+        this.cancelCloseDropdown(); // Cancel any pending close action
+      },
+      scheduleCloseDropdown() {
+        // Schedule to close dropdown after 500 ms
+        this.closeTimeout = setTimeout(() => {
+          this.showDropdown = false;
+        }, 200);
+      },
+      cancelCloseDropdown() {
+        // Cancel the scheduled close if still within the hover area
+        clearTimeout(this.closeTimeout);
+      },
+
+      logout() {
         const auth = getAuth();
         signOut(auth).then(() => {
-            alert("Logged out successfully!")
-            this.$router.push({ name: 'Login' });
+          alert("Logged out successfully!")
+          this.$router.push({ name: 'Login' });
         }).catch((error) => {
             alert("Logout Failed: " + error.message);
         });
-        },
+      },
     },
   };
   </script>
@@ -67,13 +91,14 @@
 .nav-content {
   display: flex;
   justify-content: space-between;
+  margin-left: 30px;
   width: 100%;
   align-items: center;
 }
 
 #FoodFolioLogo {
-    width: 80px;
-    padding-bottom: 4px;
+  width: 80px;
+  padding-bottom: 4px;
 }
 
 .nav-links {
@@ -150,7 +175,7 @@
 
 #logoutButton:hover, #profile-button:hover {
     background-color: #f8961f; 
-    transform: scale(1.1);
+    transform: scale(1.00);
 }
 
 #current-date {
