@@ -169,7 +169,8 @@
     background-color: white;
     border: none;
     font-family: 'Fuzzy Bubbles';
-    border-radius: 5px;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
     font-size: 15px;
 }
 

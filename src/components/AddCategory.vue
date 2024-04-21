@@ -231,17 +231,17 @@ export default {
 }
 
 .dropdown-menu a:hover {
-  background-color: #a6a6a6;
+  background-color: #f8961f; 
 }
 
 .dropdown-menu a:first-child:hover {
-  background-color: #a6a6a6;
+  background-color: #f8961f; 
   border-top-left-radius: 20px;
   border-top-right-radius: 20px;
 }
 
 .dropdown-menu a:last-child:hover {
-  background-color: #a6a6a6;
+  background-color: #f8961f; 
   border-bottom-left-radius: 20px;
   border-bottom-right-radius: 20px;
 }
