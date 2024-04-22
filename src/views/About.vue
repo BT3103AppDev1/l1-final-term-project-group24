@@ -34,7 +34,7 @@ export default {
 
 <style scoped>
 #FoodFolioLogo {
-    width: 300px;
+    width: 290px;
     display: block;
     margin-left: auto;
     margin-right: auto;

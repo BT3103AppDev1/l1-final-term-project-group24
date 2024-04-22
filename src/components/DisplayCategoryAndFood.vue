@@ -245,7 +245,7 @@ export default {
  
 <style scoped>
 .display-container {
-  width: 95%;
+  width: 60%;
   margin: auto;
 }
 
@@ -463,9 +463,9 @@ margin-right: 20px;
   z-index: 1;
   bottom: -160%; 
   left: 50%;
-  margin-left: -60px; 
-  opacity: 0;
-  transition: opacity 0.3s;
+  margin-left: -70px; 
+  opacity: 0.5;
+  transition: opacity 0.2s ease-in-out;
 }
 
 .toggle-button:hover .tooltip {
