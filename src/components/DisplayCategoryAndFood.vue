@@ -461,7 +461,7 @@ margin-right: 20px;
   border-radius: 6px;
   position: absolute;
   z-index: 1;
-  top: 125%; 
+  bottom: -160%; 
   left: 50%;
   margin-left: -70px; 
   opacity: 0.5;
