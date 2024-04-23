@@ -49,7 +49,6 @@
         this.cancelCloseDropdown(); // Cancel any pending close action
       },
       scheduleCloseDropdown() {
-        // Schedule to close dropdown after 500 ms
         this.closeTimeout = setTimeout(() => {
           this.showDropdown = false;
         }, 200);

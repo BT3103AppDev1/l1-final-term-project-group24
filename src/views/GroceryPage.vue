@@ -40,7 +40,6 @@ export default {
       showEditForm: false, 
       itemToEdit: null, 
       showExpiredFoodPopup: true, 
-      //expiredAndExpiringFoodItems: [], 
       expiredFoodItems: [], 
       expiringFoodItems: [], 
     };
@@ -50,7 +49,6 @@ export default {
   async mounted() {
     await this.fetchUserProfile();
     await this.fetchFoodItems();
-    // await this.fetchCategoryTitles();
     console.log("mounted", this.userEmail);
     if (!localStorage.getItem('hasShownExpiredFoodPopup')) {
       this.showExpiredFoodPopup = true;
@@ -66,11 +64,6 @@ export default {
       localStorage.setItem('hasShownExpiredFoodPopup', 'true');
       this.showExpiredFoodPopup = false;
     },
-
-    /*handleExpiredItemsUpdated(expiringAndExpiredItems) {
-      console.log("expiring", expiringAndExpiredItems); 
-      this.expiredAndExpiringFoodItems = expiringAndExpiredItems; 
-    }, */ 
 
     handleExpiredItemsUpdated(expiredItems) {
        console.log("Expired items:", expiredItems);
@@ -118,7 +111,6 @@ export default {
 
       if (userDocSnap.exists()) {
         const userData = userDocSnap.data();
-        // This assumes that your user document has a field called 'categoryTitles'
         console.log("These are the categories", userData.Categories);
         this.allCategories = userData.Categories || []; // return the array or an empty array if it doesn't exist
       } else {
@@ -161,7 +153,6 @@ export default {
           });
 
             this.listeners.push(realTime);
-          // this.$set(this.foodItems, category, { category, items: foodItemsForCategory });
         } catch (error) {
           console.error('Error fetching food items for category:', category, error);
         }
@@ -184,7 +175,6 @@ export default {
       // Delete the category from the array of categories
       this.allCategories.splice(index, 1); 
       const userDocRef = doc(db, this.userEmail, 'grocery-management');
-      // Add a new category title to the "categoryTitles" array field
       // If the document or field does not exist, it will be created
       await updateDoc(userDocRef, {
         Categories: this.allCategories
@@ -199,15 +189,6 @@ export default {
       this.foodItems = this.foodItems.filter(foodCategory => foodCategory.category !== categoryToDelete);
 
     }, 
-
-
-    /*deleteCategory(index) {
-      const categoryToDelete = this.selectedCategories[index]; 
-      this.selectedCategories.splice(index, 1); 
-      this.foodItems = this.foodItems.filter(foodCategory => foodCategory.category !== categoryToDelete); 
-      //this.selectedCategories = this.selectedCategories.filter((category, i) => i !== index);
-    }, */ 
-
 
 		async handleCategorySelected(categoryName) {
       await this.fetchCategoryTitles();
@@ -257,32 +238,11 @@ export default {
         this.foodItems.push({category: this.selectedCategory, items: [foodItem]});
         console.log('category not found')
       }
-    },
-
-    /*addFoodItem(food) {
-      console.log('Searching for category:', this.selectedCategory);
-      console.log('Categories in foodItems:', this.foodItems.map(cat => cat.category));
-      const categoryIndex = this.foodItems.findIndex(cat => cat.category === this.selectedCategory);
-      console.log('Category index:', categoryIndex);
-
-      if (categoryIndex !== -1) {
-        // Category exists, add the item to the existing category
-        this.foodItems[categoryIndex].items.push(food.item);
-        console.log('category found', categoryIndex); 
-        console.log('Categories in foodItems:', this.foodItems.map(cat => cat.category));
-
-      } else {
-        // Category does not exist, create a new category with the item
-        this.foodItems.push({category: this.selectedCategory, items: [food.item]});
-        console.log('category not found')
-      }
-    }, */
-
-  
+    },  
 
     handleEditItem(item) {
       console.log("editItem",item); 
-      this.itemToEdit = item; //i think this is the issue i cant update correctly
+      this.itemToEdit = item;
       this.selectedCategory = item.category; 
       this.showEditForm = true; 
     }, 
@@ -306,32 +266,6 @@ export default {
     }
   },
 
-
-    /*handleUpdateItem(updatedItem) {
-      console.log('received updateditem', updatedItem); 
-      console.log('Categories in foodItems:', this.foodItems.map(cat => cat.category));
-      // Find the index of the category that contains the item to be updated
-      const categoryIndex = this.foodItems.findIndex(cat => cat.category === this.selectedCategory);
-      console.log(categoryIndex);
-      console.log(this.selectedCategory); 
-      console.log('Item names in foodItems:', this.foodItems[categoryIndex].items.map(item => item.id));
-      console.log('Updated item name:', updatedItem.id);
-
-      if (categoryIndex !== -1) {
-        // Find the index of the item within the category's items array
-        const itemIndex = this.foodItems[categoryIndex].items.findIndex(item => item.id === updatedItem.id);
-
-        if (itemIndex !== -1) { //can find food item
-          this.foodItems[categoryIndex].items[itemIndex] = updatedItem;
-          console.log('Item updated successfully in', updatedItem.category);
-        } else {
-          console.log('Item not found within the category');
-        }
-      } else {
-        console.log('Category not found');
-      }
-    }, */ 
-
     async handleDeleteItem(item) {
       // Construct the reference to the item in Firestore
       const itemRef = doc(db, `${this.userEmail}/grocery-management/${item.category}`, item.id);
@@ -350,13 +284,6 @@ export default {
         this.foodItems[categoryIndex].items = this.foodItems[categoryIndex].items.filter(i => i.id !== item.id);
       }
     },
-
-    /*handleDeleteItem(itemToDelete) {
-      const category = this.foodItems.find(category => category.items.includes(itemToDelete)); 
-      if (category) {
-        category.items = category.items.filter(item => item !== itemToDelete); 
-      }
-    },*/ 
 
     handleCloseEditForm() {
       this.showEditForm = false; 

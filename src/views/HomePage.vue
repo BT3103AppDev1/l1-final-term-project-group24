@@ -46,8 +46,8 @@ export default {
 }
 
 #logoutButton:hover {
-  background-color: #f8961f; /* New color for hover */
-  transform: scale(1.1); /* Increases size by 10% */
+  background-color: #f8961f;
+  transform: scale(1.1);
 }
 
 .profile-button, .logout-button {

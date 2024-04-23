@@ -49,9 +49,6 @@ import '@fortawesome/fontawesome-free/css/all.css';
 import { getDoc, doc } from 'firebase/firestore';
 import { db } from '@/firebase';
 
-
-//const db = getFirestore(firebaseApp);
-
 export default {
   name: "SideBar",
   data() {
@@ -73,28 +70,6 @@ export default {
   props:['totCalories'],
 
   mounted() {
-    // async function updateBMIandTarget() {
-    //   let auth = getAuth();
-    //   onAuthStateChanged(auth, (user) => {
-    //     if (user) {
-    //       this.userEmail = user.email;
-    //     }
-    //   });
-    //   let userInfoRef = doc(db, String(userEmail), "profile-info");
-    //   try {
-    //     const docSnap = await getDocs(userInfoRef);
-    //     if (docSnap.exists()) {
-    //       let data = docSnap.data();
-    //       this.userWeight = data.weight || 0;
-    //       this.userHeight = data.height || 0;
-    //       this.calorieIntakeGoal = data.calorieIntakeGoal || '';
-    //     } else {
-    //       console.log("No data available");
-    //     }
-    //   } catch (error) {
-    //       console.error("Failed to fetch user data:", error);
-    //   }
-    // }
     this.updateSideBar()
   },
 

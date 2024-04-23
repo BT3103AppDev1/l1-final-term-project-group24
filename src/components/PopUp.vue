@@ -93,7 +93,6 @@ export default {
 
     async addToDB(email) {
       try {
-        //const selectPage = collection(db, email, 'calories-intake', this.mealDate); 
         const docRef = await setDoc(doc(db, email, 'calories-intake', this.mealDate, this.mealType),{
         mealName: this.mealName, calories: this.calories
         })

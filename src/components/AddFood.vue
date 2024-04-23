@@ -68,7 +68,6 @@ export default {
 
       this.$emit('add-food', foodItem )
 
-      //location.reload(); 
       // Reset form after submission
       this.foodName = ''; 
       this.foodQuantity = '';

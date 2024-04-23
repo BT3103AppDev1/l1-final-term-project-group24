@@ -29,7 +29,7 @@ export default {
 body{
   background-color: #FDF0C3;
   font-family: 'Fuzzy Bubbles';
-  margin: 0; /* To make the green nav bar flushed to the corners, remove if troublesome!*/
+  margin: 0;
 }
 
 </style>

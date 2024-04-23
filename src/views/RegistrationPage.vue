@@ -100,7 +100,6 @@ export default {
   padding: 16px;
   margin: 0;
   width: 100%;
-  /* Ensures there's no space between the header and the edges of the browser window */
   position: absolute;
   top: 0;
   left: 0;

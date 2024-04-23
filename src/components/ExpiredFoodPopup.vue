@@ -15,7 +15,6 @@
                 </ul>
             </div>
         </div>
-         <!-- <button @click="closePopup">Close</button> -->
     </div>
 </template>
    
@@ -38,7 +37,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.4); /* Semi-transparent backdrop */
+    background-color: rgba(0, 0, 0, 0.4);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -46,16 +45,15 @@
 }
 
 .popup-content {
-    background-color: #fefefe; /* Solid white background */
+    background-color: #fefefe;
     padding: 20px;
     border: 1px solid #888;
     border-radius: 40px;
     width: 80%;
-    max-width: 500px; /* Ensure it doesn't get too wide on larger screens */
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Add a subtle shadow for depth */
+    max-width: 500px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
-/* Additional styling for consistency with your form */
 .popup-content h2 {
     text-align: center;
     margin-bottom: 20px;
@@ -69,7 +67,6 @@
 
 .popup-content li {
     padding: 10px 0;
-    border-bottom: 1px solid #eee;
 }
 
 .popup-content button {

@@ -2,8 +2,6 @@
    <NavBar />
     <div class="profile-container">
         <h1>Profile Page</h1><br>
-        <!-- <p>Email: {{ userEmail }}</p>
-        <p>Username: {{ userName }}</p> -->
         <div class="form-row">
             <label for="email">Email:</label>
             <div class="input-text"> {{ userEmail }} </div>
@@ -108,9 +106,7 @@
             // This method is responsible for saving info of height,weight,kcal goal to firestore:
             async saveData(field, value) {
                 const auth = getAuth();
-                // const userId = auth.currentUser.uid;
                 const userEmail = auth.currentUser.email;
-                // const userDocRef = doc(db, "users", userId);
                 const userInfoRef = doc(db, String(userEmail), "profile-info");
                 try {
                     // Set the "field" data in Firestore
@@ -155,7 +151,6 @@
 </script>
 
 <style scoped>
-
 .profile-container {
   display: flex;
   flex-direction: column;
