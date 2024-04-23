@@ -12,7 +12,7 @@
       <router-view/>
 
       <div class="nav-profileicon">
-        <span id="current-date">{{ currentDate }}</span>
+        <span id="current-date">{{ this.currentDate() }}</span>
         <div @mouseover="cancelCloseDropdown" @mouseout="scheduleCloseDropdown">
           <img id="profile-icon" src="/profile_icon.png" alt="Profile" @mouseover="openDropdown">
           <div v-if="showDropdown" class="dropdown">
@@ -32,7 +32,6 @@
     data() {
       return {
         showDropdown: false,
-        currentDate: this.currentDate(),
       };
     },
     methods: {
