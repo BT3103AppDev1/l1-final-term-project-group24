@@ -41,7 +41,7 @@
         No meal found
       </div>
       <div class="modal-footer">
-        <button @click="addMeal" class="add-button">Add</button>
+        <button @click="addMeal" class="button">Add</button>
       </div>
     </div>
   </div>
