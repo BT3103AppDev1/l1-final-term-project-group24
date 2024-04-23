@@ -62,7 +62,6 @@ export default {
   padding: 16px;
   margin: 0;
   width: 100%;
-  /* Ensures there's no space between the header and the edges of the browser window */
   position: absolute;
   top: 0;
   left: 0;
@@ -130,7 +129,7 @@ button {
 }
 
 #confirmButton:hover {
-  background-color: #f8961f; /* New color for hover */
-  transform: scale(1.1); /* Increases size by 10% */
+  background-color: #f8961f;
+  transform: scale(1.1);
 }
 </style>

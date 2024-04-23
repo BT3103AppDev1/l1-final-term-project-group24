@@ -112,59 +112,6 @@ export default {
       this.$emit('category-selected',category); 
       this.showDropdown = !this.showDropdown;
     },
-
-    // async addCategory(currCategory) {
-
-    //   //Fill up Arrays of Arrays
-    //   const userDocRef = doc(db, 'users', this.userId);
-
-    //   // Add a new category title to the "categoryTitles" array field
-    //   // If the document or field does not exist, it will be created
-    //   await updateDoc(userDocRef, {
-    //     Categories: arrayUnion(currCategory)
-    //   });
-
-
-    //   //Add category with empty item
-    //   const emptyItem = {
-    //     id: "EMPTY", 
-    //     category: currCategory, 
-    //   }; 
-
-    //   const categoryRef = collection(db, `users/${this.userId}/${currCategory}`);
-
-    //   await setDoc(doc(categoryRef, "EMPTY"), emptyItem); 
-        
-    //   console.log('Empty item added to firestore', emptyItem); 
-    //   console.log('Emitting add-food empty event with:', {item: emptyItem });
-
-    //   this.$emit('category-selected',category); 
-    //   this.showDropdown = !this.showDropdown;
-    // }
-
-
-    /*//firestore code
-    
-    async addCategory(category) {
-      if (!this.selectedCategories.includes(category)) {
-        this.selectedCategories.push(category);
-        try {
-        // Assuming you have the user ID available, replace 'userId' with the actual user ID
-          const docRef = await setDoc(doc(db, "users", "userId", "categories", category), {
-            name: category,
-          });
-          console.log("Category saved:", category);
-        } catch (error) {
-          console.error("Error saving category:", error);
-        }
-      }
-      this.showDropdown = false;
-      this.$emit('category-selected', category);
-    },*/
-
-
-   
-      
   }
 }; 
 </script>
@@ -196,7 +143,7 @@ export default {
 .add-categories-btn::after {
   content: '';
   position: absolute;
-  right: 5px; /* Adjust as needed */
+  right: 5px;
   top: 50%;
   transform: translateY(-50%) rotate(0deg);
   width: 0;

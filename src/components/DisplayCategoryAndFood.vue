@@ -251,7 +251,6 @@ export default {
 
 table {
   width: 100%;
-  /* table-layout: fixed; */
   border-collapse: separate;
   border-spacing: 0px 10px;
   margin-top: -20px;
