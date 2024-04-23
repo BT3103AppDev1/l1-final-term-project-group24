@@ -203,7 +203,7 @@ button:hover {
 .meal-container {
   width: 1000px;
   height: 600px;
-  background: #ffefd5; 
+  background: white; 
   padding: 20px;
   border-radius: 20px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
