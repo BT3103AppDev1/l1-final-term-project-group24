@@ -170,8 +170,8 @@ export default {
 
 .select-container select {    
   font-size: 15px;  
-  background-color: #ffefd5;
-  border: 2px solid #ffefd5;
+  background-color: white;
+  border: none;
 }
 
 .select-container select:focus {
